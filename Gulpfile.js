@@ -69,7 +69,7 @@ function watch_styl(done) {
     done(); 
 }
 function livereload_server(done) { 
-    livereload.listen(35701);
+    livereload.listen(35707);
     done(); 
 }
 function watch_tslint(done) { 
@@ -105,7 +105,7 @@ function lint(done) {
 }
 
 function build_styl(done) {
-    pump([gulp.src('./src/ogs.styl'),
+    pump([gulp.src('./src/kidsgo.styl'),
           sourcemaps.init(),
           stylus({
               compress: false,
@@ -125,7 +125,7 @@ function build_styl(done) {
           if (err) {
               console.error(err);
           } else {
-              livereload.reload('ogs.css');
+              livereload.reload('kidsgo.css');
           }
           done();
       }
@@ -136,8 +136,8 @@ function min_styl(done) {
     let version = execSync('git describe --long || echo "min"');
     version = ("" + version).replace(/\s/g, '')
     console.log(version);
-    console.info(`Building ogs.${version}.css`);
-    pump([gulp.src('./src/ogs.styl'),
+    console.info(`Building kidsgo.${version}.css`);
+    pump([gulp.src('./src/kidsgo.styl'),
           sourcemaps.init(),
           stylus({
               compress: false,
@@ -158,7 +158,7 @@ function min_styl(done) {
           if (err) {
               console.error(err);
           } else {
-              livereload.reload('ogs.css');
+              livereload.reload('kidsgo.css');
           }
           done();
       }
@@ -179,7 +179,7 @@ function background_webpack(done) {
 }
 
 function dev_server(done) {
-    let port = 8080;
+    let port = 8888;
     let express = require('express');
     let body_parser = require('body-parser');
     let http = require('http');
@@ -192,7 +192,7 @@ function dev_server(done) {
         .listen(port, null, function() {
             console.info(`#############################################`);
             console.info(`## Development server started on port ${port} ##`);
-            console.info(`##   http://dev.beta.online-go.com:${port}    ##`);
+            console.info(`##   http://dev.beta.kidsgoserver.com:${port}    ##`);
             console.info(`#############################################`);
         });
 
@@ -215,14 +215,13 @@ function dev_server(done) {
     devserver.use('/oauth2', beta_proxy('/oauth2'));
     devserver.use('/complete', beta_proxy('/complete'));
     devserver.use('/disconnect', beta_proxy('/disconnect'));
-    devserver.use('/OGSScoreEstimator', beta_proxy('/OGSScoreEstimator'));
     devserver.use('/godojo', beta_proxy('/godojo'));
 
     devserver.get('/locale/*', (req, res) => {
         let options = {
             hostname: 'storage.googleapis.com',
             port: 80,
-            path: '/ogs-site-files/dev' + req.path,
+            path: '/kidsgo-site-files/dev' + req.path,
             method: 'GET',
         };
 
@@ -281,7 +280,7 @@ function dev_server(done) {
     devserver.get('*', (req, res) => {
         console.info(`GET ${req.path}`);
 
-        let _index = fs.readFileSync('src/index.html', {encoding: 'utf-8'});
+        let _index = fs.readFileSync('src/kidsgo-index.html', {encoding: 'utf-8'});
         let supported_languages = JSON.parse(fs.readFileSync('i18n/languages.json', {encoding: 'utf-8'}));
         let _package_json = JSON.parse(fs.readFileSync('package.json', {encoding: 'utf-8'}));
 
@@ -323,6 +322,16 @@ function dev_server(done) {
                 case 'EXTRA_CONFIG':
                     return `<script>window['websocket_host'] = "https://${SERVER}";</script>`
                 ;
+
+
+                case 'KIDSGO_LIVE_RELOAD': return `<script async src="//${req.hostname}:35707/livereload.js"></script>`;
+                case 'OG_KIDSGO_TITLE': return '';
+                case 'OG_KIDSGO_URL': return '';
+                case 'OG_KIDSGO_IMAGE': return '';
+                case 'OG_KIDSGO_DESCRIPTION': return '';
+                case 'KIDSGO_VERSION_HASH_DOTJS': return 'js';
+                case 'KIDSGO_VERSION_DOTCSS': return 'css';
+                case 'KIDSGO_LANGUAGE_VERSION_DOTJS': return 'js';
             }
             return '{{' + parameter + '}}';
         });
@@ -340,12 +349,12 @@ function dev_server(done) {
 
 
 function minify_index(done) {
-    let _index = fs.readFileSync('src/index.html', {encoding: 'utf-8'});
+    let _index = fs.readFileSync('src/kidsgo-index.html', {encoding: 'utf-8'});
 
     let index = _index.replace(/[{][{]\s*(\w+)\s*[}][}]/g, (_,parameter) => {
         switch (parameter) {
-            case 'VENDOR_HASH_DOTJS': return process.env['VENDOR_HASH'] + '.js';
-            case 'OGS_VERSION_HASH_DOTJS': return process.env['OGS_VERSION_HASH'] + '.js';
+            case 'KIDSGO_VENDOR_HASH_DOTJS': return process.env['KIDSGO_VENDOR_HASH'] + '.js';
+            case 'KIDSGO_VERSION_HASH_DOTJS': return process.env['KIDSGO_VERSION_HASH'] + '.js';
         }
         return '{{' + parameter + '}}';
     });

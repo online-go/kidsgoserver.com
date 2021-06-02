@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
     const config = {
         mode: production ? 'production' : 'development',
         entry: {
-            'ogs': './src/main.tsx',
+            'kidsgo': './src/kidsgo.tsx',
         },
         resolve: {
             modules: [
@@ -129,9 +129,9 @@ module.exports = (env, argv) => {
         optimization: {
             splitChunks: {
                 cacheGroups: {   
-                    "vendor": {
+                    "kidsgo-vendor": {
                         test: /[\\/]node_modules[\\/]/,   // <-- use the test property to specify which deps go here
-                        name: "vendor",
+                        name: "kidsgo-vendor",
                         chunks: "all",
                         priority: -10
                     }

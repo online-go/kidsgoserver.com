@@ -19,12 +19,12 @@ min: minjs mincss
 
 mincss:
 	npm run gulp min_styl
-	@echo 'gzipped ogs.min.css: ' `gzip -9 dist/ogs.min.css -c | wc -c`
+	@echo 'gzipped kidsgo.min.css: ' `gzip -9 dist/kidsgo.min.css -c | wc -c`
 
 minjs:
 	npm run webpack -- --mode production --optimization-minimize --devtool=source-map
-	@echo 'gzipped ogs.min.js: ' `gzip -9 dist/ogs.min.js -c | wc -c`
-	@echo 'gzipped vendor.min.js: ' `gzip -9 dist/vendor.min.js -c | wc -c`
+	@echo 'gzipped kidsgo.min.js: ' `gzip -9 dist/kidsgo.min.js -c | wc -c`
+	@echo 'gzipped kidsgo-vendor.min.js: ' `gzip -9 dist/kidsgo-vendor.min.js -c | wc -c`
 
 analyze:
 	ANALYZE=true npm run analyze

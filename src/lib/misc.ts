@@ -18,7 +18,7 @@
 import {_, interpolate, pgettext} from "translate";
 import {post} from "requests";
 import {errcodeAlerter} from 'ErrcodeModal';
-import {browserHistory} from "ogsHistory";
+import {browserHistory} from "kidsgoHistory";
 import * as preferences from "preferences";
 
 declare var swal;

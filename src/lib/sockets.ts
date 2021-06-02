@@ -19,8 +19,8 @@ import * as data from "data";
 import Debug from "debug";
 import { current_language } from 'translate';
 
-declare var ogs_language_version;
-declare var ogs_version;
+declare var kidsgo_language_version;
+declare var kidsgo_version;
 
 const debug = new Debug("sockets");
 
@@ -94,8 +94,8 @@ function handle_pong(data) {
 function send_client_info() {
     termination_socket.send("client/info", {
         language: current_language,
-        langauge_version: ogs_language_version,
-        version: ogs_version,
+        langauge_version: kidsgo_language_version,
+        version: kidsgo_version,
     });
 }
 export function get_network_latency(): number {

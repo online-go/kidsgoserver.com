@@ -42,6 +42,6 @@
         "jsx": "react"
     },
     "files": [
-        "./src/main.tsx"
+        "./src/kidsgo.tsx"
     ]
 }
