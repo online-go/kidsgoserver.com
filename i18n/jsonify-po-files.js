@@ -7,11 +7,12 @@ main();
 
 
 function main() {
-    fs.readFile('./build/countries.json', "utf-8", (err,countries) => {
-    fs.readFile('./build/ogs-ui-keys.json', "utf-8", (err,ui_keys) => {
+    //fs.readFile('./build/countries.json', "utf-8", (err,countries) => {
+    fs.readFile('./build/kidsgo-ui-keys.json', "utf-8", (err,ui_keys) => {
     fs.readFile('./languages.json', "utf-8", (err,languages) => { 
 
-    countries = JSON.parse(countries);
+    //countries = JSON.parse(countries);
+    let countries = {};
     ui_keys = JSON.parse(ui_keys);
     languages = JSON.parse(languages);
 
@@ -50,6 +51,7 @@ function main() {
             let json = JSON.stringify(result);
 
             let country_map = {};
+            /*
             for (let cc in countries['en']) {
                 country_map[cc] = countries['en'][cc];
             }
@@ -57,12 +59,13 @@ function main() {
             for (var cc in lang_countries) {
                 country_map[cc] = lang_countries[cc];
             }
+            */
             let country_json = JSON.stringify(country_map);
 
             fs.writeFile(`./locale/${lang}.js`, 
-                          `window.ogs_languages = ${JSON.stringify(languages)};\n`
-                        + `(window.ogs_locales = window.ogs_locales || {})['${lang}'] = ${json};\n`
-                        + `(window.ogs_countries = window.ogs_countries || {})['${lang}'] = ${country_json};\n`
+                          `window.kidsgo_languages = ${JSON.stringify(languages)};\n`
+                        + `(window.kidsgo_locales = window.kidsgo_locales || {})['${lang}'] = ${json};\n`
+                        + `(window.kidsgo_countries = window.kidsgo_countries || {})['${lang}'] = ${country_json};\n`
                         , (err)=>console.log(err || `Wrote ${lang}.js`));
         });
     }
@@ -70,5 +73,5 @@ function main() {
     
     });
     });
-    });
+    //});
 }

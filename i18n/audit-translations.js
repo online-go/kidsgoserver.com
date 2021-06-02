@@ -7,11 +7,11 @@ main();
 
 
 function main() {
-    fs.readFile('./build/countries.json', "utf-8", (err,countries) => {
-    fs.readFile('./build/ogs-ui-keys.json', "utf-8", (err,ui_keys) => {
+    //fs.readFile('./build/countries.json', "utf-8", (err,countries) => {
+    fs.readFile('./build/kidsgo-ui-keys.json', "utf-8", (err,ui_keys) => {
     fs.readFile('./languages.json', "utf-8", (err,languages) => { 
 
-    countries = JSON.parse(countries);
+    //countries = JSON.parse(countries);
     ui_keys = JSON.parse(ui_keys);
     languages = JSON.parse(languages);
     let exit_code = 0;
@@ -96,10 +96,10 @@ function main() {
 
                 write_promises.push(new Promise((resolve, reject) => {
                     fs.readFile(`./locale/${lang}.js`, 'utf8', (err, data) => {
-                        if (/ogs_missing_translation_count/.test(data)) {
-                            data.replace(/ogs_missing_translation_count = [0-9]+/, `ogs_missing_translation_count = ${missing}`);
+                        if (/kidsgo_missing_translation_count/.test(data)) {
+                            data.replace(/kidsgo_missing_translation_count = [0-9]+/, `kidsgo_missing_translation_count = ${missing}`);
                         } else {
-                            data += `window.ogs_missing_translation_count = ${missing};`;
+                            data += `window.kidsgo_missing_translation_count = ${missing};`;
                         }
                         fs.writeFile(`./locale/${lang}.js`, data, resolve);
                     })
@@ -120,7 +120,7 @@ function main() {
     
     });
     });
-    });
+    //});
 
 
 }

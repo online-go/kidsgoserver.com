@@ -37,10 +37,10 @@ function pseudo_translate(str) {
 
 
 function main() {
-    fs.readFile('./build/ogs.strings.js.map', "utf-8", (err,sourcemap_text) => {
+    fs.readFile('./build/kidsgo.strings.js.map', "utf-8", (err,sourcemap_text) => {
         let sourcemap = new SourceMapConsumer(JSON.parse(sourcemap_text));
 
-        fs.readFile('./build/ogs.strings.cleaned-for-xgettext.js', "utf-8", (err,data) => {
+        fs.readFile('./build/kidsgo.strings.cleaned-for-xgettext.js', "utf-8", (err,data) => {
             if (err) {
                 console.err(err);
                 return;
@@ -92,7 +92,7 @@ function main() {
                 },
             });
 
-            PO.load('../../ogs/ogs/go_app/locale/django.pot', (err, po) => {
+            PO.load('../../empty.pot', (err, po) => {
                 if (err) {
                     console.error(err);
                     return;
@@ -146,8 +146,8 @@ function main() {
                     }
                 }
 
-                fs.writeFile('build/ogs-ui-keys.json', JSON.stringify(ui_only_keys), ()=>console.log('build/ogs-ui-keys.json written'));
-                po.save('build/ogs.pot', () => { console.info('Wrote ogs.pot!')} );
+                fs.writeFile('build/kidsgo-ui-keys.json', JSON.stringify(ui_only_keys), ()=>console.log('build/kidsgo-ui-keys.json written'));
+                po.save('build/kidsgo.pot', () => { console.info('Wrote kidsgo.pot!')} );
 
                 for (let item of po.items) {
                     if (!item.msgid) {
