@@ -26,7 +26,7 @@ SUPPORTED_LANGUAGES=`python -c 'import json; print(json.dumps(json.loads(open("i
 GOBAN_VERSION=`python -c 'import json; print(json.loads(open("package.json", "r").read())["devDependencies"]["goban"][1:])'`
 
 INDEX_HEADERS=-H "Content-Type: text/plain" \
-	-H "X-KIDSGO-Index-Auth: $(SUPER_SECURE_INDEX_AUTH)" \
+	-H "X-OGS-Index-Auth: $(SUPER_SECURE_INDEX_AUTH)" \
 	-H "X-KIDSGO-Index-Release: $(RELEASE)"  \
 	-H "X-KIDSGO-Index-Version: $(VERSION)"  \
 	-H "X-KIDSGO-Supported-Languages: $(SUPPORTED_LANGUAGES)"  \
@@ -34,9 +34,9 @@ INDEX_HEADERS=-H "Content-Type: text/plain" \
 	-H "X-KIDSGO-Language-Version: $(LANGUAGE_VERSION)"  \
 
 dev-put: push-cdn
-	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- http://localhost:1080/_index
+	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- http://kidsgo.codebits.org:1080/_index
 dev-del:
-	curl -X DELETE $(INDEX_HEADERS)  http://localhost:1080/_index
+	curl -X DELETE $(INDEX_HEADERS)  http://kidsgo.codebits.org:1080/_index
 
 beta-put: push-cdn audit-translations
 	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
@@ -62,7 +62,7 @@ sync-translations:
 	cd i18n/locale/; ssh pootle@45.76.254.197 "bash -c 'cd kidsgoserver.com/i18n/locale; tar jcf - *'" | tar jxf -
 
 audit-translations:
-	cd i18n; node audit-translations.js
+	#cd i18n; node audit-translations.js
 
 prepare-cdn-files: purge-cdn-files sync-translations dist/kidsgo.min.js dist/kidsgo-vendor.min.js dist/kidsgo.$(VERSION).css
 	mkdir -p deployment-staging-area/$(RELEASE)/

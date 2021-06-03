@@ -181,7 +181,7 @@ module.exports = (env, argv) => {
     if (!production) {
         config.optimization.removeAvailableModules = false;
         config.optimization.removeEmptyChunks = false;
-        config.optimization.splitChunks = false;
+        //config.optimization.splitChunks = false;
     }
 
     return config;
