@@ -106,17 +106,11 @@ themed-desaturate(field, variable, amt)
 
 
 
-phone()
-    @media only screen and (max-width: 543px) {
-        arguments;
+portrait()
+    @media only screen and (max-width: 1020px) {
+        {block}
     }
 
-tablet()
-    @media only screen and (min-width: 544px) and (max-width: 767px) {
-        arguments;
-    }
-
-desktop()
-    @media only screen and (min-width: 768px) {
-        arguments;
-    }
+landscape()
+    @media only screen and (min-width: 1021px)
+        {block}

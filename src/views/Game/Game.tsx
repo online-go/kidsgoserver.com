@@ -18,22 +18,15 @@
 import * as React from "react";
 import * as data from "data";
 import * as preferences from "preferences";
-import { useState, useEffect, useRef } from "react";
+import { useResizeDetector } from 'react-resize-detector';
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { _, interpolate } from "translate";
-import { errorAlerter, ignore } from "misc";
+import { errorAlerter, ignore, navigateTo } from "misc";
 import { Goban, GoMath, GobanConfig } from "goban";
-
-
-let objIdMap = new WeakMap();
-let objectCount = 0;
-function objectId(obj) {
-  if (!objIdMap.has(obj)) {
-      objIdMap.set(obj, ++objectCount);
-  }
-  return objIdMap.get(obj);
-}
-
+import { Avatar } from 'Avatar';
+import { Bowl } from 'Bowl';
+import { Captures } from 'Captures';
 
 export function Game(props: any):JSX.Element {
     const id:number = parseInt(props.match?.params?.id);
@@ -41,6 +34,27 @@ export function Game(props: any):JSX.Element {
     let goban_ref = useRef<Goban>(null);
     let goban_opts_ref = useRef<any>({});
     let [_hup, hup]: [number, (x:number) => void] = useState<number>(Math.random());
+    const onResize = useCallback((width, height) => {
+        let goban = goban_ref.current;
+        if (goban) {
+            let target_size = Math.min(width, height) - 60; // white padding border
+
+            if (isNaN(target_size)) {
+                hup(Math.random());
+                return;
+            }
+            goban.setSquareSizeBasedOnDisplayWidth(target_size);
+        }
+    }, []);
+    const board_container_resizer =  useResizeDetector({
+        onResize,
+        refreshMode: 'throttle',
+        refreshOptions: {
+            leading: true,
+            trailing: true,
+        },
+        refreshRate: 10,
+    });
 
     useEffect(() => {
         console.log("Constructing game ", id);
@@ -49,15 +63,28 @@ export function Game(props: any):JSX.Element {
             "board_div": container.current || undefined,
             "interactive": true,
             "mode": "puzzle",
+            "width": 9,
+            "height": 9,
+            "draw_top_labels": false,
+            "draw_right_labels": false,
+            "draw_left_labels": false,
+            "draw_bottom_labels": false,
             "player_id": 0,
             "server_socket": null,
-            "square_size": 20
+            //"square_size": 20
         };
 
         goban_opts_ref.current = opts;
         goban_ref.current = new Goban(opts);
         let goban:Goban = goban_ref.current;
         goban.setMode("puzzle");
+        try {
+            onResize(board_container_resizer.width, board_container_resizer.height);
+        } catch (e) {
+            setTimeout(() => {
+                onResize(board_container_resizer.width, board_container_resizer.height);
+            }, 1);
+        }
 
         let onUpdate = () => {
             let mvs = GoMath.decodeMoves(
@@ -72,7 +99,18 @@ export function Game(props: any):JSX.Element {
         goban.on("update", onUpdate);
         window["global_goban"] = goban;
 
+        let t = setTimeout(() => {
+            t = null;
+            console.log(board_container_resizer.ref.current);
+            let w = board_container_resizer.ref.current.clientWidth;
+            let h = board_container_resizer.ref.current.clientHeight;
+            onResize(w, h);
+        }, 10);
+
         return () => {
+            if (t) {
+                clearTimeout(t);
+            }
             goban.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
@@ -85,19 +123,102 @@ export function Game(props: any):JSX.Element {
         };
     }, [id, container]);
 
+    /*
+    useEffect(() => {
+        console.log(board_container_resizer.width, board_container_resizer.height);
+    }, [board_container_resizer.width, board_container_resizer.height]);
+    */
+
+    function quit() {
+        navigateTo('/');
+    }
+
     return (
-        <div id='Game'>
-            <div className={"center-col"}>
-                <div className='Goban'>
-                    <div ref={container}></div>
+        <>
+            <div id='Game' className='bg-mars'>
+                <div className='portrait-top-spacer' />
+
+                <div id='white-container'>
+                    <div className='top-spacer' />
+                    <Bowl />
+                    <Avatar race='aquatic' random />
+                    <Captures />
+                    <div className='landscape-bottom-buttons'>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-undo' /></span>
+                            <span className='button-text'>Zurücknehmen</span>
+                        </div>
+
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-comment' /></span>
+                            <span className='button-text'>Plaudern</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='board-container' ref={board_container_resizer.ref}>
+                    <div className='Goban-container'>
+                        <div className='Goban'>
+                            <div ref={container}></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='black-container'>
+                    <div className='top-spacer' />
+                    <Captures />
+                    <Avatar race='wisdom' random />
+                    <Bowl />
+                    <div className='landscape-bottom-buttons'>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-arrow-circle-up' /></span>
+                            <span className='button-text'>Passen</span>
+                        </div>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-flag' /></span>
+                            <span className='button-text'>Aufgeben</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div className='portrait-bottom-buttons'>
+                    <div className='left'>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-undo' /></span>
+                            <span className='button-text'>Zurücknehmen</span>
+                        </div>
+
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-comment' /></span>
+                            <span className='button-text'>Plaudern</span>
+                        </div>
+                    </div>
+
+                    <div className='center'>
+                        Opponent Name
+                    </div>
+
+                    <div className='right'>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-arrow-circle-up' /></span>
+                            <span className='button-text'>Passen</span>
+                        </div>
+                        <div className='game-button-container'>
+                            <span className='game-button'><i className='fa fa-flag' /></span>
+                            <span className='button-text'>Aufgeben</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div>
-                <Link to='/game/0'>game 0</Link>
-                <Link to='/game/1'>game 1</Link>
-                <Link to='/game/2'>game 2</Link>
-                <Link to='/game/3'>game 3</Link>
+
+            <div id='quit'>
+                <i className='fa fa-times-circle' onClick={quit} />
             </div>
-        </div>
+            <div id='menu'>
+                <i className='fa fa-ellipsis-h' />
+            </div>
+        </>
     );
 }

@@ -24,6 +24,7 @@
 
 #main-content {
     display: block;
+    themed color text-color
 }
 
 html, body, #main-content {
@@ -34,7 +35,7 @@ html, body, #main-content {
     background-color: MISSING;
     //themed color text-color;
 }
-html, body, #main-content, #main-content > div {
+html, body, #main-content {
     margin: 0;
     padding: 0;
     min-height: 100%;
@@ -52,18 +53,6 @@ html, body, #main-content, #main-content > div {
 }
 .text-align-left {
     text-align: left;
-}
-
-#main-content > div {
-    display: flex;
-    flex-direction: column;
-}
-
-#main-content > div > div:first-child {
-    flex: 0 0 auto;
-}
-#main-content > div > div:nth-child(2) {
-    flex: 1 0 auto;
 }
 
 a, .clickable, .fakelink {
@@ -103,10 +92,6 @@ a.primary:active, a.primary:hover, .primary.clickable:hover, .primary.fakelink:h
     display: inline-block;
 }
 
-
-#main-content {
-    themed color text-color
-}
 
 .page-title {
     width: 100%;
