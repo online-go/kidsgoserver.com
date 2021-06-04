@@ -44,7 +44,7 @@ export function Avatar({race, random}:AvatarInterface):JSX.Element {
         return () => {
             clearInterval(interval);
         };
-    }, [random])
+    }, [random]);
 
 
     return (

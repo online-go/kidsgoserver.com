@@ -7,6 +7,7 @@ import shutil
 
 SOURCE_DIRECTORY = 'art/20210601/01_CharacterAvatars'
 DEST_DIRECTORY = 'assets/avatars'
+RELEASE = '0.1'
 
 race_source_map = {
     'aquatic': 'KidsGoSever_CHAR_DES_Delivery_AQUATIC_SPECIES_003',
@@ -62,7 +63,7 @@ with open('src/components/Avatar/avatar_list.ts', 'w') as ts:
                     ct += 1
 
                     ts.write('    {race: "%s", id: %d},\n' % (race, num));
-                    styl.write('.avatar-%s-%d { background-image: url("/avatars/%s/%d.svg"); }\n' % (race, num, race, num));
+                    styl.write('.avatar-%s-%d { background-image: url("/%s/avatars/%s/%d.svg"); }\n' % (race, num, RELEASE, race, num));
                 else:
                     print("Error: couldn't parse identifying number from %s" % filename);
             print('Prepared %d variants for %s' % (ct, race))
