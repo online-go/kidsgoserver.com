@@ -17,7 +17,7 @@
 
 import * as React from "react";
 import {Link} from "react-router-dom";
-import {browserHistory} from "ogsHistory";
+import {browserHistory} from "kidsgoHistory";
 import {_, npgettext, interpolate} from "translate";
 import * as preferences from "preferences";
 import {Goban} from "goban";

@@ -16,12 +16,12 @@
  */
 
 import * as React from "react";
-import { useState } from "react";
-import {Link} from "react-router-dom";
-import {_, interpolate} from "translate";
 import * as data from "data";
 import * as preferences from "preferences";
-import {errorAlerter, ignore} from "misc";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { _, interpolate } from "translate";
+import { errorAlerter, ignore, navigateTo } from "misc";
 
 
 const ROCKET_LAUNCH_DURATION = 1.25; // seconds. This should match the time in LandingPage.styl to sync animation and navigation
@@ -44,8 +44,9 @@ export function LandingPage():JSX.Element {
         }
         set_learn_to_play_launching(true);
         navigate_timeout = setTimeout(() => {
-            set_learn_to_play_launching(false);
+            //set_learn_to_play_launching(false);
             console.log("Go to learn to play");
+            navigateTo("/learn-to-play");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
 
@@ -62,8 +63,9 @@ export function LandingPage():JSX.Element {
         set_play_launching(true);
         setTimeout(() => set_play_launching(false), 3000);
         navigate_timeout = setTimeout(() => {
-            set_play_launching(false);
+            //set_play_launching(false);
             console.log("Go to play");
+            navigateTo("/game/0");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
 
@@ -82,7 +84,7 @@ export function LandingPage():JSX.Element {
                 <div className='flames'>FLAMES</div>
             </div>
 
-            <div className={`play-rocket ${play_launching? "launch" : ""}`}>
+            <div className={`play-rocket ${play_launching ? "launch" : ""}`}>
                 <div>R</div>
                 <div>O</div>
                 <div>C</div>

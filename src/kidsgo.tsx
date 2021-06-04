@@ -25,6 +25,8 @@ import { post } from 'requests';
 import { ai_host } from 'sockets';
 sfx.sync();
 
+import * as hacks from 'hacks';
+
 declare var kidsgo_current_language;
 declare var kidsgo_language_version;
 declare var kidsgo_version;
@@ -272,44 +274,6 @@ init_score_estimator().then((tf) => {
 
 /*** Generic error handling from the server ***/
 sockets.termination_socket.on("ERROR", errorAlerter);
-
-
-/*** Google analytics ***/
-declare var gtag;
-
-browserHistory.listen(location => {
-    try {
-        let cleaned_path = location.pathname.replace(/\/[0-9]+(\/.*)?/, "/ID");
-
-        let user_type = 'error';
-        let user = data.get('user');
-
-        if (!user || user.anonymous) {
-            user_type = 'anonymous';
-        } else if (user.supporter) {
-            user_type = 'supporter';
-        } else {
-            user_type = 'non-supporter';
-        }
-
-        if (gtag) {
-            /* ga history hook  */
-            window["gtag"]("config", 'UA-37743954-2', {
-                'page_path': cleaned_path,
-                'custom_map': {
-                    'dimension1': user_type
-                }
-            });
-        }
-
-        window.document.title = "Kids Go";
-
-        close_all_popovers();
-    } catch (e) {
-        console.log(e);
-    }
-});
-
 
 /*** Some finial initializations ***/
 init_tabcomplete();

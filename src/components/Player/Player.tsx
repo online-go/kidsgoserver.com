@@ -17,14 +17,14 @@
 
 import * as React from "react";
 import {Link} from "react-router-dom";
-import { routes } from 'routes';
-import {browserHistory} from "ogsHistory";
+import { routes } from 'kidsgo-routes';
+import {browserHistory} from "kidsgoHistory";
 import * as data from "data";
 import {shouldOpenNewTab, errorLogger, unicodeFilter} from "misc";
 import {rankString, getUserRating, is_novice, PROVISIONAL_RATING_CUTOFF} from "rank_utils";
 import {close_all_popovers, popover} from "popover";
 import {close_friend_list} from 'FriendList/FriendIndicator';
-import {PlayerDetails} from "./PlayerDetails";
+//import {PlayerDetails} from "./PlayerDetails";
 import {openPlayerNotesModal} from "PlayerNotesModal";
 import {Flag} from "Flag";
 import {PlayerIcon} from "PlayerIcon";
@@ -392,12 +392,14 @@ export class Player extends React.PureComponent<PlayerProperties, any> {
                 console.error(e);
             }
 
+            /*
             popover({
                 elt: (<PlayerDetails playerId={player_id} noextracontrols={this.props.noextracontrols} nochallenge={this.props.nochallenge} chatId={chat_id} />),
                 below: this.refs.elt,
                 minWidth: 240,
                 minHeight: 250,
             });
+            */
         }
     }
 }
