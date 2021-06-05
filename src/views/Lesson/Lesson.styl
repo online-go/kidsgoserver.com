@@ -19,9 +19,350 @@
 
 #Lesson {
     position: absolute;
-    background-color: gray;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-content: center;
+    align-items: stretch;
+    justify-content: center;
+
+    #Lesson-bottom-container {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+
+        +portrait() {
+            flex-direction: column;
+        }
+    }
+
+    +portrait() {
+        #center-container {
+            order: 0;
+        }
+        #right-container {
+            display: none !important;
+            visibility: hidden;
+        }
+        #left-container {
+            order: 1;
+        }
+    }
+
+
+    #right-container, #left-container {
+        flex: 1;
+        min-width: 20rem;
+        max-width: 100vw;
+        flex-basis: 10rem;
+        min-height: 10rem;
+
+
+        +portrait() {
+            flex-basis: 5rem;
+            min-height: 5rem;
+        }
+
+        display: flex;
+        flex-direction: column;
+
+        +portrait() {
+            flex-direction: row;
+        }
+
+        align-content: space-around;
+        //align-items: stretch;
+        //justify-content: space-evenly;
+
+    }
+    #right-container {
+        //background-color: rgba(255, 0, 0, 0.2);
+
+    }
+    #left-container {
+        //background-color: rgba(0, 0, 255, 0.2);
+
+
+        .bottom-graphic {
+            flex: 0;
+            display: inline-flex;
+            min-height: 2rem;
+            height: 2rem;
+            width: calc(100% - 4rem);
+            margin-right: 2rem;
+            margin-left: 2rem;
+            border: 2px solid #fff;
+            border-color:rgba(255, 255, 255, 0.5); 
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+
+            +portrait() {
+                display: none !important;
+            }
+        }
+
+    }
+    #board-container {
+        //background-color: rgba(255, 0, 255, 0.2);
+
+        flex: 1;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+
+        +landscape() {
+            flex-basis: 100vh // strive for square
+        }
+        +portrait() {
+            flex-basis: 100vw // strive for square
+        }
+
+
+        .Goban {
+            background-color: transparent;
+        }
+        .Goban div {
+            background: rgba(103, 156, 214, 0.7) !important;
+            background-color: rgba(103, 156, 214, 0.7) !important;
+            //opacity: 0.8;
+        }
+
+    }
+
+
+    .Goban-container {
+        display: inline-block;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid #fff;
+        border-radius: 0.5rem;
+        border-color:rgba(255, 255, 255, 0.7); 
+
+        /*
+        +portrait() {
+            padding: 0;
+            border: none;
+            background: none;
+        }
+        */
+    }
+
+
+    .top-spacer {
+        flex: 0;
+        display: inline-block;
+        min-height: 5rem;
+        height: 5rem;
+
+        +portrait() {
+            display: none;
+        }
+    }
+
+    .landscape-bottom-buttons, .portrait-bottom-buttons {
+        .game-button-container {
+            display: inline-flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem
+            margin-right: 0.5rem
+            +portrait() {
+                margin-left: 0.2rem
+                margin-right: 0.2rem
+            }
+
+            .game-button {
+                display: inline-flex;
+                border: 1px solid #000;
+                border-radius: 5rem;
+                min-height: 2.7rem;
+                min-width: 2.7rem;
+                max-height: 2.7rem;
+                max-width: 2.7rem;
+
+                +portrait() {
+                    min-height: 2.0rem;
+                    min-width : 2.0rem;
+                    max-height: 2.0rem;
+                    max-width : 2.0rem;
+                }
+
+                background-color: #aaa;
+                align-items: center;
+                align-content: center;
+                justify-content: center;
+                cursor: pointer;
+                margin: 0.5rem;
+
+                &:hover {
+                    background-color: #ccc;
+                }
+
+                .fa {
+                    color: #fff;
+                    font-size: 2rem;
+
+                    +portrait() {
+                        font-size: 1.5rem;
+                    }
+                }
+            }
+            .button-text {
+                max-width: 6rem;
+                +portrait() {
+                    max-width: 4rem;
+                }
+                word-wrap: break-word;
+                text-transform: uppercase;
+                font-weight: bold;
+                font-size: 12px;
+                color: #fff;
+                align-text: center;
+            }
+        }
+    }
+    .landscape-bottom-buttons{
+        flex: 0;
+        display: inline-flex;
+        min-height: 5rem;
+        height: 5rem;
+        border: 2px solid #fff;
+        border-color:rgba(255, 255, 255, 0.5); 
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+
+        +portrait() {
+            display: none;
+        }
+    }
+
+    .portrait-bottom-buttons{
+        flex: 0;
+        display: inline-flex;
+        min-height: 4rem;
+        max-width: 100vw;
+        width: 90vw;
+        height: 4rem;
+        border: 2px solid #fff;
+        border-color:rgba(255, 255, 255, 0.5); 
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        padding-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        align-content: center;
+        align-items: stretch;
+        justify-content: stretch;
+
+
+        +landscape() {
+            display: none;
+        }
+
+        .left, .right {
+            display: inline-flex;
+            flex-direction: row;
+        }
+
+        .center {
+            flex: 1;
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 2rem;
+            overflow: hidden;
+        }
+    }
+
+    .portrait-top-spacer {
+        flex: 0;
+        height: 2rem;
+        min-height: 4rem;
+        max-height: 4rem;
+        text-align: center;
+
+        +portrait() {
+            display: none;
+        }
+    }
+
+    .lesson-title {
+        flex: 0;
+        display: inline-flex;
+        min-height: 3rem;
+        min-width: 30rem;
+        max-width: 80vw !important;
+        display: inline-flex;
+        justify-content: center;
+        height: 3rem;
+        padding-top: 0.5rem;
+        color: #fff;
+        font-size: 2rem;
+        font-weight: bold;
+
+        border: 2px solid #fff;
+        border-color:rgba(255, 255, 255, 0.5); 
+        border-bottom-left-radius: 2rem;
+        border-bottom-right-radius: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .explanation-text {
+        flex: 1;
+        color: #fff;
+
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 0.7rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 4rem;
+
+        p {
+            margin-top: 0;
+        }
+
+        +portrait() {
+            margin: 0;
+            overflow-y: scroll;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    .Racoon {
+        margin: 10%;
+    }
 }
+

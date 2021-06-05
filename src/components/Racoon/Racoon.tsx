@@ -15,15 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as React from "react";
+import { useState, useEffect } from "react";
 
-
-#LearnToPlay {
-    position: absolute;
-    background-color: #eee;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    text-align: center;
-    font-size: 2rem;
+export function Racoon():JSX.Element {
+    return (
+        <div className='Racoon'>
+            <div className='Racoon-svg' />
+        </div>
+    );
 }

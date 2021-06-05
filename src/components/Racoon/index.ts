@@ -15,15 +15,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-#LearnToPlay {
-    position: absolute;
-    background-color: #eee;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    text-align: center;
-    font-size: 2rem;
-}
+export * from "./Racoon";
