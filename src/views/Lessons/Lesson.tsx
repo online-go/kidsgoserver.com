@@ -27,13 +27,41 @@ import { Goban, GoMath, GobanConfig } from "goban";
 import { Racoon } from 'Racoon';
 import { Content } from './Content';
 import { chapters } from './chapters';
+import { PersistentElement } from 'PersistentElement';
 
-
-
-export function Lesson({content, chapter, page}:{content:Content, chapter:number, page:number}):JSX.Element {
+export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Element {
     //const id:number = parseInt(this.props.match?.params?.id);
-    const id = chapter * 100 + page;
-    let container = useRef<HTMLDivElement>(null);
+    let next = '/';
+    {
+        let next_page = page + 1;
+        let next_chapter = chapter;
+        if (next_page >= chapters[chapter].length) {
+            next_chapter += 1;
+            next_page = 0;
+        }
+        if (next_chapter >= chapters.length) {
+            next = '/';
+        } else {
+            next = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+        }
+    }
+    let back = '/';
+    {
+        let next_page = page - 1;
+        let next_chapter = chapter;
+        back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+        if (next_page < 0) {
+            if (next_chapter === 0) {
+                back = '/learn-to-play';
+            } else {
+                next_chapter -= 1;
+                next_page = chapters[next_chapter].length - 1;
+                back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+            }
+        }
+    }
+
+    let [container, setContainer] = useState(document.createElement("div"));
     let goban_ref = useRef<Goban>(null);
     let cancel_animation_ref = useRef<() => void>(() => {});
     let goban_opts_ref = useRef<any>({});
@@ -62,24 +90,24 @@ export function Lesson({content, chapter, page}:{content:Content, chapter:number
     });
 
 
+
     useEffect(() => {
+        console.log("Constructing game ", chapter, page);
+        let content = new chapters[chapter][page];
+
         let ct = 0;
 
         let animation = content.animate(() => {
             setText(content.text().substr(0, ct++));
-            return content.text().length > ct;
+            return content.text().length >= ct;
         }, 50);
         cancel_animation_ref.current = () => {
             animation.cancel();
             setText(content.text());
         };
-    }, [content]);
-
-    useEffect(() => {
-        console.log("Constructing game ", id);
 
         let opts:GobanConfig = Object.assign({
-            "board_div": container.current || undefined,
+            "board_div": container || undefined,
             "interactive": true,
             "mode": "puzzle",
             "width": 7,
@@ -98,14 +126,43 @@ export function Lesson({content, chapter, page}:{content:Content, chapter:number
                 return {"mode": "play"};
             },
 
-
         }, content.config()) as GobanConfig;
 
         goban_opts_ref.current = opts;
-        console.log(content.config());
+        console.log(opts);
+        console.log("BUILDING NEW GOBAN");
         goban_ref.current = new Goban(opts);
         let goban:Goban = goban_ref.current;
         content.setGoban(goban);
+        content.setNext(next);
+
+        goban.on("puzzle-correct-answer", () => {
+            console.log("CORRECT!");
+                /*
+                this.correct_answer_triggered = true;
+                sfx.play("tutorial-pass");
+                setTimeout(this.next, 1000);
+                this.instructional_goban.goban.disableStonePlacement();
+                this.forceUpdate();
+                 */
+            goban.disableStonePlacement();
+        });
+        goban.on("puzzle-wrong-answer", () => {
+            console.log("WRONG");
+                /*
+                this.wrong_answer_triggered = true;
+                sfx.play("tutorial-fail");
+                this.instructional_goban.goban.disableStonePlacement();
+                this.forceUpdate();
+                 */
+            goban.engine.place(-1, -1);
+            //goban.disableStonePlacement();
+        });
+        goban.on("error", () => {
+            console.log("ERROR");
+        });
+
+
         goban.setMode("puzzle");
         try {
             onResize(board_container_resizer.width, board_container_resizer.height);
@@ -137,26 +194,18 @@ export function Lesson({content, chapter, page}:{content:Content, chapter:number
         }, 10);
 
         return () => {
+            content.destroy();
+            console.log(`lesson ${chapter} ${page} teardown`);
             if (t) {
                 clearTimeout(t);
             }
-            goban.destroy();
+            goban_ref.current.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
-            console.log(`lesson ${id} teardown`);
             hup(Math.random());
-            setTimeout(() => {
-                console.log("Redrawing");
-                goban.redraw(true);
-            }, 1);
         };
-    }, [id, container]);
+    }, [chapter, page]);
 
-    useEffect(() => {
-        if (goban_ref.current && content) {
-            content.setGoban(goban_ref.current);
-        }
-    }, [goban_ref.current, content]);
 
     /*
     useEffect(() => {
@@ -168,35 +217,6 @@ export function Lesson({content, chapter, page}:{content:Content, chapter:number
         navigateTo('/');
     }
 
-    let next = '/';
-    {
-        let next_page = page + 1;
-        let next_chapter = chapter;
-        if (next_page >= chapters[chapter].length) {
-            next_chapter += 1;
-            next_page = 0;
-        }
-        if (next_chapter >= chapters.length) {
-            next = '/';
-        } else {
-            next = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
-        }
-    }
-    let back = '/';
-    {
-        let next_page = page - 1;
-        let next_chapter = chapter;
-        back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
-        if (next_page < 0) {
-            if (next_chapter === 0) {
-                back = '/learn-to-play';
-            } else {
-                next_chapter -= 1;
-                next_page = chapters[next_chapter].length - 1;
-                back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
-            }
-        }
-    }
 
     return (
         <>
@@ -218,7 +238,7 @@ export function Lesson({content, chapter, page}:{content:Content, chapter:number
                     <div id='board-container' ref={board_container_resizer.ref}>
                         <div className='Goban-container'>
                             <div className='Goban'>
-                                <div ref={container}></div>
+                                <PersistentElement elt={container} />
                             </div>
                         </div>
                     </div>

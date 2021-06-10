@@ -33,12 +33,17 @@ export function LessonRouter(props:{match:{params:{chapter: string, page: string
         page = 0;
     }
 
+    /*
     const [content, setContent] = React.useState<Content>(new chapters[chapter][page]);
 
     React.useEffect(() => {
-        content.destroy();
-        setContent(new chapters[chapter][page]);
+        let c = new chapters[chapter][page];
+        setContent(c);
+        return () =>{
+            c.destroy();
+        }
     }, [chapter, page]);
+    */
 
-    return <div><Lesson content={content} chapter={chapter} page={page} /></div>;
+    return <div><Lesson chapter={chapter} page={page} /></div>;
 }
