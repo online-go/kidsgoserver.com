@@ -34,6 +34,7 @@ class Page1 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'd4',
                 'white': ''
@@ -48,6 +49,7 @@ class Page2 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'd4',
                 'white': ''
@@ -60,6 +62,7 @@ class Page2 extends Module1 {
         this.delay(() => goban.setMarkByPrettyCoord("d3", "3"));
         this.delay(() => goban.setMarkByPrettyCoord("c4", "4"));
 
+
         // todo: stone smiles at end
     }
 }
@@ -70,6 +73,7 @@ class Page3 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'g7',
                 'white': ''
@@ -88,6 +92,7 @@ class Page4 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'd7',
                 'white': ''
@@ -107,6 +112,7 @@ class Page5 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': '',
                 'white': ''
@@ -131,6 +137,7 @@ class Page6 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'D4',
                 'white': ''
@@ -151,6 +158,7 @@ class Page7 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'D4',
                 'white': 'C4D3E4'
@@ -171,6 +179,7 @@ class Page8 extends Module1 {
     }
     config():PuzzleConfig {
         return {
+            'puzzle_player_move_mode': 'fixed',
             'initial_state': {
                 'black': 'D4',
                 'white': 'C4D3E4'
