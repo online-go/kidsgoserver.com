@@ -25,12 +25,19 @@ import { _, interpolate } from "translate";
 import { errorAlerter, ignore, navigateTo } from "misc";
 import { Goban, GoMath, GobanConfig } from "goban";
 import { Racoon } from 'Racoon';
+import { Content } from './Content';
+import { chapters } from './chapters';
 
-export function Lesson(props: any):JSX.Element {
-    const id:number = parseInt(props.match?.params?.id);
+
+
+export function Lesson({content, chapter, page}:{content:Content, chapter:number, page:number}):JSX.Element {
+    //const id:number = parseInt(this.props.match?.params?.id);
+    const id = chapter * 100 + page;
     let container = useRef<HTMLDivElement>(null);
     let goban_ref = useRef<Goban>(null);
+    let cancel_animation_ref = useRef<() => void>(() => {});
     let goban_opts_ref = useRef<any>({});
+    let [text, setText]: [string, (x:string) => void] = useState<string>("");
     let [_hup, hup]: [number, (x:number) => void] = useState<number>(Math.random());
     const onResize = useCallback((width, height) => {
         let goban = goban_ref.current;
@@ -54,27 +61,51 @@ export function Lesson(props: any):JSX.Element {
         refreshRate: 10,
     });
 
+
+    useEffect(() => {
+        let ct = 0;
+
+        let animation = content.animate(() => {
+            setText(content.text().substr(0, ct++));
+            return content.text().length > ct;
+        }, 50);
+        cancel_animation_ref.current = () => {
+            animation.cancel();
+            setText(content.text());
+        };
+    }, [content]);
+
     useEffect(() => {
         console.log("Constructing game ", id);
 
-        let opts:GobanConfig = {
+        let opts:GobanConfig = Object.assign({
             "board_div": container.current || undefined,
             "interactive": true,
             "mode": "puzzle",
-            "width": 9,
-            "height": 9,
+            "width": 7,
+            "height": 7,
             "draw_top_labels": false,
             "draw_right_labels": false,
             "draw_left_labels": false,
             "draw_bottom_labels": false,
             "player_id": 0,
             "server_socket": null,
-            //"square_size": 20
-        };
+            "square_size": "auto",
+
+            "puzzle_opponent_move_mode": "automatic",
+            "puzzle_player_move_mode": "free",
+            "getPuzzlePlacementSetting": () => {
+                return {"mode": "play"};
+            },
+
+
+        }, content.config()) as GobanConfig;
 
         goban_opts_ref.current = opts;
+        console.log(content.config());
         goban_ref.current = new Goban(opts);
         let goban:Goban = goban_ref.current;
+        content.setGoban(goban);
         goban.setMode("puzzle");
         try {
             onResize(board_container_resizer.width, board_container_resizer.height);
@@ -121,6 +152,12 @@ export function Lesson(props: any):JSX.Element {
         };
     }, [id, container]);
 
+    useEffect(() => {
+        if (goban_ref.current && content) {
+            content.setGoban(goban_ref.current);
+        }
+    }, [goban_ref.current, content]);
+
     /*
     useEffect(() => {
         console.log(board_container_resizer.width, board_container_resizer.height);
@@ -129,6 +166,36 @@ export function Lesson(props: any):JSX.Element {
 
     function quit() {
         navigateTo('/');
+    }
+
+    let next = '/';
+    {
+        let next_page = page + 1;
+        let next_chapter = chapter;
+        if (next_page >= chapters[chapter].length) {
+            next_chapter += 1;
+            next_page = 0;
+        }
+        if (next_chapter >= chapters.length) {
+            next = '/';
+        } else {
+            next = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+        }
+    }
+    let back = '/';
+    {
+        let next_page = page - 1;
+        let next_chapter = chapter;
+        back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+        if (next_page < 0) {
+            if (next_chapter === 0) {
+                back = '/learn-to-play';
+            } else {
+                next_chapter -= 1;
+                next_page = chapters[next_chapter].length - 1;
+                back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
+            }
+        }
     }
 
     return (
@@ -142,17 +209,8 @@ export function Lesson(props: any):JSX.Element {
                 <div id='Lesson-bottom-container'>
 
                     <div id='left-container'>
-                        <div className='explanation-text'>
-                            <p>
-                                Natus asperiores vel est rerum nihil quia. Quae
-                                molestias mollitia minus. Saepe suscipit nulla magni aut qui. Eum
-                                aperiam dolorem porro aut.
-                            </p>
-
-                            <p>
-                                Natus explicabo saepe laboriosam molestias labore. Dolor illum odit qui
-                                laudantium. Veritatis voluptatem debitis vel quia corrupti ad molestiae.
-                            </p>
+                        <div className='explanation-text' onClick={cancel_animation_ref.current}>
+                            {text}
                         </div>
                         <div className='bottom-graphic' />
                     </div>
@@ -167,16 +225,16 @@ export function Lesson(props: any):JSX.Element {
 
                     <div id='right-container'>
                         <div className='top-spacer' />
-                        <Racoon />
+                        <Racoon hover />
                         <div className='landscape-bottom-buttons'>
-                            <div className='game-button-container'>
+                            <Link to={back} className='game-button-container'>
                                 <span className='game-button'><i className='fa fa-arrow-circle-left' /></span>
                                 <span className='button-text'>Back</span>
-                            </div>
-                            <div className='game-button-container'>
+                            </Link>
+                            <Link to={next} className='game-button-container'>
                                 <span className='game-button'><i className='fa fa-arrow-circle-right' /></span>
                                 <span className='button-text'>next</span>
-                            </div>
+                            </Link>
                         </div>
                     </div>
 
@@ -186,10 +244,10 @@ export function Lesson(props: any):JSX.Element {
 
                 <div className='portrait-bottom-buttons'>
                     <div className='left'>
-                        <div className='game-button-container'>
+                        <Link to={back} className='game-button-container'>
                             <span className='game-button'><i className='fa fa-arrow-circle-left' /></span>
                             <span className='button-text'>Back</span>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className='center'>
@@ -197,10 +255,10 @@ export function Lesson(props: any):JSX.Element {
                     </div>
 
                     <div className='right'>
-                        <div className='game-button-container'>
+                        <Link to={next} className='game-button-container'>
                             <span className='game-button'><i className='fa fa-arrow-circle-right' /></span>
                             <span className='button-text'>Next</span>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>

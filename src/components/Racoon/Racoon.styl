@@ -15,6 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@keyframes hover {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-4px);}
+}
 
 .Racoon {
     flex: 1;
@@ -32,6 +36,11 @@
         display: inline-block;
         flex: 1;
         background-image: svg-load("../assets/avatars/racoon.svg");
+    }
+
+    &.hover {
+        animation: hover 4s infinite;
+        animation-timing-function: ease-in-out;
     }
     
 }

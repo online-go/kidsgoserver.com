@@ -23,7 +23,7 @@ import {_} from "translate";
 import { browserHistory } from './kidsgoHistory';
 
 import { LandingPage } from "LandingPage";
-import { Lesson } from "Lesson";
+import { LessonRouter } from "Lessons";
 import { Game } from "Game";
 import { LearnToPlay } from "LearnToPlay";
 import { ErrorBoundary } from "ErrorBoundary";
@@ -51,8 +51,8 @@ export const routes = (
     <Main>
         <Switch>
             <Route path="/game/:id" exact component={Game}/>
-            <Route path="/learn-to-play/:section/:page" exact component={Lesson}/>
-            <Route path="/learn-to-play/:section" exact component={Lesson}/>
+            <Route path="/learn-to-play/:chapter/:page" exact component={LessonRouter}/>
+            <Route path="/learn-to-play/:chapter" exact component={LessonRouter}/>
             <Route path="/learn-to-play" component={LearnToPlay} exact />
             <Route path="/" component={Default} exact />
             <Route path="/*" component={PageNotFound} />

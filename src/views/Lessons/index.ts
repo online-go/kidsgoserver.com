@@ -15,18 +15,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as React from "react";
-import { useState, useEffect } from "react";
-
-interface RacoonProperties {
-    hover?:boolean;
-}
-
-
-export function Racoon(props:RacoonProperties):JSX.Element {
-    return (
-        <div className={`Racoon ${props.hover ? "hover" : ""}`}>
-            <div className='Racoon-svg' />
-        </div>
-    );
-}
+export * from "./LessonRouter";

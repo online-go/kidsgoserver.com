@@ -15,4 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./Lesson";
+
+import { Content } from './Content';
+import { module1 } from './Module1';
+
+export const chapters:Array<Array<typeof Content>> = [
+    module1
+];
