@@ -29,8 +29,12 @@ class Module1 extends Content {
 
 
 class Page1 extends Module1 {
-    text():string {
-        return "In Go, we place stones on the lines, not in the squares!  Black goes first, followed by white.  Stones stay on the board once placed and don’t move (unless they are captured).";
+    text():JSX.Element | Array<JSX.Element> {
+        return [
+            <span>In Go, we place stones on the lines, not in the squares!</span>,
+            <span>Black goes first, followed by white.</span>,
+            <span>Stones stay on the board once placed and don’t move (unless they are captured).</span>,
+        ];
     }
     config():PuzzleConfig {
         return {
@@ -44,8 +48,10 @@ class Page1 extends Module1 {
 }
 
 class Page2 extends Module1 {
-    text():string {
-        return "The spaces next to the stones are important, we call them Liberties. This stone has four liberties.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>The spaces next to the stones are important, we call them Liberties. This stone has four liberties.</p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -68,8 +74,12 @@ class Page2 extends Module1 {
 }
 
 class Page3 extends Module1 {
-    text():string {
-        return "There are no liberties off the edge of the board, so this stone only has two liberties.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            There are no liberties off the edge of the board, so this stone only has two liberties.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -87,8 +97,12 @@ class Page3 extends Module1 {
 }
 
 class Page4 extends Module1 {
-    text():string {
-        return "And this stone only has three";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            And this stone only has three
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -107,8 +121,12 @@ class Page4 extends Module1 {
 }
 
 class Page5 extends Module1 {
-    text():string {
-        return "Stones that touch each other are friends, they get to share their liberties and play as a team!";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+                Stones that touch each other are friends, they get to share their liberties and play as a team!
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -132,8 +150,12 @@ class Page5 extends Module1 {
 }
 
 class Page6 extends Module1 {
-    text():string {
-        return "If the other player surrounds 3 out of 4 liberties, we say the stone is in Atari, which means it can be captured on the next turn.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            If the other player surrounds 3 out of 4 liberties, we say the stone is in Atari, which means it can be captured on the next turn.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -153,8 +175,15 @@ class Page6 extends Module1 {
 }
 
 class Page7 extends Module1 {
-    text():string {
-        return "If we add a stone, then they become team players and get new liberties. Now they have three liberties and are safe from being captured!";
+    text():JSX.Element | Array<JSX.Element> {
+        return [
+            <p>
+                If we add a stone, then they become team players and get new liberties.
+            </p>,
+            <p>
+                Now they have three liberties and are safe from being captured!
+            </p>
+        ];
     }
     config():PuzzleConfig {
         return {
@@ -174,8 +203,12 @@ class Page7 extends Module1 {
 }
 
 class Page8 extends Module1 {
-    text():string {
-        return "If black goes somewhere else though, then white can capture the stone and remove it from the board";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            If black goes somewhere else though, then white can capture the stone and remove it from the board
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -193,8 +226,12 @@ class Page8 extends Module1 {
 }
 
 class Puzzle1 extends Module1 {
-    text():string {
-        return "Lets try some simple problems now. Try and capture the White stone.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            Lets try some simple problems now. Try and capture the White stone.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -221,8 +258,12 @@ class Puzzle1 extends Module1 {
 }
 
 class Puzzle2 extends Module1 {
-    text():string {
-        return "Lets try another problem now. Try and capture the White stone.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            Try and capture the White stone.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -248,8 +289,12 @@ class Puzzle2 extends Module1 {
 }
 
 class Puzzle3 extends Module1 {
-    text():string {
-        return "Lets try another problem now. Try and capture the White stones.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            Try and capture the White stones.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {
@@ -277,8 +322,12 @@ class Puzzle3 extends Module1 {
 }
 
 class Puzzle4 extends Module1 {
-    text():string {
-        return "Lets try another problem now. Try and capture the White stones.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            Try and capture the White stones.
+            </p>
+        );
     }
     config():PuzzleConfig {
         return {

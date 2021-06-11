@@ -35,8 +35,12 @@ export class Content {
     constructor() {
     }
 
-    text():string {
-        return "Natus asperiores vel est rerum nihil quia. Quae molestias mollitia minus. Saepe suscipit nulla magni aut qui. Eum aperiam dolorem porro aut.";
+    text():JSX.Element | Array<JSX.Element> {
+        return (
+            <p>
+            Natus asperiores vel est rerum nihil quia. Quae molestias mollitia minus. Saepe suscipit nulla magni aut qui. Eum aperiam dolorem porro aut.
+            </p>
+        );
     }
 
     destroy():void {

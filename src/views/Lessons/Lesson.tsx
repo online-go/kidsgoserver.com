@@ -65,7 +65,7 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
     let goban_ref = useRef<Goban>(null);
     let cancel_animation_ref = useRef<() => void>(() => {});
     let goban_opts_ref = useRef<any>({});
-    let [text, setText]: [string, (x:string) => void] = useState<string>("");
+    let [text, setText]: [Array<JSX.Element>, (x:Array<JSX.Element>) => void] = useState<Array<JSX.Element>>([]);
     let [_hup, hup]: [number, (x:number) => void] = useState<number>(Math.random());
     const onResize = useCallback((width, height) => {
         let goban = goban_ref.current;
@@ -97,13 +97,15 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
 
         let ct = 0;
 
+        let target_text:Array<JSX.Element> = (Array.isArray(content.text()) ? content.text() : [content.text()]) as Array<JSX.Element>;
+
         let animation = content.animate(() => {
-            setText(content.text().substr(0, ct++));
-            return content.text().length >= ct;
-        }, 50);
+            setText(target_text.slice(0, ct++));
+            return target_text.length >= ct;
+        }, 500);
         cancel_animation_ref.current = () => {
             animation.cancel();
-            setText(content.text());
+            setText(target_text);
         };
 
         let opts:GobanConfig = Object.assign({
@@ -230,7 +232,9 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
 
                     <div id='left-container'>
                         <div className='explanation-text' onClick={cancel_animation_ref.current}>
-                            {text}
+                            {text.map((e, idx) => (
+                                <div className='fade-in' key={idx}>{e}</div>
+                            ))}
                         </div>
                         <div className='bottom-graphic' />
                     </div>

@@ -17,6 +17,13 @@
 
 
 
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+
+
+
 #Lesson {
     position: absolute;
     top: 0;
@@ -369,6 +376,11 @@
 
     a {
         text-decoration: none;
+    }
+
+    .fade-in {
+        display: inline-block;
+        animation: fadeIn linear 3s;
     }
 }
 
