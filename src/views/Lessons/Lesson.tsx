@@ -215,11 +215,6 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
     }, [board_container_resizer.width, board_container_resizer.height]);
     */
 
-    function quit() {
-        navigateTo('/');
-    }
-
-
     return (
         <>
             <div id='Lesson' className='bg-earth'>
@@ -252,11 +247,11 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
                         <Racoon hover />
                         <div className='landscape-bottom-buttons'>
                             <Link to={back} className='game-button-container'>
-                                <span className='game-button'><i className='fa fa-arrow-circle-left' /></span>
+                                <span className='stone-button-left' />
                                 <span className='button-text'>Back</span>
                             </Link>
                             <Link to={next} className='game-button-container'>
-                                <span className='game-button'><i className='fa fa-arrow-circle-right' /></span>
+                                <span className='stone-button-right' />
                                 <span className='button-text'>next</span>
                             </Link>
                         </div>
@@ -269,7 +264,7 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
                 <div className='portrait-bottom-buttons'>
                     <div className='left'>
                         <Link to={back} className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-arrow-circle-left' /></span>
+                            <span className='stone-button-left' />
                             <span className='button-text'>Back</span>
                         </Link>
                     </div>
@@ -280,7 +275,7 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
 
                     <div className='right'>
                         <Link to={next} className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-arrow-circle-right' /></span>
+                            <span className='stone-button-right' />
                             <span className='button-text'>Next</span>
                         </Link>
                     </div>
@@ -288,7 +283,7 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             </div>
 
             <div id='quit'>
-                <i className='fa fa-times-circle' onClick={quit} />
+                <Link to='/learn-to-play'><span className='stone-button-x' /></Link>
             </div>
             <div id='menu'>
                 <i className='fa fa-ellipsis-h' />

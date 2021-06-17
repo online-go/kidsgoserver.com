@@ -145,12 +145,12 @@ export function Game(props: any):JSX.Element {
                     <Captures />
                     <div className='landscape-bottom-buttons'>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-undo' /></span>
+                            <span className='stone-button-return' />
                             <span className='button-text'>Undo</span>
                         </div>
 
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-comment' /></span>
+                            <span className='stone-button-chat' />
                             <span className='button-text'>Chat</span>
                         </div>
                     </div>
@@ -171,11 +171,11 @@ export function Game(props: any):JSX.Element {
                     <Bowl />
                     <div className='landscape-bottom-buttons'>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-arrow-circle-up' /></span>
+                            <span className='stone-button-up' />
                             <span className='button-text'>Pass</span>
                         </div>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-flag' /></span>
+                            <span className='stone-button-flag' />
                             <span className='button-text'>Resign</span>
                         </div>
                     </div>
@@ -186,12 +186,12 @@ export function Game(props: any):JSX.Element {
                 <div className='portrait-bottom-buttons'>
                     <div className='left'>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-undo' /></span>
+                            <span className='stone-button-return' />
                             <span className='button-text'>Undo</span>
                         </div>
 
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-comment' /></span>
+                            <span className='stone-button-chat' />
                             <span className='button-text'>Chat</span>
                         </div>
                     </div>
@@ -202,11 +202,11 @@ export function Game(props: any):JSX.Element {
 
                     <div className='right'>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-arrow-circle-up' /></span>
+                            <span className='stone-button-up' />
                             <span className='button-text'>Pass</span>
                         </div>
                         <div className='game-button-container'>
-                            <span className='game-button'><i className='fa fa-flag' /></span>
+                            <span className='stone-button-flag' />
                             <span className='button-text'>Resign</span>
                         </div>
                     </div>
@@ -214,7 +214,7 @@ export function Game(props: any):JSX.Element {
             </div>
 
             <div id='quit'>
-                <i className='fa fa-times-circle' onClick={quit} />
+                <span className='stone-button-x' onClick={quit} />
             </div>
             <div id='menu'>
                 <i className='fa fa-ellipsis-h' />
