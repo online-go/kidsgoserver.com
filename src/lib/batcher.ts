@@ -37,8 +37,8 @@ export class Batcher<T> {
     }
 
     private perform = () => {
-        let values = this.values;
+        const values = this.values;
         this.values = [];
         this.action(values);
-    }
+    };
 }

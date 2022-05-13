@@ -17,11 +17,10 @@
 
 import * as React from "react";
 
-
-export function Captures():JSX.Element {
+export function Captures(): JSX.Element {
     return (
-        <div className='Captures'>
-            <div className='Captures-svg'></div>
+        <div className="Captures">
+            <div className="Captures-svg"></div>
         </div>
     );
 }

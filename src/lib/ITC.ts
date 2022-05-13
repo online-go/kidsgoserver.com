@@ -16,9 +16,9 @@
  */
 
 /* Inter tab communications library */
-import {comm_socket} from "sockets";
+import { comm_socket } from "sockets";
 
-let registrations = {};
+const registrations = {};
 
 comm_socket.on("itc", (obj) => {
     if (obj.event in registrations) {
@@ -36,6 +36,6 @@ export default {
         registrations[event].push(cb);
     },
     send: (event, data) => {
-        comm_socket.send("itc", {"event": event, "data": data});
-    }
+        comm_socket.send("itc", { event: event, data: data });
+    },
 };

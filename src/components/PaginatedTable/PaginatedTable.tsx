@@ -16,9 +16,9 @@
  */
 
 import * as React from "react";
-import {_, pgettext, interpolate} from "translate";
-import {post, get} from "requests";
-import {deepCompare} from "misc";
+import { _, pgettext, interpolate } from "translate";
+import { post, get } from "requests";
+import { deepCompare } from "misc";
 import * as data from "data";
 
 interface PaginatedTableColumnProperties {
@@ -45,7 +45,7 @@ interface PaginatedTableProperties {
     className: string;
     filter?: any;
     orderBy?: Array<string>;
-    groom?: ((data: Array<any>) => Array<any>);
+    groom?: (data: Array<any>) => Array<any>;
     onRowClick?: (row, ev) => any;
     debug?: boolean;
     pageSizeOptions?: Array<number>;
@@ -78,7 +78,10 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
 
     componentDidMount() {
         this.setState({
-            page_size: this.props.pageSize || (this.props.name ? data.get(`paginated-table.${this.props.name}.page_size`) : 0) || 10,
+            page_size:
+                this.props.pageSize ||
+                (this.props.name ? data.get(`paginated-table.${this.props.name}.page_size`) : 0) ||
+                10,
         });
         this.filter = this.props.filter || {};
         this.update_source();
@@ -93,51 +96,49 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
     }
 
     update_source = () => {
-        if (typeof(this.props.source) === "string") {
+        if (typeof this.props.source === "string") {
             this.source_url = this.props.source as string;
             this.source_method = this.props.method || "get";
             this.source_function = this.ajax_loader.bind(this);
         } else {
             this.source_function = this.props.source as SourceFunction;
         }
-    }
+    };
 
     shouldComponentUpdate(nextProps, nextState) {
         return !deepCompare(this.props, nextProps) || !deepCompare(this.state, nextState);
     }
 
-    setPageSize(n: number|string) {
-        let old_page_size = this.state.page_size;
-        let page_size = parseInt(n + "");
+    setPageSize(n: number | string) {
+        const old_page_size = this.state.page_size;
+        const page_size = parseInt(n + "");
         if (this.props.name) {
             data.set(`paginated-table.${this.props.name}.page_size`, page_size);
         }
-        this.setState({page_size: page_size});
+        this.setState({ page_size: page_size });
         this.setPage(Math.max(0, ((this.state.page - 1) * old_page_size) / page_size) + 1, true);
     }
 
     ajax_loader(filter: any, sorting: Array<string>): Promise<any> {
-        let query = {
+        const query = {
             page_size: this.state.page_size,
             page: this.state.page,
         };
-        for (let k in filter) {
+        for (const k in filter) {
             if (
-                (
-                    (k.indexOf("__istartswith") > 0) ||
-                    (k.indexOf("__startswith") > 0) ||
-                    (k.indexOf("__icontains") > 0) ||
-                    (k.indexOf("__contains") > 0)
-                )
-                && filter[k] === ""
-           ) {
-               continue;
-           }
+                (k.indexOf("__istartswith") > 0 ||
+                    k.indexOf("__startswith") > 0 ||
+                    k.indexOf("__icontains") > 0 ||
+                    k.indexOf("__contains") > 0) &&
+                filter[k] === ""
+            ) {
+                continue;
+            }
 
             query[k] = filter[k];
         }
         //console.log(query);
-        let order_by = (this.state.orderBy ? this.state.orderBy : (sorting || []));
+        const order_by = this.state.orderBy ? this.state.orderBy : sorting || [];
 
         if (order_by.length) {
             query["ordering"] = order_by.join(",");
@@ -147,7 +148,6 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
         }
         return post(this.source_url, query); // TODO: Check the URLs and typify the result again
     }
-
 
     needs_another_update: boolean = false;
     filter_updated() {
@@ -167,75 +167,77 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
         this.updating = true;
         this.needs_another_update = false;
         this.source_function(this.filter, this.sorting)
-        .then((res) => {
-            let new_rows = this.props.groom ? this.props.groom(res.results || []) : res.results || [];
+            .then((res) => {
+                const new_rows = this.props.groom
+                    ? this.props.groom(res.results || [])
+                    : res.results || [];
 
-            if (this.props.debug) {
-                console.debug("PaginatedTable groomed rows: ", new_rows);
-            }
+                if (this.props.debug) {
+                    console.debug("PaginatedTable groomed rows: ", new_rows);
+                }
 
-            this.updating = false;
-            this.setState({
-                total: res.count,
-                rows: new_rows,
-                num_pages:  Math.ceil(res.count / this.state.page_size),
+                this.updating = false;
+                this.setState({
+                    total: res.count,
+                    rows: new_rows,
+                    num_pages: Math.ceil(res.count / this.state.page_size),
+                });
+
+                if (this.needs_another_update) {
+                    this.update();
+                }
+            })
+            .catch((err) => {
+                this.updating = false;
+                console.error(err.stack);
+
+                if (this.needs_another_update) {
+                    this.update();
+                }
             });
-
-            if (this.needs_another_update) {
-                this.update();
-            }
-        })
-        .catch((err) => {
-            this.updating = false;
-            console.error(err.stack);
-
-            if (this.needs_another_update) {
-                this.update();
-            }
-        });
     }
 
-    setPage(n: number|string, skip_bounds_check?: boolean) {
+    setPage(n: number | string, skip_bounds_check?: boolean) {
         let page = parseInt(n + "");
         if (!skip_bounds_check) {
             page = Math.max(1, Math.min(page, this.state.num_pages));
         }
         this.setState({
-            page: page
+            page: page,
         });
         setTimeout(() => this.update(), 1);
     }
 
     _setPageSize = (ev) => {
         this.setPageSize(parseInt(ev.target.value));
-    }
+    };
 
     _setPage = (ev) => {
         if ((ev.target as any).value === "") {
-            this.setState({page: ""});
+            this.setState({ page: "" });
             return;
         }
-        let n = parseInt(ev.target.value);
+        const n = parseInt(ev.target.value);
         this.setPage(n);
-    }
+    };
     _select = (ev) => {
         $(ev.target).select();
-    }
+    };
 
     _sort = (order_by) => {
         if (this.ordersMatch(order_by, this.state.orderBy)) {
             order_by = this.reverseOrder(this.state.orderBy);
         }
         this.setState({
-            orderBy: order_by
+            orderBy: order_by,
         });
         setTimeout(() => this.update(), 1);
-    }
+    };
 
     ordersMatch(order1, order2) {
         let match = true;
         if (order1.length === order2.length) {
-            for (let i in order1) {
+            for (const i in order1) {
                 if (order1[i].replace("-", "") !== order2[i].replace("-", "")) {
                     match = false;
                     break;
@@ -248,8 +250,8 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
     }
 
     reverseOrder(order) {
-        let new_order_by = [];
-        for (let str of order) {
+        const new_order_by = [];
+        for (const str of order) {
             new_order_by.push(str.indexOf("-") === 0 ? str.substr(1) : "-" + str);
         }
         return new_order_by;
@@ -261,7 +263,7 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
             let clsName = "";
             if (this.ordersMatch(this.state.orderBy, order)) {
                 let minus = false;
-                for (let o of this.state.orderBy) {
+                for (const o of this.state.orderBy) {
                     if (o.indexOf("-") === 0) {
                         minus = true;
                         break;
@@ -271,7 +273,11 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
             } else {
                 clsName = "fa fa-sort";
             }
-            el = (<a className="sort-link">{header} <i className={clsName}/></a>);
+            el = (
+                <a className="sort-link">
+                    {header} <i className={clsName} />
+                </a>
+            );
         } else {
             el = header;
         }
@@ -283,24 +289,24 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
             if (!column.className) {
                 return "";
             }
-            if (typeof(column.className) === "function") {
+            if (typeof column.className === "function") {
                 return column.className(row, column);
             }
             return column.className;
         }
 
         function column_render(column, row): string {
-            if (typeof(column.render) === "function") {
+            if (typeof column.render === "function") {
                 return column.render(row);
             }
             return column.render;
         }
 
-        let extra_classes = [
+        const extra_classes = [
             this.props.className || "",
             this.props.onRowClick ? "clickable-rows" : "",
         ].join(" ");
-        let page_sizes = this.props.pageSizeOptions || [10, 25, 50];
+        const page_sizes = this.props.pageSizeOptions || [10, 25, 50];
         if (this.props.pageSize) {
             if (page_sizes.indexOf(this.props.pageSize) < 0) {
                 page_sizes.push(this.props.pageSize);
@@ -308,59 +314,106 @@ export class PaginatedTable extends React.Component<PaginatedTableProperties, an
         }
         page_sizes.sort();
 
-        let columns = this.props.columns.filter((c) => !!c);
-        let ncols = columns.length;
+        const columns = this.props.columns.filter((c) => !!c);
+        const ncols = columns.length;
 
-        let blank_rows = [];
+        const blank_rows = [];
         if (this.props.fillBlankRows) {
             for (let i = 0; i < this.state.page_size - this.state.rows.length; ++i) {
-                blank_rows.push(<tr key={"blank-" + i}><td className="blank" colSpan={ncols} /></tr>);
+                blank_rows.push(
+                    <tr key={"blank-" + i}>
+                        <td className="blank" colSpan={ncols} />
+                    </tr>,
+                );
             }
         }
-
 
         return (
             <div className={"PaginatedTable " + extra_classes}>
                 <table className={extra_classes}>
                     <thead>
                         <tr>
-                            {columns.map((column, idx) => <th key={idx} className={cls(null, column)} {...column.headerProps} onClick={column.orderBy ? () => {this._sort(column.orderBy); } : null}>{this.getHeader(column.orderBy, column.header)}</th>)}
+                            {columns.map((column, idx) => (
+                                <th
+                                    key={idx}
+                                    className={cls(null, column)}
+                                    {...column.headerProps}
+                                    onClick={
+                                        column.orderBy
+                                            ? () => {
+                                                  this._sort(column.orderBy);
+                                              }
+                                            : null
+                                    }
+                                >
+                                    {this.getHeader(column.orderBy, column.header)}
+                                </th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.rows.map((row, i) => {
-                            let cols = columns.map((column, idx) => (
-                                <td key={idx} className={cls(row, column)} {...column.cellProps}>{column_render(column, row)}</td>
+                            const cols = columns.map((column, idx) => (
+                                <td key={idx} className={cls(row, column)} {...column.cellProps}>
+                                    {column_render(column, row)}
+                                </td>
                             ));
                             if (this.props.onRowClick) {
-                                return (<tr key={row.id} onMouseUp={(ev) => this.props.onRowClick(row, ev)}>{cols}</tr>);
+                                return (
+                                    <tr
+                                        key={row.id}
+                                        onMouseUp={(ev) => this.props.onRowClick(row, ev)}
+                                    >
+                                        {cols}
+                                    </tr>
+                                );
                             } else {
-                                return (<tr key={row.id}>{cols}</tr>);
+                                return <tr key={row.id}>{cols}</tr>;
                             }
                         })}
                         {blank_rows}
                     </tbody>
                 </table>
-                {(!this.props.hidePageControls || null) &&
+                {(!this.props.hidePageControls || null) && (
                     <div className="page-controls">
                         <div className="left">
-                            {this.state.page > 1 ? <i className="fa fa-step-backward" onClick={() => this.setPage(this.state.page - 1)}/> : <i className="fa"/>}
+                            {this.state.page > 1 ? (
+                                <i
+                                    className="fa fa-step-backward"
+                                    onClick={() => this.setPage(this.state.page - 1)}
+                                />
+                            ) : (
+                                <i className="fa" />
+                            )}
                             <input
                                 onChange={this._setPage}
                                 onFocus={this._select}
-                                value={this.state.page}/>
-                                <span className="of"> /  </span><span className="total">{this.state.num_pages}</span>
-                            {this.state.page < this.state.num_pages ? <i className="fa fa-step-forward" onClick={() => this.setPage(this.state.page + 1)}/> : <i className="fa"/>}
+                                value={this.state.page}
+                            />
+                            <span className="of"> / </span>
+                            <span className="total">{this.state.num_pages}</span>
+                            {this.state.page < this.state.num_pages ? (
+                                <i
+                                    className="fa fa-step-forward"
+                                    onClick={() => this.setPage(this.state.page + 1)}
+                                />
+                            ) : (
+                                <i className="fa" />
+                            )}
                         </div>
                         <div className="right">
-                            {(page_sizes.length > 1 || null) &&
+                            {(page_sizes.length > 1 || null) && (
                                 <select onChange={this._setPageSize} value={this.state.page_size}>
-                                    {page_sizes.map((v, idx) => <option key={idx} value={v}>{v}</option>)}
+                                    {page_sizes.map((v, idx) => (
+                                        <option key={idx} value={v}>
+                                            {v}
+                                        </option>
+                                    ))}
                                 </select>
-                            }
+                            )}
                         </div>
                     </div>
-                }
+                )}
             </div>
         );
     }

@@ -17,11 +17,10 @@
 
 import * as React from "react";
 
-
-export function Bowl():JSX.Element {
+export function Bowl(): JSX.Element {
     return (
-        <div className='Bowl'>
-            <div className='Bowl-svg'></div>
+        <div className="Bowl">
+            <div className="Bowl-svg"></div>
         </div>
     );
 }

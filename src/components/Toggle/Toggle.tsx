@@ -16,11 +16,11 @@
  */
 
 import * as React from "react";
-import Switch from 'react-switch';
+import Switch from "react-switch";
 
 interface ToggleProps {
     checked: boolean;
-    onChange: (checked: boolean, event:any, id: string) => void;
+    onChange: (checked: boolean, event: any, id: string) => void;
 
     width?: number;
     height?: number;
@@ -31,17 +31,10 @@ interface ToggleProps {
     className?: string;
 }
 
-export function Toggle(props:ToggleProps):JSX.Element {
+export function Toggle(props: ToggleProps): JSX.Element {
     return (
-        <span className={'Toggle ' + (props.checked ? 'on' : 'off')}>
-            <Switch
-                height={20}
-                width={48}
-                checkedIcon={false}
-                uncheckedIcon={false}
-                {...props}
-            />
+        <span className={"Toggle " + (props.checked ? "on" : "off")}>
+            <Switch height={20} width={48} checkedIcon={false} uncheckedIcon={false} {...props} />
         </span>
     );
-
 }

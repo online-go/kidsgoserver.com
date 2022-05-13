@@ -15,59 +15,62 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "whatwg-fetch"; /* polyfills window.fetch */
-import * as Sentry from '@sentry/browser';
-import * as SentryTracing from '@sentry/tracing';
-import { configure_goban } from 'configure-goban';
-import { GoMath, init_score_estimator, set_remote_scorer, ScoreEstimateRequest, ScoreEstimateResponse } from 'goban';
-import { sfx } from 'sfx';
-import { post } from 'requests';
-import { ai_host } from 'sockets';
+import * as Sentry from "@sentry/browser";
+import * as SentryTracing from "@sentry/tracing";
+import { configure_goban } from "configure-goban";
+import {
+    GoMath,
+    init_score_estimator,
+    set_remote_scorer,
+    ScoreEstimateRequest,
+    ScoreEstimateResponse,
+} from "goban";
+import { sfx } from "sfx";
+import { post } from "requests";
+import { ai_host } from "sockets";
 sfx.sync();
 
-import * as hacks from 'hacks';
+import * as hacks from "hacks";
 
-declare var kidsgo_current_language;
-declare var kidsgo_language_version;
-declare var kidsgo_version;
+declare let kidsgo_current_language;
+declare let kidsgo_version;
 
 let sentry_env = "production";
 
-if (/online-(go|baduk|weiqi|covay|igo).(com|net)$/.test(document.location.host) && !(/dev/.test(document.location.host))) {
+if (
+    /online-(go|baduk|weiqi|covay|igo).(com|net)$/.test(document.location.host) &&
+    !/dev/.test(document.location.host)
+) {
     sentry_env = "production";
     if (/beta/.test(document.location.host)) {
         sentry_env = "beta";
     }
-}  else {
+} else {
     sentry_env = "development";
 }
 
 try {
     Sentry.init({
-        dsn: 'https://55abcdda52904d7cb3456070c0f6acc1@o589780.ingest.sentry.io/5797436',
-        release: kidsgo_version || 'dev',
+        dsn: "https://55abcdda52904d7cb3456070c0f6acc1@o589780.ingest.sentry.io/5797436",
+        release: kidsgo_version || "dev",
         tracesSampleRate: 1,
-        whitelistUrls: [
-            'kidsgoserver.com',
-            'beta.kidsgoserver.com',
-            'dev.beta.kidsgoserver.com'
-        ],
+        whitelistUrls: ["kidsgoserver.com", "beta.kidsgoserver.com", "dev.beta.kidsgoserver.com"],
         environment: sentry_env,
         integrations: [
             new Sentry.Integrations.GlobalHandlers({
                 onerror: true,
-                onunhandledrejection: false
+                onunhandledrejection: false,
             }),
             new Sentry.Integrations.Breadcrumbs({
-                console: false
+                console: false,
             }),
             new SentryTracing.Integrations.BrowserTracing(),
-        ]
+        ],
     });
 
-    Sentry.setTag("version", kidsgo_version || 'dev');
-    Sentry.setExtra("language", kidsgo_current_language || 'unknown');
-    Sentry.setExtra("version", kidsgo_version || 'dev');
+    Sentry.setTag("version", kidsgo_version || "dev");
+    Sentry.setExtra("language", kidsgo_current_language || "unknown");
+    Sentry.setExtra("version", kidsgo_version || "dev");
 } catch (e) {
     console.error(e);
 }
@@ -92,57 +95,51 @@ try {
     data.setDefault("theme", "light");
 }
 data.setDefault("config", {
-    "user": {
-        "anonymous": true,
-        "id": 0,
-        "username": "Guest",
-        "ranking": -100,
-        "country": "un",
-        "pro": 0,
-    }
+    user: {
+        anonymous: true,
+        id: 0,
+        username: "Guest",
+        ranking: -100,
+        country: "un",
+        pro: 0,
+    },
 });
 data.setDefault("config.user", {
-    "anonymous": true,
-    "id": 0,
-    "username": "Guest",
-    "ranking": -100,
-    "country": "un",
-    "pro": 0,
+    anonymous: true,
+    id: 0,
+    username: "Guest",
+    ranking: -100,
+    country: "un",
+    pro: 0,
 });
 
-data.setDefault('config.cdn', window['cdn_service']);
-data.setDefault('config.cdn_host', window['cdn_service'].replace('https://', '').replace('http://', '').replace('//', ''));
-data.setDefault('config.cdn_release', window['cdn_service'] + '/' + window['kidsgo_release']);
-data.setDefault('config.release', window['kidsgo_release']);
+data.setDefault("config.cdn", window["cdn_service"]);
+data.setDefault(
+    "config.cdn_host",
+    window["cdn_service"].replace("https://", "").replace("http://", "").replace("//", ""),
+);
+data.setDefault("config.cdn_release", window["cdn_service"] + "/" + window["kidsgo_release"]);
+data.setDefault("config.release", window["kidsgo_release"]);
 
 configure_goban();
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { browserHistory } from './kidsgoHistory';
 import { routes } from "./kidsgo-routes";
 
 //import {Promise} from "es6-promise";
-import {get} from "requests";
-import {errorAlerter, uuid} from "misc";
-import {close_all_popovers} from "popover";
+import { errorAlerter, uuid } from "misc";
 import * as sockets from "sockets";
-import {_} from "translate";
-import {init_tabcomplete} from "tabcomplete";
+import { _ } from "translate";
 import * as player_cache from "player_cache";
-import {toast} from 'toast';
-import cached from 'cached';
-import * as moment from 'moment';
+import { toast } from "toast";
+import cached from "cached";
 
 import "debug";
 
 declare const swal;
 
-
 /*** Initialize moment in our current language ***/
-declare function getPreferredLanguage();
-moment.locale(getPreferredLanguage());
-
 
 /*** Load our config ***/
 data.watch(cached.config, (config) => {
@@ -150,10 +147,10 @@ data.watch(cached.config, (config) => {
      * again to do the emits that we are expecting. Otherwise triggers
      * that are depending on other parts of the config will fire without
      * having up to date information (in particular user / auth stuff) */
-    for (let key in config) {
+    for (const key in config) {
         data.setWithoutEmit(`config.${key}`, config[key]);
     }
-    for (let key in config) {
+    for (const key in config) {
         data.set(`config.${key}`, config[key]);
     }
 });
@@ -162,8 +159,8 @@ let last_username: string | null = null;
 data.watch("config.user", (user) => {
     try {
         Sentry.setUser({
-            'id': user.id,
-            'username': user.username,
+            id: user.id,
+            username: user.username,
         });
     } catch (e) {
         console.error(e);
@@ -184,7 +181,7 @@ data.watch("config.user", (user) => {
  * Setup a device UUID so we can logout other *devices* and not all other
  * tabs with our new logout-other-devices button
  */
-data.set('device.uuid', data.get('device.uuid', uuid()));
+data.set("device.uuid", data.get("device.uuid", uuid()));
 
 /*** SweetAlert setup ***/
 swal.setDefaults({
@@ -198,25 +195,27 @@ swal.setDefaults({
     //focusCancel: true,
 });
 
-
 /***
  * Test if local storage is disabled for some reason (Either because the user
  * turned it off, the browser doesn't support it, or because the user is using
  * Safari in private browsing mode which implicitly disables the feature.)
  */
 try {
-    localStorage.setItem('localstorage-test', "true");
+    localStorage.setItem("localstorage-test", "true");
 } catch (e) {
     toast(
         <div>
-            {_("It looks like localStorage is disabled on your browser. Unfortunately you won't be able to sign in without enabling it first.")}
-        </div>
+            {_(
+                "It looks like localStorage is disabled on your browser. Unfortunately you won't be able to sign in without enabling it first.",
+            )}
+        </div>,
     );
 }
 
-
 /** Connect to the chat service */
-let auth_connect_fn = () => {return; };
+let auth_connect_fn = () => {
+    return;
+};
 data.watch("config.user", (user) => {
     /*
     if (!user.anonymous) {
@@ -241,59 +240,59 @@ data.watch("config.user", (user) => {
         };
     } else if (user.id < 0) {
     */
-        auth_connect_fn = (): void => {
-            sockets.comm_socket.send("chat/connect", {
-                player_id: user.id,
-                ranking: user.ranking,
-                username: user.username,
-                ui_class: user.ui_class,
-            });
-        };
+    auth_connect_fn = (): void => {
+        sockets.comm_socket.send("chat/connect", {
+            player_id: user.id,
+            ranking: user.ranking,
+            username: user.username,
+            ui_class: user.ui_class,
+        });
+    };
     //}
     if (sockets.comm_socket.connected) {
         auth_connect_fn();
     }
 });
-sockets.comm_socket.on("connect", () => {auth_connect_fn(); });
+sockets.comm_socket.on("connect", () => {
+    auth_connect_fn();
+});
 
 /*** Setup remote score estimation */
 set_remote_scorer(remote_score_estimator);
-function remote_score_estimator(req:ScoreEstimateRequest):Promise<ScoreEstimateResponse> {
+function remote_score_estimator(req: ScoreEstimateRequest): Promise<ScoreEstimateResponse> {
     return new Promise<ScoreEstimateResponse>((resolve, reject) => {
-        req.jwt = data.get('config.user_jwt');
-        resolve(
-            post(`${ai_host}/api/score`, req)
-        );
+        req.jwt = data.get("config.user_jwt");
+        resolve(post(`${ai_host}/api/score`, req));
     });
 }
-init_score_estimator().then((tf) => {
-    // console.log('SE Initialized');
-})
-.catch(err => console.error(err));
-
+init_score_estimator()
+    .then((tf) => {
+        // console.log('SE Initialized');
+    })
+    .catch((err) => console.error(err));
 
 /*** Generic error handling from the server ***/
 sockets.termination_socket.on("ERROR", errorAlerter);
 
-/*** Some finial initializations ***/
-init_tabcomplete();
-
 /* Initialization done, render!! */
-let svg_loader = document.getElementById('loading-svg-container');
+const svg_loader = document.getElementById("loading-svg-container");
 svg_loader.parentNode.removeChild(svg_loader);
 
-let forceReactUpdate:() => void = () => {};
+let forceReactUpdate: () => void = () => {};
 
-function ForceReactUpdateWrapper(props):JSX.Element {
-    let [update, setUpdate] = React.useState(1);
+function ForceReactUpdateWrapper(props): JSX.Element {
+    const [update, setUpdate] = React.useState(1);
     forceReactUpdate = () => {
         setUpdate(update + 1);
     };
     return <React.Fragment key={update}>{props.children}</React.Fragment>;
 }
-ReactDOM.render(<ForceReactUpdateWrapper>{routes}</ForceReactUpdateWrapper>, document.getElementById("main-content"));
+ReactDOM.render(
+    <ForceReactUpdateWrapper>{routes}</ForceReactUpdateWrapper>,
+    document.getElementById("main-content"),
+);
 
-window['data'] = data;
-window['preferences'] = preferences;
-window['player_cache'] = player_cache;
-window['GoMath'] = GoMath;
+window["data"] = data;
+window["preferences"] = preferences;
+window["player_cache"] = player_cache;
+window["GoMath"] = GoMath;

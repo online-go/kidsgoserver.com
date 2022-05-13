@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {termination_socket} from "sockets";
-import {getUserRating} from 'rank_utils';
+import { termination_socket } from "sockets";
+import { getUserRating } from "rank_utils";
 
 let active_bots = {};
 let _bots_list = [];
@@ -28,7 +28,7 @@ export function bots_list(): Array<any> {
     return _bots_list;
 }
 export function one_bot() {
-    for (let k in active_bots) {
+    for (const k in active_bots) {
         return active_bots[k];
     }
     return null;
@@ -40,7 +40,7 @@ export function bot_count() {
 termination_socket.on("active-bots", (bots) => {
     active_bots = bots;
     _bots_list = [];
-    for (let id in bots) {
+    for (const id in bots) {
         _bots_list.push(bots[id]);
     }
     _bots_list.sort((a, b) => getUserRating(a).rating - getUserRating(b).rating);

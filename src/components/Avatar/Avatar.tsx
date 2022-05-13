@@ -19,24 +19,24 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { avatar_list } from "./avatar_list";
 
-window['avatar_list'] = avatar_list;
+window["avatar_list"] = avatar_list;
 
-type Race = 'aquatic' | 'bird' | 'fuzzball' | 'wisdom';
+type Race = "aquatic" | "bird" | "fuzzball" | "wisdom";
 
 export interface AvatarInterface {
     race: Race;
     random?: boolean;
 }
 
-export function Avatar({race, random}:AvatarInterface):JSX.Element {
-    let [_race, set_race] = useState(race);
-    let [idx, set_idx] = useState(4);
+export function Avatar({ race, random }: AvatarInterface): JSX.Element {
+    const [_race, set_race] = useState(race);
+    const [idx, set_idx] = useState(4);
 
     useEffect(() => {
         let interval;
         if (random) {
             interval = setInterval(() => {
-                let item = avatar_list[Math.floor(Math.random() * avatar_list.length)];
+                const item = avatar_list[Math.floor(Math.random() * avatar_list.length)];
                 set_race(item.race as Race);
                 set_idx(item.id);
             }, 10000);
@@ -46,9 +46,8 @@ export function Avatar({race, random}:AvatarInterface):JSX.Element {
         };
     }, [random]);
 
-
     return (
-        <div className='Avatar'>
+        <div className="Avatar">
             <div className={`Avatar-svg avatar-${_race}-${idx}`} />
         </div>
     );

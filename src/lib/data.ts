@@ -97,25 +97,23 @@
  *
  */
 
-
-import { TypedEventEmitter } from 'TypedEventEmitter';
-import { GroupList, ActiveTournamentList } from './types';
+import { TypedEventEmitter } from "TypedEventEmitter";
+import { GroupList, ActiveTournamentList } from "./types";
 
 interface Events {
-    [name:string]: any;
+    [name: string]: any;
 }
 
 export enum Replication {
-    NONE                    = 0x0, // No replication of this change
+    NONE = 0x0, // No replication of this change
     LOCAL_OVERWRITES_REMOTE = 0x1, // Locally set data will overwrite remotely set data, but if not set will default to remotely set data
     REMOTE_OVERWRITES_LOCAL = 0x2, // Remotely set data will overwrite locally set data
-    REMOTE_ONLY             = 0x4, // Remotely set data, but do not update our local value
+    REMOTE_ONLY = 0x4, // Remotely set data, but do not update our local value
 }
 
-let defaults = {};
-let store = {};
-let event_emitter = new TypedEventEmitter<Events>();
-
+const defaults = {};
+const store = {};
+const event_emitter = new TypedEventEmitter<Events>();
 
 export function setWithoutEmit(key: string, value: any | undefined): any {
     if (value === undefined) {
@@ -165,7 +163,7 @@ export function remove(key: string, replication?: Replication): void {
 }
 
 export function removePrefix(key_prefix: string): any {
-    let hits = {};
+    const hits = {};
 
     Object.keys(store).map((key) => {
         if (key.indexOf(key_prefix) === 0) {
@@ -173,7 +171,7 @@ export function removePrefix(key_prefix: string): any {
         }
     });
 
-    for (let key in hits) {
+    for (const key in hits) {
         safeLocalStorageRemove(`ogs.${key}`);
         delete store[key];
         emitForKey(key);
@@ -181,11 +179,11 @@ export function removePrefix(key_prefix: string): any {
 }
 
 export function removeAll(): void {
-    let keys = [];
-    for (let key in store) {
+    const keys = [];
+    for (const key in store) {
         keys.push(key);
     }
-    for (let key of keys) {
+    for (const key of keys) {
         try {
             remove(key);
         } catch (e) {
@@ -195,7 +193,10 @@ export function removeAll(): void {
 }
 
 export function get(key: "cached.groups", default_value?: GroupList): GroupList;
-export function get(key: "cached.active_tournaments", default_value?: ActiveTournamentList): ActiveTournamentList;
+export function get(
+    key: "cached.active_tournaments",
+    default_value?: ActiveTournamentList,
+): ActiveTournamentList;
 export function get(key: string, default_value?: any): any | undefined;
 export function get(key, default_value?): any | undefined {
     if (key in store) {
@@ -210,20 +211,38 @@ export function get(key, default_value?): any | undefined {
     return default_value;
 }
 
-export function watch(key: "cached.groups", cb: (data: GroupList) => void, call_on_undefined?: boolean, dont_call_immediately?: boolean): void;
-export function watch(key: "cached.active_tournaments", cb: (data: ActiveTournamentList) => void, call_on_undefined?: boolean, dont_call_immediately?: boolean): void;
-export function watch(key: string, cb: (data: any) => void, call_on_undefined?: boolean, dont_call_immediately?: boolean): void;
+export function watch(
+    key: "cached.groups",
+    cb: (data: GroupList) => void,
+    call_on_undefined?: boolean,
+    dont_call_immediately?: boolean,
+): void;
+export function watch(
+    key: "cached.active_tournaments",
+    cb: (data: ActiveTournamentList) => void,
+    call_on_undefined?: boolean,
+    dont_call_immediately?: boolean,
+): void;
+export function watch(
+    key: string,
+    cb: (data: any) => void,
+    call_on_undefined?: boolean,
+    dont_call_immediately?: boolean,
+): void;
 export function watch(key, cb, call_on_undefined?: boolean, dont_call_immediately?: boolean): void {
     event_emitter.on(key, cb);
 
-    let val = get(key);
-    if (!dont_call_immediately && (val != undefined || call_on_undefined)) {
+    const val = get(key);
+    if (!dont_call_immediately && (val !== undefined || call_on_undefined)) {
         cb(val);
     }
 }
 
 export function unwatch(key: "cached.groups", cb: (data: GroupList) => void): void;
-export function unwatch(key: "cached.active_tournaments", cb: (data: ActiveTournamentList) => void): void;
+export function unwatch(
+    key: "cached.active_tournaments",
+    cb: (data: ActiveTournamentList) => void,
+): void;
 export function unwatch(key: string, cb: (data: any) => void): void;
 export function unwatch(key, cb): void {
     event_emitter.off(key, cb);
@@ -233,38 +252,43 @@ export function dump(key_prefix: string = "", strip_prefix?: boolean) {
     if (!key_prefix) {
         key_prefix = "";
     }
-    let ret = {};
-    let remote_values = {};
-    for (let k in remote_store) {
+    const ret = {};
+    const remote_values = {};
+    for (const k in remote_store) {
         remote_values[k] = remote_store[k].value;
     }
-    let data = Object.assign({}, defaults, remote_values, store);
-    let keys = Object.keys(data);
+    const data = Object.assign({}, defaults, remote_values, store);
+    const keys = Object.keys(data);
 
     keys.sort().map((key) => {
         if (key.indexOf(key_prefix) === 0) {
-            let k = strip_prefix ? key.substr(key_prefix.length) : key;
-            ret[k] = {"union": data[key], value: store[key], "default": defaults[key], remote: remote_get(key)};
+            const k = strip_prefix ? key.substr(key_prefix.length) : key;
+            ret[k] = {
+                union: data[key],
+                value: store[key],
+                default: defaults[key],
+                remote: remote_get(key),
+            };
         }
     });
     console.table(ret);
 }
 
-export function getPrefix(key_prefix:string = "", strip_prefix?: boolean):{[key:string]: any} {
+export function getPrefix(key_prefix: string = "", strip_prefix?: boolean): { [key: string]: any } {
     if (!key_prefix) {
         key_prefix = "";
     }
-    let ret = {};
-    let remote_values = {};
-    for (let k in remote_store) {
+    const ret = {};
+    const remote_values = {};
+    for (const k in remote_store) {
         remote_values[k] = remote_store[k].value;
     }
-    let data = Object.assign({}, defaults, remote_values, store);
-    let keys = Object.keys(data);
+    const data = Object.assign({}, defaults, remote_values, store);
+    const keys = Object.keys(data);
 
     keys.sort().map((key) => {
         if (key.indexOf(key_prefix) === 0) {
-            let k = strip_prefix ? key.substr(key_prefix.length) : key;
+            const k = strip_prefix ? key.substr(key_prefix.length) : key;
             ret[k] = data[key];
         }
     });
@@ -275,7 +299,9 @@ function safeLocalStorageSet(key, value) {
     try {
         localStorage.setItem(key, value);
     } catch (e) {
-        console.warn(`Failed to save setting ${key}, LocalStorage is probably disabled. If you are using Safari, the most likely cause of this is being in Private Browsing Mode.`);
+        console.warn(
+            `Failed to save setting ${key}, LocalStorage is probably disabled. If you are using Safari, the most likely cause of this is being in Private Browsing Mode.`,
+        );
     }
 }
 
@@ -283,10 +309,11 @@ function safeLocalStorageRemove(key) {
     try {
         localStorage.removeItem(key);
     } catch (e) {
-        console.warn(`Failed to remove ${key}, LocalStorage is probably disabled. If you are using Safari, the most likely cause of this is being in Private Browsing Mode.`);
+        console.warn(
+            `Failed to remove ${key}, LocalStorage is probably disabled. If you are using Safari, the most likely cause of this is being in Private Browsing Mode.`,
+        );
     }
 }
-
 
 /* Load previously saved data from localStorage */
 
@@ -296,10 +323,14 @@ try {
         if (key.indexOf("ogs.") === 0) {
             key = key.substr(4);
             try {
-                let item = localStorage.getItem(`ogs.${key}`);
+                const item = localStorage.getItem(`ogs.${key}`);
                 store[key] = JSON.parse(item);
             } catch (e) {
-                console.error(`Data storage system failed to load ${key}. Value was: `, typeof(localStorage.getItem(`ogs.${key}`)), localStorage.getItem(`ogs.${key}`));
+                console.error(
+                    `Data storage system failed to load ${key}. Value was: `,
+                    typeof localStorage.getItem(`ogs.${key}`),
+                    localStorage.getItem(`ogs.${key}`),
+                );
                 console.error(e);
                 localStorage.removeItem(`ogs.${key}`);
             }
@@ -308,8 +339,6 @@ try {
 } catch (e) {
     console.error(e);
 }
-
-
 
 /**********************/
 /*** REMOTE STORAGE ***/
@@ -336,11 +365,15 @@ try {
  * only updated data will be downloaded.
  */
 
+import ITC from "ITC";
+import { termination_socket } from "sockets";
 
-import ITC from 'ITC';
-import { termination_socket } from 'sockets';
-
-type RemoteStorableValue = number | string | boolean | undefined | {[key:string]: RemoteStorableValue};
+type RemoteStorableValue =
+    | number
+    | string
+    | boolean
+    | undefined
+    | { [key: string]: RemoteStorableValue };
 
 interface RemoteKV {
     key: string;
@@ -349,17 +382,16 @@ interface RemoteKV {
     modified?: string;
 }
 
-let remote_store:{[key:string]: RemoteKV} = {};
-let wal:{[key:string]: {key: string, value?: any, replication: Replication}} = {};
-let wal_currently_processing:{[k:string]: boolean} = {};
-let last_modified:string = "2000-01-01T00:00:00.000Z";
-let loaded_user_id:number | null = null; // user id we've currently loaded data for
+let remote_store: { [key: string]: RemoteKV } = {};
+let wal: { [key: string]: { key: string; value?: any; replication: Replication } } = {};
+let wal_currently_processing: { [k: string]: boolean } = {};
+let last_modified = "2000-01-01T00:00:00.000Z";
+let loaded_user_id: number | null = null; // user id we've currently loaded data for
 
-
-function remote_set(key:string, value:RemoteStorableValue, replication: Replication):void {
-    let user = store["config.user"];
+function remote_set(key: string, value: RemoteStorableValue, replication: Replication): void {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
-        throw new Error('user is not authenticated');
+        throw new Error("user is not authenticated");
     }
 
     if (remote_store[key]?.value === value && remote_store[key]?.replication === replication) {
@@ -368,13 +400,16 @@ function remote_set(key:string, value:RemoteStorableValue, replication: Replicat
 
     remote_store[key] = { key, value, replication };
     _enqueue_set(user.id, key, value, replication);
-    safeLocalStorageSet(`ogs-remote-storage-store.${user.id}.${key}`, JSON.stringify(remote_store[key]));
+    safeLocalStorageSet(
+        `ogs-remote-storage-store.${user.id}.${key}`,
+        JSON.stringify(remote_store[key]),
+    );
 }
 
-function remote_remove(key:string, replication: Replication):void {
-    let user = store["config.user"];
+function remote_remove(key: string, replication: Replication): void {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
-        throw new Error('user is not authenticated');
+        throw new Error("user is not authenticated");
     }
 
     if (remote_get(key) === undefined) {
@@ -386,8 +421,8 @@ function remote_remove(key:string, replication: Replication):void {
     safeLocalStorageRemove(`ogs-remote-storage-store.${user.id}.${key}`);
 }
 
-function remote_get(key:string):RemoteStorableValue {
-    let user = store["config.user"];
+function remote_get(key: string): RemoteStorableValue {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
         return undefined;
     }
@@ -395,29 +430,32 @@ function remote_get(key:string):RemoteStorableValue {
     return remote_store[key]?.value;
 }
 
-
 // Our write ahead log ensures that if we have a connection problem while we
 // are writing a value to our remote storage, we retry when we re-establish
 // our connection. This is a "last to write wins" system.
 
-function _enqueue_set(user_id:number, key:string, value: RemoteStorableValue, replication: Replication):void {
-    let entry = {key, value, replication};
+function _enqueue_set(
+    user_id: number,
+    key: string,
+    value: RemoteStorableValue,
+    replication: Replication,
+): void {
+    const entry = { key, value, replication };
     safeLocalStorageSet(`ogs-remote-storage-wal.${user_id}.${key}`, JSON.stringify(entry));
     wal[key] = entry;
     _process_write_ahead_log(user_id);
 }
 
-function _enqueue_remove(user_id:number, key:string, replication: Replication):void {
-    let entry = {key, replication};
+function _enqueue_remove(user_id: number, key: string, replication: Replication): void {
+    const entry = { key, replication };
     safeLocalStorageSet(`ogs-remote-storage-wal.${user_id}.${key}`, JSON.stringify(entry));
     wal[key] = entry;
     _process_write_ahead_log(user_id);
 }
 
-
-function _process_write_ahead_log(user_id:number):void {
-    for (let data_key in wal) {
-        let kv = wal[data_key];
+function _process_write_ahead_log(user_id: number): void {
+    for (const data_key in wal) {
+        const kv = wal[data_key];
 
         if (wal_currently_processing[kv.key]) {
             // already writing this key. We'll check when we return from our
@@ -428,9 +466,11 @@ function _process_write_ahead_log(user_id:number):void {
 
         wal_currently_processing[kv.key] = true;
 
-        let cb = (res) => {
+        const cb = (res) => {
             if (loaded_user_id !== user_id) {
-                console.warn("User changed while we were synchronizing our remote storage write ahead log, bailing from further updates.");
+                console.warn(
+                    "User changed while we were synchronizing our remote storage write ahead log, bailing from further updates.",
+                );
                 return;
             }
 
@@ -441,7 +481,10 @@ function _process_write_ahead_log(user_id:number):void {
                 // unexpected errors (internal exceptions) will set a retry flag, in which case
                 // we should retry this after a short while.
                 if (res.retry) {
-                    setTimeout(() => _process_write_ahead_log(user_id), 3000 + 3000 * Math.random());
+                    setTimeout(
+                        () => _process_write_ahead_log(user_id),
+                        3000 + 3000 * Math.random(),
+                    );
                     return;
                 }
                 // otherwise, this was an error such as we've set too many keys
@@ -462,25 +505,32 @@ function _process_write_ahead_log(user_id:number):void {
             }
         };
 
-        if ('value' in kv) {
-            termination_socket.send('remote_storage/set', {key: kv.key, value: kv.value, replication: kv.replication}, cb);
+        if ("value" in kv) {
+            termination_socket.send(
+                "remote_storage/set",
+                { key: kv.key, value: kv.value, replication: kv.replication },
+                cb,
+            );
         } else {
-            termination_socket.send('remote_storage/remove', {key: kv.key, replication: kv.replication}, cb);
+            termination_socket.send(
+                "remote_storage/remove",
+                { key: kv.key, replication: kv.replication },
+                cb,
+            );
         }
     }
 }
 // When we get disconnected from the server, reset our write ahead processing state
 // so we retry everything that's in our wal when we reconnect
-termination_socket.on('disconnect', () => {
+termination_socket.on("disconnect", () => {
     wal_currently_processing = {};
 });
-
 
 let currently_synchronizing = false;
 let need_another_synchronization_call = false;
 
 function remote_sync() {
-    let user = store['config.user'];
+    const user = store["config.user"];
     if (!user || user.anonymous) {
         return;
     }
@@ -493,7 +543,7 @@ function remote_sync() {
     currently_synchronizing = true;
     need_another_synchronization_call = false;
 
-    termination_socket.send('remote_storage/sync', last_modified, (ret) => {
+    termination_socket.send("remote_storage/sync", last_modified, (ret) => {
         if (ret.error) {
             console.error(ret.error);
         } else {
@@ -507,18 +557,19 @@ function remote_sync() {
 }
 // When we get disconnected from the server, reset the our remote_sync state in the
 // event that we were mid-sync
-termination_socket.on('disconnect', () => {
+termination_socket.on("disconnect", () => {
     currently_synchronizing = false;
     need_another_synchronization_call = false;
 });
 
-
 // we'll get this when a client updates a value. We'll then send a request to the
 // server for any new updates since the last update we got.
-ITC.register('remote_storage/sync_needed', () => {
-    let user = store['config.user'];
+ITC.register("remote_storage/sync_needed", () => {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
-        console.error("User is not logged in but received remote_storage/sync_needed for some reason, ignoring");
+        console.error(
+            "User is not logged in but received remote_storage/sync_needed for some reason, ignoring",
+        );
         return;
     }
 
@@ -527,14 +578,16 @@ ITC.register('remote_storage/sync_needed', () => {
 
 // After we've sent a synchronization request, we'll get these update messages
 // for each key that's been updated since the timestamp we sent
-termination_socket.on('remote_storage/update', (row:RemoteKV) => {
-    let user = store['config.user'];
+termination_socket.on("remote_storage/update", (row: RemoteKV) => {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
-        console.error("User is not logged in but received remote_storage/update for some reason, ignoring");
+        console.error(
+            "User is not logged in but received remote_storage/update for some reason, ignoring",
+        );
         return;
     }
 
-    let current_data_value = get(row.key);
+    const current_data_value = get(row.key);
 
     if (row.replication === Replication.REMOTE_OVERWRITES_LOCAL) {
         setWithoutEmit(row.key, row.value);
@@ -556,8 +609,8 @@ termination_socket.on('remote_storage/update', (row:RemoteKV) => {
 });
 
 // Whenever we connect to the server, process anything pending in our WAL and synchronize
-termination_socket.on('connect', () => {
-    let user = store['config.user'];
+termination_socket.on("connect", () => {
+    const user = store["config.user"];
     if (!user || user.anonymous) {
         return;
     }
@@ -570,9 +623,8 @@ termination_socket.on('connect', () => {
     }, 1);
 });
 
-
 function load_from_local_storage_and_sync() {
-    let user = store['config.user'];
+    const user = store["config.user"];
     if (!user || user.anonymous) {
         return;
     }
@@ -593,10 +645,10 @@ function load_from_local_storage_and_sync() {
         const last_modified_key = `ogs-remote-storage-last-modified.${user.id}`;
 
         for (let i = 0; i < localStorage.length; ++i) {
-            let full_key = localStorage.key(i);
+            const full_key = localStorage.key(i);
 
             if (full_key.indexOf(store_prefix) === 0) {
-                let key = full_key.substr(store_prefix.length);
+                const key = full_key.substr(store_prefix.length);
                 try {
                     remote_store[key] = JSON.parse(localStorage.getItem(full_key)) as RemoteKV;
                 } catch (e) {
@@ -605,7 +657,7 @@ function load_from_local_storage_and_sync() {
                 }
             }
             if (full_key.indexOf(wal_prefix) === 0) {
-                let key = full_key.substr(wal_prefix.length);
+                const key = full_key.substr(wal_prefix.length);
                 try {
                     wal[key] = JSON.parse(localStorage.getItem(full_key));
                 } catch (e) {
@@ -625,6 +677,5 @@ function load_from_local_storage_and_sync() {
     remote_sync();
 }
 
-
 load_from_local_storage_and_sync();
-watch('config.user', load_from_local_storage_and_sync);
+watch("config.user", load_from_local_storage_and_sync);

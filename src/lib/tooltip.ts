@@ -25,27 +25,27 @@ function clearTooltip() {
 }
 
 export default function tooltip(event) {
-    let target = $(event.target);
-    let title = target.attr("title") || target.attr("data-title");
-    let X = event.nativeEvent.pageX + 10;
-    let Y = event.nativeEvent.pageY + 10;
+    const target = $(event.target);
+    const title = target.attr("title") || target.attr("data-title");
+    const X = event.nativeEvent.pageX + 10;
+    const Y = event.nativeEvent.pageY + 10;
 
     if (event.type === "click") {
         if (current_tooltip) {
             clearTooltip();
         } else {
-            current_tooltip = $("<div class='ogs-tooltip'>").text(title).css({left: X, top: Y});
+            current_tooltip = $("<div class='ogs-tooltip'>").text(title).css({ left: X, top: Y });
             $("body").append(current_tooltip);
         }
     } else if (event.type === "mouseover") {
         clearTooltip();
-        current_tooltip = $("<div class='ogs-tooltip'>").text(title).css({left: X, top: Y});
+        current_tooltip = $("<div class='ogs-tooltip'>").text(title).css({ left: X, top: Y });
         $("body").append(current_tooltip);
     } else if (event.type === "mouseout") {
         clearTooltip();
     } else if (event.type === "mousemove") {
         if (current_tooltip) {
-            current_tooltip.css({left: X, top: Y});
+            current_tooltip.css({ left: X, top: Y });
         }
     } else {
         console.warn("Unhandled event type: ", event.type);

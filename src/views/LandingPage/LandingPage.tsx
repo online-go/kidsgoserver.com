@@ -16,21 +16,19 @@
  */
 
 import * as React from "react";
-import * as data from "data";
-import * as preferences from "preferences";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { _, interpolate } from "translate";
-import { errorAlerter, ignore, navigateTo } from "misc";
-
+import { _ } from "translate";
+import { useNavigate } from "react-router-dom";
 
 const ROCKET_LAUNCH_DURATION = 1.25; // seconds. This should match the time in LandingPage.styl to sync animation and navigation
 let navigate_timeout;
 
-export function LandingPage():JSX.Element {
-    let [learn_to_play_launching, set_learn_to_play_launching]:[boolean, (tf:boolean) => void] = React.useState(false as boolean);
-    let [play_launching, set_play_launching]:[boolean, (tf:boolean) => void] = React.useState(false as boolean);
-
+export function LandingPage(): JSX.Element {
+    const navigate = useNavigate();
+    const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
+        React.useState(false as boolean);
+    const [play_launching, set_play_launching]: [boolean, (tf: boolean) => void] = React.useState(
+        false as boolean,
+    );
 
     function learnToPlay() {
         if (learn_to_play_launching) {
@@ -46,7 +44,7 @@ export function LandingPage():JSX.Element {
         navigate_timeout = setTimeout(() => {
             //set_learn_to_play_launching(false);
             console.log("Go to learn to play");
-            navigateTo("/learn-to-play");
+            navigate("/learn-to-play");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
 
@@ -65,23 +63,21 @@ export function LandingPage():JSX.Element {
         navigate_timeout = setTimeout(() => {
             //set_play_launching(false);
             console.log("Go to play");
-            navigateTo("/game/0");
+            navigate("/game/0");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
 
     return (
-        <div id='LandingPage'>
-            <div className='mountain-background'>
-                Mountain Background
-            </div>
-            <div className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`} >
+        <div id="LandingPage">
+            <div className="mountain-background">Mountain Background</div>
+            <div className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}>
                 <div>R</div>
                 <div>O</div>
                 <div>C</div>
                 <div>K</div>
                 <div>E</div>
                 <div>T</div>
-                <div className='flames'>FLAMES</div>
+                <div className="flames">FLAMES</div>
             </div>
 
             <div className={`play-rocket ${play_launching ? "launch" : ""}`}>
@@ -91,12 +87,12 @@ export function LandingPage():JSX.Element {
                 <div>K</div>
                 <div>E</div>
                 <div>T</div>
-                <div className='flames'>FLAMES</div>
+                <div className="flames">FLAMES</div>
             </div>
-            <div className='learn-to-play-button-container'>
+            <div className="learn-to-play-button-container">
                 <button onClick={learnToPlay}>{_("Learn to Play")}</button>
             </div>
-            <div className='play-button-container'>
+            <div className="play-button-container">
                 <button onClick={play}>{_("Play")}</button>
             </div>
         </div>

@@ -17,26 +17,40 @@
 
 import * as React from "react";
 import { useState } from "react";
-import {Link} from "react-router-dom";
-import {_, interpolate} from "translate";
+import { Link } from "react-router-dom";
+import { _, interpolate } from "translate";
 import * as data from "data";
 import * as preferences from "preferences";
-import {errorAlerter, ignore} from "misc";
+import { errorAlerter, ignore } from "misc";
 
-
-export function LearnToPlay():JSX.Element {
-
+export function LearnToPlay(): JSX.Element {
     return (
-        <div id='LearnToPlay'>
+        <div id="LearnToPlay">
             Learn to play
-            <div><Link to='/learn-to-play/1'>Lesson 1</Link></div>
-            <div><Link to='/learn-to-play/2'>Lesson 2</Link></div>
-            <div><Link to='/learn-to-play/3'>Lesson 3</Link></div>
-            <div><Link to='/learn-to-play/4'>Lesson 4</Link></div>
-            <div><Link to='/learn-to-play/5'>Lesson 5</Link></div>
-            <div><Link to='/learn-to-play/6'>Lesson 6</Link></div>
-            <div><Link to='/learn-to-play/7'>Lesson 7</Link></div>
-            <div><Link to='/learn-to-play/8'>Lesson 8</Link></div>
+            <div>
+                <Link to="/learn-to-play/1">Lesson 1</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/2">Lesson 2</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/3">Lesson 3</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/4">Lesson 4</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/5">Lesson 5</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/6">Lesson 6</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/7">Lesson 7</Link>
+            </div>
+            <div>
+                <Link to="/learn-to-play/8">Lesson 8</Link>
+            </div>
         </div>
     );
 }

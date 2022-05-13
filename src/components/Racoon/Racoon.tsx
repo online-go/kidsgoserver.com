@@ -19,14 +19,13 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 interface RacoonProperties {
-    hover?:boolean;
+    hover?: boolean;
 }
 
-
-export function Racoon(props:RacoonProperties):JSX.Element {
+export function Racoon(props: RacoonProperties): JSX.Element {
     return (
         <div className={`Racoon ${props.hover ? "hover" : ""}`}>
-            <div className='Racoon-svg' />
+            <div className="Racoon-svg" />
         </div>
     );
 }

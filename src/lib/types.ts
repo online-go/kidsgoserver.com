@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PlayerCacheEntry } from 'player_cache';
-import { GoEngineRules, JGOFTimeControl } from 'goban';
+import { PlayerCacheEntry } from "player_cache";
+import { GoEngineRules, JGOFTimeControl } from "goban";
 
 export interface Player extends PlayerCacheEntry {
     professional: boolean;
@@ -26,19 +26,26 @@ export interface Group {
     hide_details: boolean;
     icon: string;
     id: number;
-    is_public:  boolean;
+    is_public: boolean;
     member_count: number;
     name: string;
-    require_invitation:  boolean;
+    require_invitation: boolean;
     summary: string;
 }
 
 export type GroupList = Array<Group>;
 
-
 export type TournamentPairingMethod = "slaughter" | "random" | "slide" | "strength";
 export type TournamentExclusivity = "open" | "group" | "invite";
-export type TournamentType = 'mcmahon' | 's_mcmahon' | 'roundrobin' | 'swiss' | 's_title' | 's_elimination' | 'elimination' | 'double_elimination';
+export type TournamentType =
+    | "mcmahon"
+    | "s_mcmahon"
+    | "roundrobin"
+    | "swiss"
+    | "s_title"
+    | "s_elimination"
+    | "elimination"
+    | "double_elimination";
 
 export interface ActiveTournament {
     active_round: number;

@@ -16,21 +16,25 @@
  */
 
 import * as ReactDOM from "react-dom";
-import {TypedEventEmitterPureComponent} from "TypedEventEmitterPureComponent";
-import {dup} from "misc";
+import { TypedEventEmitterPureComponent } from "TypedEventEmitterPureComponent";
+import { dup } from "misc";
 
 let current_modal = null;
-export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events & {"close": never, "open": never}, P&{fastDismiss?: boolean}, S> {
+export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<
+    Events & { close: never; open: never },
+    P & { fastDismiss?: boolean },
+    S
+> {
     constructor(props) {
         super(props);
         current_modal = this;
     }
     close = () => {
         this.emit("close");
-    }
+    };
     _open = () => {
-        let container = $(ReactDOM.findDOMNode(this)).parent();
-        let backdrop = $("<div class='Modal-backdrop'></div>");
+        const container = $(ReactDOM.findDOMNode(this)).parent();
+        const backdrop = $("<div class='Modal-backdrop'></div>");
         $(document.body).append(backdrop);
 
         if (this.props.fastDismiss) {
@@ -41,12 +45,12 @@ export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events &
             });
         }
 
-        let on_escape = (event) => {
+        const on_escape = (event) => {
             if (event.keyCode === 27) {
                 this.close();
             }
         };
-        let on_close = () => {
+        const on_close = () => {
             container.remove();
             backdrop.remove();
             this.off("close", on_close);
@@ -57,7 +61,7 @@ export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events &
         $(document.body).on("keydown", on_escape);
 
         this.emit("open");
-    }
+    };
     componentDidMount() {
         this._open();
     }
@@ -87,22 +91,22 @@ export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events &
         this.upstate_object = null;
     }
     bulkUpstate(arr) {
-        let next_state: any = this.nextState();
-        let state_update: any = {};
+        const next_state: any = this.nextState();
+        const state_update: any = {};
 
-        for (let elt of arr) {
-            let key = elt[0];
-            let event_or_value = elt[1];
+        for (const elt of arr) {
+            const key = elt[0];
+            const event_or_value = elt[1];
 
             let value = null;
-            if (typeof(event_or_value) === "object" && "target" in event_or_value) {
-                let target = event_or_value.target;
+            if (typeof event_or_value === "object" && "target" in event_or_value) {
+                const target = event_or_value.target;
                 value = target.type === "checkbox" ? target.checked : target.value;
             } else {
                 value = event_or_value;
             }
-            let components = key.split(".");
-            let primary_key = components[0];
+            const components = key.split(".");
+            const primary_key = components[0];
             let cur = next_state;
             while (components.length > 1) {
                 cur = cur[components[0]];
@@ -113,7 +117,7 @@ export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events &
         }
         this.setState(state_update);
     }
-    upstate(key: string|Array<Array<any>>, event_or_value?) {
+    upstate(key: string | Array<Array<any>>, event_or_value?) {
         if (!event_or_value && Array.isArray(key)) {
             return this.bulkUpstate(key);
         }
@@ -121,9 +125,8 @@ export class Modal<Events, P, S> extends TypedEventEmitterPureComponent<Events &
     }
 }
 
-
 export function openModal(modal: any): any {
-    let container = $("<div class='Modal-container'></div>");
+    const container = $("<div class='Modal-container'></div>");
     $(document.body).append(container);
     ReactDOM.render(modal, container[0]);
     return current_modal;

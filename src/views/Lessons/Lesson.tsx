@@ -16,22 +16,21 @@
  */
 
 import * as React from "react";
-import * as data from "data";
-import * as preferences from "preferences";
-import { useResizeDetector } from 'react-resize-detector';
+import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { _, interpolate } from "translate";
-import { errorAlerter, ignore, navigateTo } from "misc";
+import { _ } from "translate";
 import { Goban, GoMath, GobanConfig } from "goban";
-import { Racoon } from 'Racoon';
-import { Content } from './Content';
-import { chapters } from './chapters';
-import { PersistentElement } from 'PersistentElement';
+import { Racoon } from "Racoon";
+import { setContentNavigate } from "./Content";
+import { chapters } from "./chapters";
+import { PersistentElement } from "PersistentElement";
+import { useNavigate } from "react-router-dom";
 
-export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Element {
+export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
+    setContentNavigate(useNavigate());
     //const id:number = parseInt(this.props.match?.params?.id);
-    let next = '/';
+    let next = "/";
     {
         let next_page = page + 1;
         let next_chapter = chapter;
@@ -40,19 +39,19 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             next_page = 0;
         }
         if (next_chapter >= chapters.length) {
-            next = '/';
+            next = "/";
         } else {
             next = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
         }
     }
-    let back = '/';
+    let back = "/";
     {
         let next_page = page - 1;
         let next_chapter = chapter;
         back = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
         if (next_page < 0) {
             if (next_chapter === 0) {
-                back = '/learn-to-play';
+                back = "/learn-to-play";
             } else {
                 next_chapter -= 1;
                 next_page = chapters[next_chapter].length - 1;
@@ -61,16 +60,18 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
         }
     }
 
-    let [container, setContainer] = useState(document.createElement("div"));
-    let goban_ref = useRef<Goban>(null);
-    let cancel_animation_ref = useRef<() => void>(() => {});
-    let goban_opts_ref = useRef<any>({});
-    let [text, setText]: [Array<JSX.Element>, (x:Array<JSX.Element>) => void] = useState<Array<JSX.Element>>([]);
-    let [_hup, hup]: [number, (x:number) => void] = useState<number>(Math.random());
+    const [container, _setContainer] = useState(document.createElement("div"));
+    const goban_ref = useRef<Goban>(null);
+    const cancel_animation_ref = useRef<() => void>(() => {});
+    const goban_opts_ref = useRef<any>({});
+    const [text, setText]: [Array<JSX.Element>, (x: Array<JSX.Element>) => void] = useState<
+        Array<JSX.Element>
+    >([]);
+    const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const onResize = useCallback((width, height) => {
-        let goban = goban_ref.current;
+        const goban = goban_ref.current;
         if (goban) {
-            let target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = Math.min(width, height) - 60; // white padding border
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -79,9 +80,9 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             goban.setSquareSizeBasedOnDisplayWidth(target_size);
         }
     }, []);
-    const board_container_resizer =  useResizeDetector({
+    const board_container_resizer = useResizeDetector({
         onResize,
-        refreshMode: 'throttle',
+        refreshMode: "throttle",
         refreshOptions: {
             leading: true,
             trailing: true,
@@ -89,17 +90,17 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
         refreshRate: 10,
     });
 
-
-
     useEffect(() => {
         console.log("Constructing game ", chapter, page);
-        let content = new chapters[chapter][page];
+        const content = new chapters[chapter][page]();
 
         let ct = 0;
 
-        let target_text:Array<JSX.Element> = (Array.isArray(content.text()) ? content.text() : [content.text()]) as Array<JSX.Element>;
+        const target_text: Array<JSX.Element> = (
+            Array.isArray(content.text()) ? content.text() : [content.text()]
+        ) as Array<JSX.Element>;
 
-        let animation = content.animate(() => {
+        const animation = content.animate(() => {
             setText(target_text.slice(0, ct++));
             return target_text.length >= ct;
         }, 500);
@@ -108,39 +109,41 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             setText(target_text);
         };
 
-        let opts:GobanConfig = Object.assign({
-            "board_div": container || undefined,
-            "interactive": true,
-            "mode": "puzzle",
-            "width": 7,
-            "height": 7,
-            "draw_top_labels": false,
-            "draw_right_labels": false,
-            "draw_left_labels": false,
-            "draw_bottom_labels": false,
-            "player_id": 0,
-            "server_socket": null,
-            "square_size": "auto",
+        const opts: GobanConfig = Object.assign(
+            {
+                board_div: container || undefined,
+                interactive: true,
+                mode: "puzzle",
+                width: 7,
+                height: 7,
+                draw_top_labels: false,
+                draw_right_labels: false,
+                draw_left_labels: false,
+                draw_bottom_labels: false,
+                player_id: 0,
+                server_socket: null,
+                square_size: "auto",
 
-            "puzzle_opponent_move_mode": "automatic",
-            "puzzle_player_move_mode": "free",
-            "getPuzzlePlacementSetting": () => {
-                return {"mode": "play"};
+                puzzle_opponent_move_mode: "automatic",
+                puzzle_player_move_mode: "free",
+                getPuzzlePlacementSetting: () => {
+                    return { mode: "play" };
+                },
             },
-
-        }, content.config()) as GobanConfig;
+            content.config(),
+        ) as GobanConfig;
 
         goban_opts_ref.current = opts;
         console.log(opts);
         console.log("BUILDING NEW GOBAN");
         goban_ref.current = new Goban(opts);
-        let goban:Goban = goban_ref.current;
+        const goban: Goban = goban_ref.current;
         content.setGoban(goban);
         content.setNext(next);
 
         goban.on("puzzle-correct-answer", () => {
             console.log("CORRECT!");
-                /*
+            /*
                 this.correct_answer_triggered = true;
                 sfx.play("tutorial-pass");
                 setTimeout(this.next, 1000);
@@ -151,7 +154,7 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
         });
         goban.on("puzzle-wrong-answer", () => {
             console.log("WRONG");
-                /*
+            /*
                 this.wrong_answer_triggered = true;
                 sfx.play("tutorial-fail");
                 this.instructional_goban.goban.disableStonePlacement();
@@ -164,7 +167,6 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             console.log("ERROR");
         });
 
-
         goban.setMode("puzzle");
         try {
             onResize(board_container_resizer.width, board_container_resizer.height);
@@ -174,12 +176,15 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
             }, 1);
         }
 
-        let onUpdate = () => {
-            let mvs = GoMath.decodeMoves(
+        const onUpdate = () => {
+            const mvs = GoMath.decodeMoves(
                 goban.engine.cur_move.getMoveStringToThisPoint(),
                 goban.width,
-                goban.height);
-            let move_string = mvs.map((p) => GoMath.prettyCoords(p.x, p.y, goban.height)).join(",");
+                goban.height,
+            );
+            const move_string = mvs
+                .map((p) => GoMath.prettyCoords(p.x, p.y, goban.height))
+                .join(",");
             console.log("Move string: ", move_string);
             //this.setState({ move_string });
         };
@@ -190,8 +195,8 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
         let t = setTimeout(() => {
             t = null;
             console.log(board_container_resizer.ref.current);
-            let w = board_container_resizer.ref.current.clientWidth;
-            let h = board_container_resizer.ref.current.clientHeight;
+            const w = board_container_resizer.ref.current.clientWidth;
+            const h = board_container_resizer.ref.current.clientHeight;
             onResize(w, h);
         }, 10);
 
@@ -208,7 +213,6 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
         };
     }, [chapter, page]);
 
-
     /*
     useEffect(() => {
         console.log(board_container_resizer.width, board_container_resizer.height);
@@ -217,76 +221,72 @@ export function Lesson({chapter, page}:{chapter:number, page:number}):JSX.Elemen
 
     return (
         <>
-            <div id='Lesson' className='bg-earth'>
-                <div className='portrait-top-spacer'>
-                    <div className='lesson-title'>
-                        Lesson 1
-                    </div>
+            <div id="Lesson" className="bg-earth">
+                <div className="portrait-top-spacer">
+                    <div className="lesson-title">Lesson 1</div>
                 </div>
-                <div id='Lesson-bottom-container'>
-
-                    <div id='left-container'>
-                        <div className='explanation-text' onClick={cancel_animation_ref.current}>
+                <div id="Lesson-bottom-container">
+                    <div id="left-container">
+                        <div className="explanation-text" onClick={cancel_animation_ref.current}>
                             {text.map((e, idx) => (
-                                <div className='fade-in' key={idx}>{e}</div>
+                                <div className="fade-in" key={idx}>
+                                    {e}
+                                </div>
                             ))}
                         </div>
-                        <div className='bottom-graphic' />
+                        <div className="bottom-graphic" />
                     </div>
 
-                    <div id='board-container' ref={board_container_resizer.ref}>
-                        <div className='Goban-container'>
-                            <div className='Goban'>
+                    <div id="board-container" ref={board_container_resizer.ref}>
+                        <div className="Goban-container">
+                            <div className="Goban">
                                 <PersistentElement elt={container} />
                             </div>
                         </div>
                     </div>
 
-                    <div id='right-container'>
-                        <div className='top-spacer' />
+                    <div id="right-container">
+                        <div className="top-spacer" />
                         <Racoon hover />
-                        <div className='landscape-bottom-buttons'>
-                            <Link to={back} className='game-button-container'>
-                                <span className='stone-button-left' />
-                                <span className='button-text'>Back</span>
+                        <div className="landscape-bottom-buttons">
+                            <Link to={back} className="game-button-container">
+                                <span className="stone-button-left" />
+                                <span className="button-text">Back</span>
                             </Link>
-                            <Link to={next} className='game-button-container'>
-                                <span className='stone-button-right' />
-                                <span className='button-text'>next</span>
+                            <Link to={next} className="game-button-container">
+                                <span className="stone-button-right" />
+                                <span className="button-text">next</span>
                             </Link>
                         </div>
                     </div>
-
                 </div>
 
-
-
-                <div className='portrait-bottom-buttons'>
-                    <div className='left'>
-                        <Link to={back} className='game-button-container'>
-                            <span className='stone-button-left' />
-                            <span className='button-text'>Back</span>
+                <div className="portrait-bottom-buttons">
+                    <div className="left">
+                        <Link to={back} className="game-button-container">
+                            <span className="stone-button-left" />
+                            <span className="button-text">Back</span>
                         </Link>
                     </div>
 
-                    <div className='center'>
-                        Lesson 1
-                    </div>
+                    <div className="center">Lesson 1</div>
 
-                    <div className='right'>
-                        <Link to={next} className='game-button-container'>
-                            <span className='stone-button-right' />
-                            <span className='button-text'>Next</span>
+                    <div className="right">
+                        <Link to={next} className="game-button-container">
+                            <span className="stone-button-right" />
+                            <span className="button-text">Next</span>
                         </Link>
                     </div>
                 </div>
             </div>
 
-            <div id='quit'>
-                <Link to='/learn-to-play'><span className='stone-button-x' /></Link>
+            <div id="quit">
+                <Link to="/learn-to-play">
+                    <span className="stone-button-x" />
+                </Link>
             </div>
-            <div id='menu'>
-                <i className='fa fa-ellipsis-h' />
+            <div id="menu">
+                <i className="fa fa-ellipsis-h" />
             </div>
         </>
     );

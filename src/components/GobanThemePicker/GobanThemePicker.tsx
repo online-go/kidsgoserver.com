@@ -16,13 +16,13 @@
  */
 
 import * as React from "react";
-import {_, pgettext, interpolate} from "translate";
-import {post, get} from "requests";
-import {errorAlerter} from "misc";
-import {GoThemes, GoThemesSorted} from "goban";
-import {getSelectedThemes} from "preferences";
+import { _, pgettext, interpolate } from "translate";
+import { post, get } from "requests";
+import { errorAlerter } from "misc";
+import { GoThemes, GoThemesSorted } from "goban";
+import { getSelectedThemes } from "preferences";
 import * as preferences from "preferences";
-import {PersistentElement} from "PersistentElement";
+import { PersistentElement } from "PersistentElement";
 import * as data from "data";
 
 interface GobanThemePickerProperties {
@@ -32,8 +32,6 @@ interface GobanThemePickerProperties {
     size?: number;
 }
 
-
-
 export class GobanThemePicker extends React.PureComponent<GobanThemePickerProperties, any> {
     canvases: any = {};
     selectTheme: any = {};
@@ -41,7 +39,7 @@ export class GobanThemePicker extends React.PureComponent<GobanThemePickerProper
     constructor(props) {
         super(props);
 
-        let selected = getSelectedThemes();
+        const selected = getSelectedThemes();
 
         this.state = {
             size: props.size || 44,
@@ -52,31 +50,32 @@ export class GobanThemePicker extends React.PureComponent<GobanThemePickerProper
             lineCustom: this.getCustom("line"),
             whiteCustom: this.getCustom("white"),
             blackCustom: this.getCustom("black"),
-            urlCustom: this.getCustom("url")
+            urlCustom: this.getCustom("url"),
         };
 
-        for (let k in GoThemesSorted) {
+        for (const k in GoThemesSorted) {
             this.canvases[k] = [];
             this.selectTheme[k] = {};
-            for (let theme of GoThemesSorted[k]) {
-                this.canvases[k].push($("<canvas>").attr("width", this.state.size).attr("height", this.state.size));
+            for (const theme of GoThemesSorted[k]) {
+                this.canvases[k].push(
+                    $("<canvas>").attr("width", this.state.size).attr("height", this.state.size),
+                );
                 theme.styles = Object.assign(
                     {
                         height: this.state.size + "px",
-                        width: this.state.size + "px"
+                        width: this.state.size + "px",
                     },
-                    theme.getReactStyles()
+                    theme.getReactStyles(),
                 ) as unknown as { [style_name: string]: string };
 
                 this.selectTheme[k][theme.theme_name] = () => {
                     preferences.set(`goban-theme-${k}`, theme.theme_name);
-                    let up = {};
+                    const up = {};
                     up[k] = theme.theme_name;
                     this.setState(up);
                 };
             }
         }
-
     }
 
     componentDidMount() {
@@ -84,8 +83,7 @@ export class GobanThemePicker extends React.PureComponent<GobanThemePickerProper
     }
     //UNSAFE_componentWillReceiveProps(next_props) { }
     //componentDidUpdate(old_props, old_state) { }
-    componentWillUnmount() {
-    }
+    componentWillUnmount() {}
 
     getCustom(key) {
         return data.get(`custom.${key}`);
@@ -96,108 +94,171 @@ export class GobanThemePicker extends React.PureComponent<GobanThemePickerProper
         } else {
             data.remove(`custom.${key}`);
         }
-        let up = {};
+        const up = {};
         up[`${key}Custom`] = this.getCustom(key);
         this.setState(up);
         this.renderPickers();
 
-        if (key === "url") { // Changing the custom image should update the board theme
+        if (key === "url") {
+            // Changing the custom image should update the board theme
             key = "board";
         }
 
-        if (key === "line") { // Changing the line color should update the board theme
+        if (key === "line") {
+            // Changing the line color should update the board theme
             key = "board";
         }
         preferences.set(`goban-theme-${key}`, this.state[key]);
     }
 
     render() {
-        let inputStyle = {height: `${this.state.size}px`, width: `${this.state.size * 1.5}px`};
-        let {boardCustom, lineCustom, whiteCustom, blackCustom, urlCustom} = this.state;
+        const inputStyle = { height: `${this.state.size}px`, width: `${this.state.size * 1.5}px` };
+        const { boardCustom, lineCustom, whiteCustom, blackCustom, urlCustom } = this.state;
 
         return (
             <div className="GobanThemePicker">
                 <div className="theme-set">
                     {GoThemesSorted.board.map((theme, idx) => (
-                        <div key={theme.theme_name}
-                            className={"selector" + (this.state.board === theme.theme_name ? " active" : "")}
+                        <div
+                            key={theme.theme_name}
+                            className={
+                                "selector" +
+                                (this.state.board === theme.theme_name ? " active" : "")
+                            }
                             style={{
                                 ...theme.styles,
-                                ...(theme.theme_name === "Plain" ? {backgroundImage: "linear-gradient(-45deg, orange,yellow,green,blue,indigo,violet)"} : {})
+                                ...(theme.theme_name === "Plain"
+                                    ? {
+                                          backgroundImage:
+                                              "linear-gradient(-45deg, orange,yellow,green,blue,indigo,violet)",
+                                      }
+                                    : {}),
                             }}
                             onClick={this.selectTheme["board"][theme.theme_name]}
-                            >
-
-                            {theme.theme_name === "Plain"
-                                ? <span>{pgettext("Custom board theme", "Custom")}</span>
-                                : <PersistentElement elt={this.canvases.board[idx]} />
-                            }
+                        >
+                            {theme.theme_name === "Plain" ? (
+                                <span>{pgettext("Custom board theme", "Custom")}</span>
+                            ) : (
+                                <PersistentElement elt={this.canvases.board[idx]} />
+                            )}
                         </div>
                     ))}
-                    {this.state.board === "Plain" &&
+                    {this.state.board === "Plain" && (
                         <div>
-                            <input type="color" style={inputStyle} value={boardCustom} onChange={this.setCustom.bind(this, "board")} />
-                            <button className="color-reset" onClick={this.setCustom.bind(this, "board")}><i className="fa fa-undo"/></button>
-                            <input type="color" style={inputStyle} value={lineCustom} onChange={this.setCustom.bind(this, "line")} />
-                            <button className="color-reset" onClick={this.setCustom.bind(this, "line")}><i className="fa fa-undo"/></button>
-                            <input className="customUrlSelector"
+                            <input
+                                type="color"
+                                style={inputStyle}
+                                value={boardCustom}
+                                onChange={this.setCustom.bind(this, "board")}
+                            />
+                            <button
+                                className="color-reset"
+                                onClick={this.setCustom.bind(this, "board")}
+                            >
+                                <i className="fa fa-undo" />
+                            </button>
+                            <input
+                                type="color"
+                                style={inputStyle}
+                                value={lineCustom}
+                                onChange={this.setCustom.bind(this, "line")}
+                            />
+                            <button
+                                className="color-reset"
+                                onClick={this.setCustom.bind(this, "line")}
+                            >
+                                <i className="fa fa-undo" />
+                            </button>
+                            <input
+                                className="customUrlSelector"
                                 type="text"
                                 value={urlCustom}
-                                placeholder={pgettext("Custom background image url for the goban", "Custom background URL")}
-                                onFocus={e => e.target.select()}
+                                placeholder={pgettext(
+                                    "Custom background image url for the goban",
+                                    "Custom background URL",
+                                )}
+                                onFocus={(e) => e.target.select()}
                                 onChange={this.setCustom.bind(this, "url")}
                             />
                         </div>
-                    }
+                    )}
                 </div>
 
                 <div className="theme-set">
                     {GoThemesSorted.white.map((theme, idx) => (
-                        <div key={theme.theme_name}
-                            className={"selector" + (this.state.white === theme.theme_name ? " active" : "")}
+                        <div
+                            key={theme.theme_name}
+                            className={
+                                "selector" +
+                                (this.state.white === theme.theme_name ? " active" : "")
+                            }
                             style={theme.styles}
                             onClick={this.selectTheme["white"][theme.theme_name]}
-                            >
+                        >
                             <PersistentElement elt={this.canvases.white[idx]} />
                         </div>
                     ))}
-                    {this.state.white === "Plain" &&
+                    {this.state.white === "Plain" && (
                         <div>
-                            <input type="color" style={inputStyle} value={whiteCustom} onChange={this.setCustom.bind(this, "white")} />
-                            <button className="color-reset" onClick={this.setCustom.bind(this, "white")}><i className="fa fa-undo"/></button>
+                            <input
+                                type="color"
+                                style={inputStyle}
+                                value={whiteCustom}
+                                onChange={this.setCustom.bind(this, "white")}
+                            />
+                            <button
+                                className="color-reset"
+                                onClick={this.setCustom.bind(this, "white")}
+                            >
+                                <i className="fa fa-undo" />
+                            </button>
                         </div>
-                    }
+                    )}
                 </div>
 
                 <div className="theme-set">
                     {GoThemesSorted.black.map((theme, idx) => (
-                        <div key={theme.theme_name}
-                            className={"selector" + (this.state.black === theme.theme_name ? " active" : "")}
+                        <div
+                            key={theme.theme_name}
+                            className={
+                                "selector" +
+                                (this.state.black === theme.theme_name ? " active" : "")
+                            }
                             style={theme.styles}
                             onClick={this.selectTheme["black"][theme.theme_name]}
-                            >
+                        >
                             <PersistentElement elt={this.canvases.black[idx]} />
                         </div>
                     ))}
-                    {this.state.black === "Plain" &&
+                    {this.state.black === "Plain" && (
                         <div>
-                            <input type="color" style={inputStyle} value={blackCustom} onChange={this.setCustom.bind(this, "black")} />
-                            <button className="color-reset" onClick={this.setCustom.bind(this, "black")}><i className="fa fa-undo"/></button>
+                            <input
+                                type="color"
+                                style={inputStyle}
+                                value={blackCustom}
+                                onChange={this.setCustom.bind(this, "black")}
+                            />
+                            <button
+                                className="color-reset"
+                                onClick={this.setCustom.bind(this, "black")}
+                            >
+                                <i className="fa fa-undo" />
+                            </button>
                         </div>
-                    }
+                    )}
                 </div>
             </div>
         );
     }
 
     renderPickers() {
-        let start = new Date();
-        let square_size = this.state.size;
+        const start = new Date();
+        const square_size = this.state.size;
 
         for (let i = 0; i < GoThemesSorted.board.length; ++i) {
-            let theme = GoThemesSorted.board[i];
-            let canvas = this.canvases.board[i];
-            let ctx = canvas[0].getContext("2d");
+            const theme = GoThemesSorted.board[i];
+            const canvas = this.canvases.board[i];
+            const ctx = canvas[0].getContext("2d");
             ctx.clearRect(0, 0, square_size, square_size);
 
             ctx.beginPath();
@@ -211,37 +272,37 @@ export class GobanThemePicker extends React.PureComponent<GobanThemePickerProper
             ctx.lineTo(square_size / 2 - 0.5, square_size - 0.5);
             ctx.stroke();
 
-            ctx.font = "bold " + (square_size / 4) + "px Verdana,Courier,Arial,serif";
+            ctx.font = "bold " + square_size / 4 + "px Verdana,Courier,Arial,serif";
             ctx.fillStyle = theme.getLabelTextColor();
             ctx.textBaseline = "middle";
-            let metrics = ctx.measureText("A");
-            let xx = square_size / 2 - metrics.width / 2;
-            let yy = (square_size / 4);
+            const metrics = ctx.measureText("A");
+            const xx = square_size / 2 - metrics.width / 2;
+            const yy = square_size / 4;
             ctx.fillText("A", xx + 0.5, yy + 0.5);
         }
 
-        let plain_board = new (GoThemes["board"]["Plain"])();
+        const plain_board = new GoThemes["board"]["Plain"]();
         for (let i = 0; i < GoThemesSorted.white.length; ++i) {
-            let theme = GoThemesSorted.white[i];
-            let canvas = this.canvases.white[i];
-            let ctx = canvas[0].getContext("2d");
-            let radius = Math.round(square_size / 2.2);
-            let stones = theme.preRenderWhite(radius, 23434);
+            const theme = GoThemesSorted.white[i];
+            const canvas = this.canvases.white[i];
+            const ctx = canvas[0].getContext("2d");
+            const radius = Math.round(square_size / 2.2);
+            const stones = theme.preRenderWhite(radius, 23434);
             ctx.clearRect(0, 0, square_size, square_size);
             theme.placeWhiteStone(ctx, ctx, stones[0], square_size / 2, square_size / 2, radius);
         }
 
         for (let i = 0; i < GoThemesSorted.black.length; ++i) {
-            let theme = GoThemesSorted.black[i];
-            let canvas = this.canvases.black[i];
-            let ctx = canvas[0].getContext("2d");
-            let radius = Math.round(square_size / 2.2);
-            let stones = theme.preRenderBlack(radius, 23434);
+            const theme = GoThemesSorted.black[i];
+            const canvas = this.canvases.black[i];
+            const ctx = canvas[0].getContext("2d");
+            const radius = Math.round(square_size / 2.2);
+            const stones = theme.preRenderBlack(radius, 23434);
             ctx.clearRect(0, 0, square_size, square_size);
             theme.placeBlackStone(ctx, ctx, stones[0], square_size / 2, square_size / 2, radius);
         }
 
-        let end = new Date();
+        const end = new Date();
         //console.info("Render time: ", (end.getTime() - start.getTime()))
     }
 }

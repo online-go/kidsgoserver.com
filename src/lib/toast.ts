@@ -17,11 +17,10 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {TypedEventEmitter} from "TypedEventEmitter";
-
+import { TypedEventEmitter } from "TypedEventEmitter";
 
 interface Events {
-    "close": never;
+    close: never;
 }
 
 let toast_meta_container = null;
@@ -59,31 +58,27 @@ export function toast(element: React.ReactElement<any>, timeout?: number): Toast
         $(document.body).append(toast_meta_container);
     }
 
-    let position_container = $("<div class='toast-position-container'>");
+    const position_container = $("<div class='toast-position-container'>");
     toast_meta_container.prepend(position_container);
 
-    let container = $("<div class='toast-container'>");
+    const container = $("<div class='toast-container'>");
     position_container.append(container);
 
     ReactDOM.render(element, container[0]);
-    let ret = new Toast(container[0] as HTMLElement, timeout);
+    const ret = new Toast(container[0] as HTMLElement, timeout);
     container.click((ev) => {
-        if (
-            ev.target.nodeName !== "BUTTON"
-            && ev.target.className.indexOf('fab') === -1
-        ) {
+        if (ev.target.nodeName !== "BUTTON" && ev.target.className.indexOf("fab") === -1) {
             ret.close();
         }
     });
 
     setTimeout(() => {
-        position_container.css({height: container.outerHeight()}).addClass("opaque");
-
+        position_container.css({ height: container.outerHeight() }).addClass("opaque");
     }, 1);
     //position_container.css({height: 'auto'});
     setTimeout(() => {
-        container.css({position: "relative"});
-        position_container.css({height: "auto", minHeight: position_container.height() + 3});
+        container.css({ position: "relative" });
+        position_container.css({ height: "auto", minHeight: position_container.height() + 3 });
     }, 350);
 
     return ret;

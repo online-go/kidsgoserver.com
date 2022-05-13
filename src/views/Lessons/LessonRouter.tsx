@@ -16,15 +16,15 @@
  */
 
 import * as React from "react";
-import { Lesson } from './Lesson';
-import { Content } from './Content';
-import { chapters } from './chapters';
+import { Lesson } from "./Lesson";
+//import { Content } from "./Content";
+import { useParams } from "react-router-dom";
+import { chapters } from "./chapters";
 
-
-
-export function LessonRouter(props:{match:{params:{chapter: string, page: string}}}):JSX.Element {
-    let chapter = parseInt(props.match?.params?.chapter || '1') - 1;
-    let page = parseInt(props.match?.params?.page || '1') - 1;
+export function LessonRouter(): JSX.Element {
+    const params = useParams();
+    let chapter = parseInt(params.chapter || "1") - 1;
+    let page = parseInt(params.page || "1") - 1;
 
     if (chapter < 0 || chapter >= chapters.length) {
         chapter = 0;
@@ -45,5 +45,9 @@ export function LessonRouter(props:{match:{params:{chapter: string, page: string
     }, [chapter, page]);
     */
 
-    return <div><Lesson chapter={chapter} page={page} /></div>;
+    return (
+        <div>
+            <Lesson chapter={chapter} page={page} />
+        </div>
+    );
 }

@@ -15,19 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import * as React from "react";
-import {_, pgettext, interpolate} from "translate";
-import {post, get} from "requests";
-import {comm_socket} from "sockets";
+import { _, pgettext, interpolate } from "translate";
+import { post, get } from "requests";
+import { comm_socket } from "sockets";
 
 interface UIPushProperties {
     event: string;
     channel?: string;
     action: (data: any) => any;
 }
-
-
 
 class Handler {
     id: number;
@@ -38,10 +35,10 @@ class Handler {
 let last_handler_id = 0;
 class UIPushManager {
     handlers: {
-        [id: string]: Array<Handler>
+        [id: string]: Array<Handler>;
     };
     subscriptions: {
-        [id: string]: number
+        [id: string]: number;
     };
 
     constructor() {
@@ -50,23 +47,22 @@ class UIPushManager {
 
         comm_socket.on("ui-push", (msg) => {
             if (msg.event in this.handlers) {
-                for (let handler of this.handlers[msg.event]) {
+                for (const handler of this.handlers[msg.event]) {
                     handler.cb(msg.data, msg.event);
                 }
             }
         });
         comm_socket.on("connect", () => {
             /* handle resubscriptions */
-            for (let channel in this.subscriptions) {
-                comm_socket.send("ui-pushes/subscribe", {"channel": channel});
+            for (const channel in this.subscriptions) {
+                comm_socket.send("ui-pushes/subscribe", { channel: channel });
             }
         });
     }
 
     on(event, cb) {
-        let handler = new Handler();
-        handler.id = ++last_handler_id,
-        handler.event = event;
+        const handler = new Handler();
+        (handler.id = ++last_handler_id), (handler.event = event);
         handler.cb = cb;
 
         if (!(event in this.handlers)) {
@@ -91,7 +87,7 @@ class UIPushManager {
         } else {
             this.subscriptions[channel] = 1;
             if ((comm_socket as any).connected) {
-                comm_socket.send("ui-pushes/subscribe", {"channel": channel});
+                comm_socket.send("ui-pushes/subscribe", { channel: channel });
             }
         }
     }
@@ -101,13 +97,13 @@ class UIPushManager {
         } else {
             delete this.subscriptions[channel];
             if ((comm_socket as any).connected) {
-                comm_socket.send("ui-pushes/unsubscribe", {"channel": channel});
+                comm_socket.send("ui-pushes/unsubscribe", { channel: channel });
             }
         }
     }
 }
 
-export let push_manager = new UIPushManager();
+export const push_manager = new UIPushManager();
 
 export class UIPush extends React.Component<UIPushProperties, any> {
     handler: Handler = null;
@@ -118,7 +114,8 @@ export class UIPush extends React.Component<UIPushProperties, any> {
     }
 
     shouldComponentUpdate(next) {
-        if (this.props.event === next.event &&
+        if (
+            this.props.event === next.event &&
             this.props.action === next.action &&
             this.props.channel === next.channel
         ) {
@@ -165,7 +162,6 @@ export class UIPush extends React.Component<UIPushProperties, any> {
         this.removeHandler();
         this.unsubscribe();
     }
-
 
     render() {
         return null;

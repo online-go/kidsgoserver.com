@@ -16,60 +16,59 @@
  */
 
 import * as React from "react";
-import { PuzzleConfig, Goban, GoMath } from 'goban';
-import { Timeout, navigateTo } from 'misc';
-
+import { PuzzleConfig, Goban, GoMath } from "goban";
+import { Timeout } from "misc";
 
 interface Animation {
     cancel: () => void;
 }
 
 export class Content {
-    animations:{[id:string]: Timeout} = {};
-    delays:{[id:string]: Timeout} = {};
-    last_animation_id:number = 0;
-    goban?:Goban;
-    current_delay:number = 0;
-    next_path:string = "";
+    animations: { [id: string]: Timeout } = {};
+    delays: { [id: string]: Timeout } = {};
+    last_animation_id: number = 0;
+    goban?: Goban;
+    current_delay: number = 0;
+    next_path: string = "";
 
-    constructor() {
-    }
+    constructor() {}
 
-    text():JSX.Element | Array<JSX.Element> {
+    text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-            Natus asperiores vel est rerum nihil quia. Quae molestias mollitia minus. Saepe suscipit nulla magni aut qui. Eum aperiam dolorem porro aut.
+                Natus asperiores vel est rerum nihil quia. Quae molestias mollitia minus. Saepe
+                suscipit nulla magni aut qui. Eum aperiam dolorem porro aut.
             </p>
         );
     }
 
-    destroy():void {
+    destroy(): void {
         console.log("Destroying Content");
-        for (let id in this.animations) {
+        for (const id in this.animations) {
             clearTimeout(this.animations[id]);
         }
-        for (let id in this.delays) {
+        for (const id in this.delays) {
             clearTimeout(this.delays[id]);
         }
         this.animations = {};
         this.delays = {};
     }
 
-    config():PuzzleConfig {
+    config(): PuzzleConfig {
         return {
-            'initial_state': {
-                'black': 'a1b2',
-                'white': ''
-            }
+            initial_state: {
+                black: "a1b2",
+                white: "",
+            },
         };
     }
 
     /* Calls cb every interval ms until the callback returns falsy. Manages
      * tearing down the animation when the Content is destroyed. */
-    animate(cb: () => any, interval:number):Animation {
-        let animation_id = ++this.last_animation_id;
+    animate(cb: () => any, interval: number): Animation {
+        const animation_id = ++this.last_animation_id;
 
-        let loop = () => {
+        const loop = () => {
             let res = false;
             try {
                 res = cb();
@@ -92,13 +91,13 @@ export class Content {
                     clearTimeout(this.animations[animation_id]);
                     delete this.animations[animation_id];
                 }
-            }
+            },
         };
     }
 
-    delay(cb: () => any, increment:number = 750):Animation {
-        let animation_id = ++this.last_animation_id;
-        let t = this.current_delay += increment;
+    delay(cb: () => any, increment: number = 750): Animation {
+        const animation_id = ++this.last_animation_id;
+        const t = (this.current_delay += increment);
 
         this.delays[animation_id] = setTimeout(() => {
             try {
@@ -116,11 +115,11 @@ export class Content {
                     clearTimeout(this.delays[animation_id]);
                     delete this.delays[animation_id];
                 }
-            }
+            },
         };
     }
 
-    setGoban(goban:Goban) {
+    setGoban(goban: Goban) {
         if (this.goban) {
             throw new Error("Duplicate setGoban called");
         }
@@ -128,20 +127,24 @@ export class Content {
         this.onSetGoban(this.goban);
     }
 
-    onSetGoban(goban:Goban):void {
-    }
+    onSetGoban(goban: Goban): void {}
 
-    makePuzzleMoveTree(_correct:Array<string>, _wrong:Array<string>, width:number = 7, height:number = 7) {
-        let correct:Array<any> = [];
-        let wrong:Array<any> = [];
-        for (let s of _correct) {
+    makePuzzleMoveTree(
+        _correct: Array<string>,
+        _wrong: Array<string>,
+        width: number = 7,
+        height: number = 7,
+    ) {
+        const correct: Array<any> = [];
+        const wrong: Array<any> = [];
+        for (const s of _correct) {
             correct.push(GoMath.decodeMoves(s, width, height));
         }
-        for (let s of _wrong) {
+        for (const s of _wrong) {
             wrong.push(GoMath.decodeMoves(s, width, height));
         }
 
-        let ret = {
+        const ret = {
             x: -1,
             y: -1,
             branches: [],
@@ -152,14 +155,14 @@ export class Content {
                 cb(cur);
                 return;
             } else {
-                for (let branch of cur.branches) {
+                for (const branch of cur.branches) {
                     if (branch.x === path[0].x && branch.y === path[0].y) {
                         path.shift();
                         walk(branch, path, cb);
                         return;
                     }
                 }
-                let new_branch = {
+                const new_branch = {
                     x: path[0].x,
                     y: path[0].y,
                     branches: [],
@@ -171,21 +174,32 @@ export class Content {
             }
         }
 
-        for (let arr of correct) {
-            walk(ret, arr, (node) => node.correct_answer = true);
+        for (const arr of correct) {
+            walk(ret, arr, (node) => (node.correct_answer = true));
         }
 
-        for (let arr of wrong) {
-            walk(ret, arr, (node) => node.wrong_answer = true);
+        for (const arr of wrong) {
+            walk(ret, arr, (node) => (node.wrong_answer = true));
         }
 
         return ret;
     }
 
-    gotoNext():void {
+    gotoNext(): void {
         navigateTo(this.next_path);
     }
-    setNext(path:string):void {
+    setNext(path: string): void {
         this.next_path = path;
     }
+}
+
+let content_navigate = (_path: string) => {
+    console.error("Naviate not implemented");
+};
+export function setContentNavigate(fn: (path: string) => void): void {
+    content_navigate = fn;
+}
+
+function navigateTo(path: string) {
+    content_navigate(path);
 }
