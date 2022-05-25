@@ -69,32 +69,25 @@ export function LandingPage(): JSX.Element {
 
     return (
         <div id="LandingPage">
-            <div className="mountain-background">Mountain Background</div>
-            <div className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}>
-                <div>R</div>
-                <div>O</div>
-                <div>C</div>
-                <div>K</div>
-                <div>E</div>
-                <div>T</div>
-                <div className="flames">FLAMES</div>
-            </div>
+            <div className="spacer" />
+            <div className="mountain-background">
+                <div className="logo" />
+                <div
+                    className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}
+                    onClick={learnToPlay}
+                >
+                    <span className="label">LEARN</span>
+                    <div className="flames" />
+                </div>
 
-            <div className={`play-rocket ${play_launching ? "launch" : ""}`}>
-                <div>R</div>
-                <div>O</div>
-                <div>C</div>
-                <div>K</div>
-                <div>E</div>
-                <div>T</div>
-                <div className="flames">FLAMES</div>
+                <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
+                    <span className="label">PLAY</span>
+                    <div className="flames" />
+                </div>
+                <div className="learn-launchpad launchpad" />
+                <div className="play-launchpad launchpad" />
             </div>
-            <div className="learn-to-play-button-container">
-                <button onClick={learnToPlay}>{_("Learn to Play")}</button>
-            </div>
-            <div className="play-button-container">
-                <button onClick={play}>{_("Play")}</button>
-            </div>
+            <div className="spacer" />
         </div>
     );
 }

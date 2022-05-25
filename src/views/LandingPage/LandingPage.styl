@@ -27,46 +27,95 @@ ROCKET_LAUNCH_DURATION = 1.25s
 }
 
 
+ROCKETWIDTH=10rem;
+ROCKETHEIGHT=ROCKETWIDTH * 3;
+FLAMEWIDTH=5rem;
+FLAMECENTER=2.5rem;
+FLAMEHEIGHT=12rem;
+
 
 #LandingPage {
     position: absolute;
-    background-color: green;
+    background-color: #001533;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: stretch;
 
+
+
+    .spacer {
+        flex-grow: 0;
+        flex-shrink: 1;
+        width: "calc((100vw - 100vh) / 2)" % "";
+    }
 
     .mountain-background {
-        position: absolute;
-        font-size: 60px;
+        flex-grow: 1;
+        position: relative;
         text-align: center;
-        background-color: brown;
+        background-image: svg-load("../assets/pages/home/background.svg");
+        background-repeat: no-repeat;
+    }
 
-        top: 10vh;
-        bottom: 10vh;
-        left: 0;
-        right: 0;
+    .logo {
+        position: absolute;
+        text-align: center;
+        background-image: svg-load("../assets/pages/home/kidsgoserver.svg");
+        background-repeat: no-repeat;
+        display: inline-block;
+        width: 80%;
+        height: 80%;
+        left: 10%;
+
     }
 
 
     .learn-to-play-rocket, .play-rocket {
         position: absolute;
-        background-color: RED;
-        bottom: 10rem;
-        width: 5rem;
+        bottom: 5.5rem;
+        width: ROCKETWIDTH;
         text-align: center;
+        height: ROCKETHEIGHT;
+        background-repeat: no-repeat;
+        background-position: bottom;
+        z-index: z.rocket;
+        cursor: pointer;
 
         .flames {
             display: none;
+            z-index: z.flame;
+            height: FLAMEHEIGHT;
+            width: FLAMEWIDTH;
+            position: absolute;
+            top: ROCKETHEIGHT;
+            left: ROCKETWIDTH - 6.25rem;
+            background-image: svg-load("../assets/pages/home/flame.svg");
+            background-repeat: no-repeat;
+            background-position: 0 -30px;
+        }
+
+        .label {
+            position: relative;
+            color: white;
+            top: ROCKETHEIGHT * 0.5 - 0.75rem;
+
         }
     }
     .learn-to-play-rocket {
         left: 5vw;
+        background-image: svg-load("../assets/pages/home/learn.svg");
     }
 
     .play-rocket {
         right: 5vw;
+        background-image: svg-load("../assets/pages/home/play.svg");
     }
 
     .launch {
@@ -75,28 +124,29 @@ ROCKET_LAUNCH_DURATION = 1.25s
         animation-timing-function: cubic-bezier(0.73, 0.27, 0.95, 0.66);
 
         .flames {
-            display: block;
+            display: inline-block;
         }
     }
 
 
 
-    .learn-to-play-button-container, .play-button-container {
+    .launchpad {
         position: absolute;
-        background-color: blue;
-        bottom: 5rem;
+        display: inline-block;
+        bottom: 0.5rem;
         height: 5rem;
+        width: ROCKETWIDTH;
         text-align: center;
-
+        background-repeat: no-repeat;
     }
 
-    .learn-to-play-button-container {
+    .learn-launchpad {
         left: 5vw;
+        background-image: svg-load("../assets/pages/home/launchpad.svg");
     }
 
-    .play-button-container {
+    .play-launchpad {
         right: 5vw;
+        background-image: svg-load("../assets/pages/home/launchpad.svg");
     }
-
-
 }
