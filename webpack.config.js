@@ -86,6 +86,10 @@ module.exports = (env, argv) => {
                 'src/components',
                 'src/views',
                 'src',
+                'online-go.com/src/lib',
+                'online-go.com/src/components',
+                'online-go.com/src/views',
+                'online-go.com/src',
                 'node_modules'
             ],
             alias: alias,

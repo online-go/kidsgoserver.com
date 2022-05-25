@@ -15,8 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference path="../online-go.com/src/models/challenges.d.ts" />
+/// <reference path="../online-go.com/src/models/games.d.ts" />
+/// <reference path="../online-go.com/src/models/overview.d.ts" />
+/// <reference path="../online-go.com/src/models/puzzles.d.ts" />
+/// <reference path="../online-go.com/src/models/tournaments.d.ts" />
+/// <reference path="../online-go.com/src/models/user.d.ts" />
 import * as Sentry from "@sentry/browser";
-import * as SentryTracing from "@sentry/tracing";
 import { configure_goban } from "configure-goban";
 import {
     GoMath,
@@ -29,8 +34,6 @@ import { sfx } from "sfx";
 import { post } from "requests";
 import { ai_host } from "sockets";
 sfx.sync();
-
-import * as hacks from "hacks";
 
 declare let kidsgo_current_language;
 declare let kidsgo_version;
@@ -64,7 +67,6 @@ try {
             new Sentry.Integrations.Breadcrumbs({
                 console: false,
             }),
-            new SentryTracing.Integrations.BrowserTracing(),
         ],
     });
 
@@ -148,10 +150,10 @@ data.watch(cached.config, (config) => {
      * that are depending on other parts of the config will fire without
      * having up to date information (in particular user / auth stuff) */
     for (const key in config) {
-        data.setWithoutEmit(`config.${key}`, config[key]);
+        data.setWithoutEmit(`config.${key}` as any, config[key] as never);
     }
     for (const key in config) {
-        data.set(`config.${key}`, config[key]);
+        data.set(`config.${key}` as any, config[key] as never);
     }
 });
 
@@ -220,7 +222,7 @@ data.watch("config.user", (user) => {
     /*
     if (!user.anonymous) {
         auth_connect_fn = (): void => {
-            sockets.comm_socket.send("authenticate", {
+            sockets.socket.send("authenticate", {
                 auth: data.get("config.chat_auth"),
                 player_id: user.id,
                 username: user.username,
@@ -230,7 +232,7 @@ data.watch("config.user", (user) => {
                 language_version: kidsgo_language_version,
                 client_version: kidsgo_version,
             });
-            sockets.comm_socket.send("chat/connect", {
+            sockets.socket.send("chat/connect", {
                 auth: data.get("config.chat_auth"),
                 player_id: user.id,
                 ranking: user.ranking,
@@ -241,7 +243,7 @@ data.watch("config.user", (user) => {
     } else if (user.id < 0) {
     */
     auth_connect_fn = (): void => {
-        sockets.comm_socket.send("chat/connect", {
+        sockets.socket.send("chat/connect", {
             player_id: user.id,
             ranking: user.ranking,
             username: user.username,
@@ -249,11 +251,11 @@ data.watch("config.user", (user) => {
         });
     };
     //}
-    if (sockets.comm_socket.connected) {
+    if (sockets.socket.connected) {
         auth_connect_fn();
     }
 });
-sockets.comm_socket.on("connect", () => {
+sockets.socket.on("connect", () => {
     auth_connect_fn();
 });
 
@@ -272,7 +274,7 @@ init_score_estimator()
     .catch((err) => console.error(err));
 
 /*** Generic error handling from the server ***/
-sockets.termination_socket.on("ERROR", errorAlerter);
+sockets.socket.on("ERROR", errorAlerter);
 
 /* Initialization done, render!! */
 const svg_loader = document.getElementById("loading-svg-container");

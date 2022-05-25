@@ -18,10 +18,16 @@
                 "src/views/*",
                 "src/data/*",
                 "src/compatibility/*",
-                "src/*"
+                "src/*",
+                "online-go.com/src/lib/*",
+                "online-go.com/src/components/*",
+                "online-go.com/src/views/*",
+                "online-go.com/src/models/*",
+                "online-go.com/src/*",
+                "online-go.com/*"
             ],
             "requests": [
-                "src/lib/requests"
+                "online-go.com/src/lib/requests"
             ]
         },
 

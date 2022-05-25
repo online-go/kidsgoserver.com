@@ -13,7 +13,7 @@ const autoprefixer = require("autoprefixer");
 const postcss = require("gulp-postcss");
 const cssnano = require("cssnano");
 const inline_svg = require("postcss-inline-svg");
-const gulpEslint = require("gulp-eslint7");
+const gulpEslint = require("gulp-eslint-new");
 const html_minifier = require("html-minifier").minify;
 
 let ts_sources = ["src/**/*.ts", "src/**/*.tsx", "!src/**/*.test.ts", "!src/**/*.test.tsx"];
