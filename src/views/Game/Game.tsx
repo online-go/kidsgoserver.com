@@ -114,7 +114,7 @@ export function Game(): JSX.Element {
             onResize(w, h);
         }, 10);
 
-        let animation_interval = setInterval(() => {
+        const animation_interval = setInterval(() => {
             goban.redraw();
         }, 1000);
 
