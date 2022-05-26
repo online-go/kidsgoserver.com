@@ -23,6 +23,7 @@
 /// <reference path="../online-go.com/src/models/user.d.ts" />
 import * as Sentry from "@sentry/browser";
 import { configure_goban } from "configure-goban";
+import { initialize_kidsgo_themes } from "goban_themes";
 import {
     GoMath,
     init_score_estimator,
@@ -123,6 +124,7 @@ data.setDefault(
 data.setDefault("config.cdn_release", window["cdn_service"] + "/" + window["kidsgo_release"]);
 data.setDefault("config.release", window["kidsgo_release"]);
 
+initialize_kidsgo_themes();
 configure_goban();
 
 import * as React from "react";
@@ -282,7 +284,8 @@ svg_loader.parentNode.removeChild(svg_loader);
 
 const react_root = ReactDOM.createRoot(document.getElementById("main-content"));
 
-react_root.render(<React.StrictMode>{routes}</React.StrictMode>);
+//react_root.render(<React.StrictMode>{routes}</React.StrictMode>);
+react_root.render(routes);
 
 window["data"] = data;
 window["preferences"] = preferences;

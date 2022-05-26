@@ -16,7 +16,7 @@
  */
 
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
@@ -25,13 +25,16 @@ import { Avatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 
-export function Game(props: any): JSX.Element {
+export function Game(): JSX.Element {
+    const params = useParams();
     const navigate = useNavigate();
-    const id: number = parseInt(props.match?.params?.id);
     const container = useRef<HTMLDivElement>(null);
     const goban_ref = useRef<Goban>(null);
     const goban_opts_ref = useRef<any>({});
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
+
+    const game_id = parseInt(params.id);
+
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
@@ -55,7 +58,7 @@ export function Game(props: any): JSX.Element {
     });
 
     useEffect(() => {
-        console.log("Constructing game ", id);
+        console.log("Constructing game ", game_id);
 
         const opts: GobanConfig = {
             board_div: container.current || undefined,
@@ -68,7 +71,10 @@ export function Game(props: any): JSX.Element {
             draw_left_labels: false,
             draw_bottom_labels: false,
             player_id: 0,
-            server_socket: null,
+            game_id: game_id,
+            dont_draw_last_move: true,
+
+            //server_socket: null,
             //"square_size": 20
         };
 
@@ -93,7 +99,7 @@ export function Game(props: any): JSX.Element {
             const move_string = mvs
                 .map((p) => GoMath.prettyCoords(p.x, p.y, goban.height))
                 .join(",");
-            console.log("Move string: ", move_string);
+            //console.log("Move string: ", move_string);
             //this.setState({ move_string });
         };
 
@@ -108,6 +114,10 @@ export function Game(props: any): JSX.Element {
             onResize(w, h);
         }, 10);
 
+        let animation_interval = setInterval(() => {
+            goban.redraw();
+        }, 1000);
+
         return () => {
             if (t) {
                 clearTimeout(t);
@@ -115,14 +125,15 @@ export function Game(props: any): JSX.Element {
             goban.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
-            console.log(`Game ${id} teardown`);
+            console.log(`Game ${game_id} teardown`);
             hup(Math.random());
             setTimeout(() => {
                 console.log("Redrawing");
                 goban.redraw(true);
             }, 1);
+            clearInterval(animation_interval);
         };
-    }, [id, container]);
+    }, [game_id, container]);
 
     /*
     useEffect(() => {
