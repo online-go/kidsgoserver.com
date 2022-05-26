@@ -126,7 +126,7 @@ data.setDefault("config.release", window["kidsgo_release"]);
 configure_goban();
 
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom/client";
 import { routes } from "./kidsgo-routes";
 
 //import {Promise} from "es6-promise";
@@ -174,7 +174,7 @@ data.watch("config.user", (user) => {
 
     if (last_username && last_username !== user.username) {
         last_username = user.username;
-        forceReactUpdate();
+        //forceReactUpdate();
     }
     last_username = user.username;
 });
@@ -280,19 +280,9 @@ sockets.socket.on("ERROR", errorAlerter);
 const svg_loader = document.getElementById("loading-svg-container");
 svg_loader.parentNode.removeChild(svg_loader);
 
-let forceReactUpdate: () => void = () => {};
+const react_root = ReactDOM.createRoot(document.getElementById("main-content"));
 
-function ForceReactUpdateWrapper(props): JSX.Element {
-    const [update, setUpdate] = React.useState(1);
-    forceReactUpdate = () => {
-        setUpdate(update + 1);
-    };
-    return <React.Fragment key={update}>{props.children}</React.Fragment>;
-}
-ReactDOM.render(
-    <ForceReactUpdateWrapper>{routes}</ForceReactUpdateWrapper>,
-    document.getElementById("main-content"),
-);
+react_root.render(<React.StrictMode>{routes}</React.StrictMode>);
 
 window["data"] = data;
 window["preferences"] = preferences;
