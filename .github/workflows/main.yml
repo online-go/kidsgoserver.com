@@ -55,9 +55,6 @@ jobs:
 
       - name: Webpack
         run: npx webpack --optimization-minimize --devtool=source-map
-        
-      - name: Tests
-        run: npx jest
 
       # Log compressed output size
       - name: Compressed sizes
