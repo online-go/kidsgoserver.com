@@ -24,8 +24,9 @@ import { Goban, GoMath, GobanConfig } from "goban";
 import { Avatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
+import { BackButton } from "BackButton";
 
-export function Game(): JSX.Element {
+export function KidsGame(): JSX.Element {
     const params = useParams();
     const navigate = useNavigate();
     const container = useRef<HTMLDivElement>(null);
@@ -125,7 +126,7 @@ export function Game(): JSX.Element {
             goban.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
-            console.log(`Game ${game_id} teardown`);
+            console.log(`KidsGame ${game_id} teardown`);
             hup(Math.random());
             setTimeout(() => {
                 console.log("Redrawing");
@@ -147,7 +148,9 @@ export function Game(): JSX.Element {
 
     return (
         <>
-            <div id="Game" className="bg-mars">
+            <div id="KidsGame" className="bg-mars">
+                <BackButton onClick={quit} />
+
                 <div className="portrait-top-spacer" />
 
                 <div id="white-container">

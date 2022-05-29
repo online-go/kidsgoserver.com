@@ -1,33 +1,33 @@
-'use strict';
+"use strict";
 
-var path = require('path');
-let fs = require('fs');
-var webpack = require('webpack');
-const pkg = require('./package.json');
-const TerserPlugin = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var path = require("path");
+let fs = require("fs");
+var webpack = require("webpack");
+const pkg = require("./package.json");
+const TerserPlugin = require("terser-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 let plugins = [];
 
 plugins.push(
     new ForkTsCheckerWebpackPlugin({
         typescript: {
-            diagnosticOptions: { 
-                syntactic: true, 
-                semantic: true, 
-                declaration: true, 
-                global: true 
-            }
-        }
-    })
+            diagnosticOptions: {
+                syntactic: true,
+                semantic: true,
+                declaration: true,
+                global: true,
+            },
+        },
+    }),
 );
 
-
-plugins.push(new webpack.BannerPlugin(
-`Copyright (C) 2012-2020  Online-Go.com
+plugins.push(
+    new webpack.BannerPlugin(
+        `Copyright (C) 2012-2020  Online-Go.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -41,26 +41,40 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-`));
-
+`,
+    ),
+);
 
 module.exports = (env, argv) => {
-    const production = argv.mode === 'production';
+    const production = argv.mode === "production";
     let alias = {};
 
     if (production) {
         console.log("Production build, enabling react profiling");
         alias = {
-            'react-dom$': 'react-dom/profiling',
-            'scheduler/tracing': 'scheduler/tracing-profiling',
+            "react-dom$": "react-dom/profiling",
+            "scheduler/tracing": "scheduler/tracing-profiling",
         };
     }
 
+    plugins.push(
+        new CircularDependencyPlugin({
+            exclude: /node_modules|Player/,
+            failOnError: false,
+            allowAsyncCycles: false,
+            cwd: process.cwd(),
+            onDetected({ module: webpackModuleRecord, paths, compilation }) {
+                compilation.errors.push(new Error("Circular dependency found:\n    " + paths.join("\n -> ")));
+            },
+        }),
+    );
 
-    plugins.push(new webpack.EnvironmentPlugin({
-        NODE_ENV: production ? 'production' : 'development',
-        DEBUG: false
-    }));
+    plugins.push(
+        new webpack.EnvironmentPlugin({
+            NODE_ENV: production ? "production" : "development",
+            DEBUG: false,
+        }),
+    );
 
     let defines = {
         CLIENT: true,
@@ -69,42 +83,40 @@ module.exports = (env, argv) => {
 
     plugins.push(new webpack.DefinePlugin(defines));
 
-
     if (process.env.ANALYZE) {
         plugins.push(new BundleAnalyzerPlugin());
     }
 
-
     const config = {
-        mode: production ? 'production' : 'development',
+        mode: production ? "production" : "development",
         entry: {
-            'kidsgo': './src/kidsgo.tsx',
+            kidsgo: "./src/kidsgo.tsx",
         },
         resolve: {
             modules: [
-                'src/lib',
-                'src/components',
-                'src/views',
-                'src',
-                'online-go.com/src/lib',
-                'online-go.com/src/components',
-                'online-go.com/src/views',
-                'online-go.com/src',
-                'node_modules'
+                "src/lib",
+                "src/components",
+                "src/views",
+                "src",
+                "online-go.com/src/lib",
+                "online-go.com/src/components",
+                "online-go.com/src/views",
+                "online-go.com/src",
+                "node_modules",
             ],
             alias: alias,
             extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
         },
         output: {
-            path: __dirname + '/dist',
-            filename: production ? '[name].min.js' : '[name].js'
+            path: __dirname + "/dist",
+            filename: production ? "[name].min.js" : "[name].js",
         },
         module: {
             rules: [
                 {
                     test: /\.js$/,
                     use: ["source-map-loader"],
-                    enforce: "pre"
+                    enforce: "pre",
                 },
                 // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
                 {
@@ -114,14 +126,14 @@ module.exports = (env, argv) => {
                         {
                             loader: "ts-loader",
                             options: {
-                                configFile: 'tsconfig.json',
+                                configFile: "tsconfig.json",
                                 transpileOnly: true,
-                                happyPackMode: true
-                            }
-                        }
-                    ]
-                }
-            ]
+                                happyPackMode: true,
+                            },
+                        },
+                    ],
+                },
+            ],
         },
 
         performance: {
@@ -131,39 +143,36 @@ module.exports = (env, argv) => {
 
         optimization: {
             splitChunks: {
-                cacheGroups: {   
+                cacheGroups: {
                     "kidsgo-vendor": {
-                        test: /[\\/]node_modules[\\/]/,   // <-- use the test property to specify which deps go here
+                        test: /[\\/]node_modules[\\/]/, // <-- use the test property to specify which deps go here
                         name: "kidsgo-vendor",
                         chunks: "all",
-                        priority: -10
-                    }
-                }
+                        priority: -10,
+                    },
+                },
             },
             minimizer: [
                 new TerserPlugin({
                     parallel: true,
-                    terserOptions: {
-                    },
+                    terserOptions: {},
                 }),
             ],
         },
-
-
 
         plugins: plugins,
 
         //devtool: production ? 'source-map' : 'eval-source-map',
         /* NOTE: The default needs to be source-map for the i18n translation stuff to work. Specifically, using eval-source-map makes it impossible for our xgettext-js parser to parse the embedded source. */
-        devtool: 'source-map',
+        devtool: "source-map",
 
         // When importing a module whose path matches one of the following, just
         // assume a corresponding global variable exists and use that instead.
         // This is important because it allows us to avoid bundling all of our
         // dependencies, which allows browsers to cache those libraries between builds.
         externals: {
-            "goban": "goban",
-            "swal": "swal", // can't seem to import anyways
+            goban: "goban",
+            swal: "swal", // can't seem to import anyways
         },
 
         devServer: {
@@ -177,7 +186,7 @@ module.exports = (env, argv) => {
                 timings: true,
                 version: true,
                 warnings: true,
-            }
+            },
         },
     };
 

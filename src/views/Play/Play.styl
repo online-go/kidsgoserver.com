@@ -1,0 +1,67 @@
+/*
+ * Copyright (C) 2012-2020  Online-Go.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+#Play {
+    position: absolute;
+    background-color: #eee;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    font-size: 2rem;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: center;
+
+    .container {
+        display: inline-flex;
+        flex-direction: row;
+    }
+
+    .refresh {
+        cursor: pointer;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .NameSelection {
+        font-size: 1.8rem;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .NameSelection.refreshing {
+        opacity: 0.5;
+    }
+
+    .username {
+        width: 25rem;
+        max-width: 100vw;
+        display: inline-flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: center;
+        align-content: flex-end;
+    }
+
+    select {
+        background-color: rgba(255,255,255,0.5);
+    }
+}

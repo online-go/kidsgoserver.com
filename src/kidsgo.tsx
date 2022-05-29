@@ -21,6 +21,7 @@
 /// <reference path="../online-go.com/src/models/puzzles.d.ts" />
 /// <reference path="../online-go.com/src/models/tournaments.d.ts" />
 /// <reference path="../online-go.com/src/models/user.d.ts" />
+import * as _hacks from "./hacks";
 import * as Sentry from "@sentry/browser";
 import { configure_goban } from "configure-goban";
 import { initialize_kidsgo_themes } from "goban_themes";
@@ -34,7 +35,10 @@ import {
 import { sfx } from "sfx";
 import { post } from "requests";
 import { ai_host } from "sockets";
+import * as requests from "requests";
 sfx.sync();
+
+(window as any)["requests"] = requests;
 
 declare let kidsgo_current_language;
 declare let kidsgo_version;
@@ -151,11 +155,14 @@ data.watch(cached.config, (config) => {
      * again to do the emits that we are expecting. Otherwise triggers
      * that are depending on other parts of the config will fire without
      * having up to date information (in particular user / auth stuff) */
+    console.log(config);
     for (const key in config) {
         data.setWithoutEmit(`config.${key}` as any, config[key] as never);
+        console.log(`config.${key}`, config[key]);
     }
     for (const key in config) {
         data.set(`config.${key}` as any, config[key] as never);
+        console.log(`config.${key}`, config[key]);
     }
 });
 

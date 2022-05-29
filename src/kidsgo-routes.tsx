@@ -25,7 +25,8 @@ import { _ } from "translate";
 
 import { LandingPage } from "LandingPage";
 import { LessonRouter } from "Lessons";
-import { Game } from "Game";
+import { KidsGame } from "KidsGame";
+import { Play } from "Play";
 import { LearnToPlay } from "LearnToPlay";
 import { ErrorBoundary } from "ErrorBoundary";
 
@@ -49,10 +50,11 @@ export const routes = (
     <BrowserRouter>
         <Main>
             <Routes>
-                <Route path="/game/:id" element={<Game />} />
+                <Route path="/game/:id" element={<KidsGame />} />
                 <Route path="/learn-to-play/:chapter/:page" element={<LessonRouter />} />
                 <Route path="/learn-to-play/:chapter" element={<LessonRouter />} />
                 <Route path="/learn-to-play" element={<LearnToPlay />} />
+                <Route path="/play" element={<Play />} />
                 <Route path="/" element={<Default />} />
                 <Route path="/*" element={<PageNotFound />} />
             </Routes>

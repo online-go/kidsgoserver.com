@@ -63,7 +63,7 @@ export function LandingPage(): JSX.Element {
         navigate_timeout = setTimeout(() => {
             //set_play_launching(false);
             console.log("Go to play");
-            navigate("/game/0");
+            navigate("/play");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
 
