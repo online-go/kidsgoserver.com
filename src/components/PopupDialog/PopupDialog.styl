@@ -15,43 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-font-size-normal= 14px;
 
-/* z indicies */
-z = {
-    goban: {
-        shadow-layer   : 10,
-        stone-layer    : 20,
-        pen-layer      : 30,
-        message        : 40,
-        tab-icon       : 160, /* must be above z.dock */
-        exit-zenmode   : 45,
-        score-details  : 50,
-    },
-    rocket: 10,
-    flame: 5,
-    swal: 10000,
-}
-
-
-/************/
-/************/
-/************/
-
-@require "global_styl/global.styl";
-@require "global_styl/mixins.styl";
-@require "../node_modules/goban/src/Goban.styl";
-@require "global_styl/backgrounds.styl";
-@require "global_styl/swal.styl";
-
-@require "./components/[A-Z]*/*.styl";
-@require "./views/[A-Z]*/*.styl";
-
-
-.foobar {
+.PopupDialog-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    width: 64px;
-    height: 64px;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.PopupDialog {
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
 }

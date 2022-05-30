@@ -155,14 +155,11 @@ data.watch(cached.config, (config) => {
      * again to do the emits that we are expecting. Otherwise triggers
      * that are depending on other parts of the config will fire without
      * having up to date information (in particular user / auth stuff) */
-    console.log(config);
     for (const key in config) {
         data.setWithoutEmit(`config.${key}` as any, config[key] as never);
-        console.log(`config.${key}`, config[key]);
     }
     for (const key in config) {
         data.set(`config.${key}` as any, config[key] as never);
-        console.log(`config.${key}`, config[key]);
     }
 });
 
@@ -228,17 +225,16 @@ let auth_connect_fn = () => {
     return;
 };
 data.watch("config.user", (user) => {
-    /*
     if (!user.anonymous) {
         auth_connect_fn = (): void => {
             sockets.socket.send("authenticate", {
                 auth: data.get("config.chat_auth"),
                 player_id: user.id,
                 username: user.username,
-                jwt: data.get('config.user_jwt'),
+                jwt: data.get("config.user_jwt"),
                 useragent: navigator.userAgent,
                 language: kidsgo_current_language,
-                language_version: kidsgo_language_version,
+                language_version: "",
                 client_version: kidsgo_version,
             });
             sockets.socket.send("chat/connect", {
@@ -250,16 +246,15 @@ data.watch("config.user", (user) => {
             });
         };
     } else if (user.id < 0) {
-    */
-    auth_connect_fn = (): void => {
-        sockets.socket.send("chat/connect", {
-            player_id: user.id,
-            ranking: user.ranking,
-            username: user.username,
-            ui_class: user.ui_class,
-        });
-    };
-    //}
+        auth_connect_fn = (): void => {
+            sockets.socket.send("chat/connect", {
+                player_id: user.id,
+                ranking: user.ranking,
+                username: user.username,
+                ui_class: user.ui_class,
+            });
+        };
+    }
     if (sockets.socket.connected) {
         auth_connect_fn();
     }
