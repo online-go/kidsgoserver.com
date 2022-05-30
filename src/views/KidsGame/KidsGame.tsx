@@ -16,6 +16,7 @@
  */
 
 import * as React from "react";
+import * as data from "data";
 import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -25,14 +26,18 @@ import { Avatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
+import { usePlayerToMove } from "Game/GameHooks";
 
 export function KidsGame(): JSX.Element {
+    const user = data.get("user");
+
     const params = useParams();
     const navigate = useNavigate();
     const container = useRef<HTMLDivElement>(null);
     const goban_ref = useRef<Goban>(null);
     const goban_opts_ref = useRef<any>({});
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
+    const player_to_move = usePlayerToMove(goban_ref.current);
 
     const game_id = parseInt(params.id);
 
@@ -64,16 +69,17 @@ export function KidsGame(): JSX.Element {
         const opts: GobanConfig = {
             board_div: container.current || undefined,
             interactive: true,
-            mode: "puzzle",
+            mode: "play",
             width: 9,
             height: 9,
             draw_top_labels: false,
             draw_right_labels: false,
             draw_left_labels: false,
             draw_bottom_labels: false,
-            player_id: 0,
+            player_id: user.id,
             game_id: game_id,
             dont_draw_last_move: true,
+            one_click_submit: true,
 
             //server_socket: null,
             //"square_size": 20
@@ -82,7 +88,6 @@ export function KidsGame(): JSX.Element {
         goban_opts_ref.current = opts;
         goban_ref.current = new Goban(opts);
         const goban: Goban = goban_ref.current;
-        goban.setMode("puzzle");
         try {
             onResize(board_container_resizer.width, board_container_resizer.height);
         } catch (e) {
@@ -136,15 +141,43 @@ export function KidsGame(): JSX.Element {
         };
     }, [game_id, container]);
 
-    /*
-    useEffect(() => {
-        console.log(board_container_resizer.width, board_container_resizer.height);
-    }, [board_container_resizer.width, board_container_resizer.height]);
-    */
-
     function quit() {
+        if (user.id in goban_ref.current.engine.player_pool) {
+            goban_ref.current.resign();
+        }
         navigate("/");
     }
+
+    const pass = () => {
+        if (goban_ref.current) {
+            goban_ref.current.pass();
+        }
+    };
+
+    const requestUndo = () => {
+        if (goban_ref.current) {
+            goban_ref.current.requestUndo();
+        }
+    };
+
+    console.log("Player to move: ", player_to_move);
+
+    const is_player = user.id in (goban_ref.current?.engine.player_pool || {});
+
+    const opponent = is_player
+        ? goban_ref.current?.engine.players.black.id === user.id
+            ? goban_ref.current?.engine.players.white
+            : goban_ref.current?.engine.players.black
+        : goban_ref.current?.engine.players.black;
+    const self_player = is_player
+        ? goban_ref.current?.engine.players.black.id === user.id
+            ? goban_ref.current?.engine.players.black
+            : goban_ref.current?.engine.players.white
+        : goban_ref.current?.engine.players.white;
+
+    const opponent_color =
+        opponent?.id === goban_ref.current?.engine.players.black.id ? "black" : "white";
+    const self_color = opponent_color === "black" ? "white" : "black";
 
     return (
         <>
@@ -153,20 +186,16 @@ export function KidsGame(): JSX.Element {
 
                 <div className="portrait-top-spacer" />
 
-                <div id="white-container">
+                <div id="opponent-container">
                     <div className="top-spacer" />
-                    <Bowl />
+                    <Bowl bouncing={player_to_move === opponent?.id} />
                     <Avatar race="aquatic" random />
+                    <span className="username">{opponent?.username}</span>
                     <Captures />
                     <div className="landscape-bottom-buttons">
-                        <div className="game-button-container">
+                        <div className="game-button-container" onClick={requestUndo}>
                             <span className="stone-button-return" />
                             <span className="button-text">Undo</span>
-                        </div>
-
-                        <div className="game-button-container">
-                            <span className="stone-button-chat" />
-                            <span className="button-text">Chat</span>
                         </div>
                     </div>
                 </div>
@@ -179,46 +208,34 @@ export function KidsGame(): JSX.Element {
                     </div>
                 </div>
 
-                <div id="black-container">
+                <div id="my-container">
                     <div className="top-spacer" />
                     <Captures />
                     <Avatar race="wisdom" random />
-                    <Bowl />
+                    <span className="username">{self_player?.username}</span>
+                    <Bowl bouncing={player_to_move === self_player?.id} />
                     <div className="landscape-bottom-buttons">
-                        <div className="game-button-container">
+                        <div className="game-button-container" onClick={pass}>
                             <span className="stone-button-up" />
                             <span className="button-text">Pass</span>
-                        </div>
-                        <div className="game-button-container">
-                            <span className="stone-button-flag" />
-                            <span className="button-text">Resign</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="portrait-bottom-buttons">
                     <div className="left">
-                        <div className="game-button-container">
+                        <div className="game-button-container" onClick={requestUndo}>
                             <span className="stone-button-return" />
                             <span className="button-text">Undo</span>
-                        </div>
-
-                        <div className="game-button-container">
-                            <span className="stone-button-chat" />
-                            <span className="button-text">Chat</span>
                         </div>
                     </div>
 
                     <div className="center">Opponent Name</div>
 
                     <div className="right">
-                        <div className="game-button-container">
+                        <div className="game-button-container" onClick={pass}>
                             <span className="stone-button-up" />
                             <span className="button-text">Pass</span>
-                        </div>
-                        <div className="game-button-container">
-                            <span className="stone-button-flag" />
-                            <span className="button-text">Resign</span>
                         </div>
                     </div>
                 </div>
@@ -227,9 +244,11 @@ export function KidsGame(): JSX.Element {
             <div id="quit">
                 <span className="stone-button-x" onClick={quit} />
             </div>
+        </>
+    );
+    /*
             <div id="menu">
                 <i className="fa fa-ellipsis-h" />
             </div>
-        </>
-    );
+            */
 }

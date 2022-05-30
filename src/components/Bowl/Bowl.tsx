@@ -17,9 +17,13 @@
 
 import * as React from "react";
 
-export function Bowl(): JSX.Element {
+interface BowlProps {
+    bouncing: boolean;
+}
+
+export function Bowl({ bouncing }: BowlProps): JSX.Element {
     return (
-        <div className="Bowl">
+        <div className={"Bowl" + (bouncing ? " bouncing" : "")}>
             <div className="Bowl-svg"></div>
         </div>
     );
