@@ -17,6 +17,7 @@
 
 import * as React from "react";
 import { chat_manager, ChatChannelProxy } from "chat_manager";
+import { useUser } from "hooks";
 
 interface OpponentListProperties {
     channel: string;
@@ -25,6 +26,7 @@ interface OpponentListProperties {
 }
 
 export function OpponentList(props: OpponentListProperties): JSX.Element {
+    const user = useUser();
     const [, refresh] = React.useState<number>(0);
     const proxy = React.useRef<ChatChannelProxy>();
 
@@ -48,11 +50,13 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                 <option value="easy">Easy Computer</option>
                 <option value="medium">Medium Computer</option>
                 <option value="hard">Hard Computer</option>
-                {sorted_users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                        {user.username}
-                    </option>
-                ))}
+                {sorted_users
+                    .filter((u) => u.id !== user.id)
+                    .map((user) => (
+                        <option key={user.id} value={user.id}>
+                            {user.username}
+                        </option>
+                    ))}
             </select>
         </div>
     );
