@@ -16,6 +16,7 @@
  */
 
 import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 
 interface PopupDialogProps {
     text: string;
@@ -29,10 +30,59 @@ export function PopupDialog(props: PopupDialogProps): JSX.Element {
             <div className="PopupDialog">
                 <div className="PopupDialog-text">{props.text}</div>
                 <div className="PopupDialog-buttons">
-                    <span className="green-check" onClick={props.onAccept} />
-                    <span className="red-x" onClick={props.onCancel} />
+                    {(props.onAccept || null) && (
+                        <span className="green-check" onClick={props.onAccept} />
+                    )}
+                    {(props.onCancel || null) && (
+                        <span className="red-x" onClick={props.onCancel} />
+                    )}
                 </div>
             </div>
         </div>
     );
+}
+
+interface OpenPopupProps {
+    text: string;
+    no_accept?: boolean;
+    no_cancel?: boolean;
+}
+
+let root: ReactDOM.Root;
+
+export function openPopup(props: OpenPopupProps): Promise<void> {
+    const container = document.createElement("DIV");
+    document.body.append(container);
+
+    root = ReactDOM.createRoot(container);
+
+    let onaccept: () => void;
+    let oncancel: () => void;
+
+    const promise = new Promise<void>((resolve, reject) => {
+        onaccept = () => {
+            root.unmount();
+            resolve();
+        };
+        oncancel = () => {
+            root.unmount();
+            reject();
+        };
+    });
+
+    root.render(
+        <React.StrictMode>
+            <PopupDialog
+                text={props.text}
+                onAccept={props.no_accept ? undefined : onaccept}
+                onCancel={props.no_cancel ? undefined : oncancel}
+            />
+        </React.StrictMode>,
+    );
+
+    return promise;
+}
+
+export function closePopup(): void {
+    root.unmount();
 }

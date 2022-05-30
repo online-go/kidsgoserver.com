@@ -28,10 +28,10 @@ import { OpponentList } from "./OpponentList";
 //import * as preferences from "preferences";
 //import { errorAlerter, ignore } from "misc";
 import { socket } from "sockets";
-import swal from "sweetalert2";
 import { notification_manager } from "Notifications";
 import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
+import { closePopup, openPopup } from "PopupDialog";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
@@ -83,21 +83,13 @@ export function Play(): JSX.Element {
 
                 notification_manager.event_emitter.on("notification", checkForReject);
 
-                swal({
-                    title: _("Waiting for opponent"),
-                    html: '<div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>',
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Cancel",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                })
+                openPopup({ text: `Waiting for opponent to accept challenge`, no_accept: true })
                     .then(() => {
                         off();
-                        // cancel challenge
-                        del("me/challenges/%%", challenge_id).then(ignore).catch(ignore);
                     })
                     .catch(() => {
                         off();
+                        del("me/challenges/%%", challenge_id).then(ignore).catch(ignore);
                     });
                 active_check();
 
@@ -114,17 +106,20 @@ export function Play(): JSX.Element {
 
                 function onGamedata() {
                     off();
-                    swal.close();
+                    closePopup();
                     //sfx.play("game_started", 3000);
                     navigate(`/game/${game_id}`);
                 }
 
                 function onRejected(message?: string) {
                     off();
-                    swal.close();
-                    swal({
-                        text: message || _("Game offer was rejected"),
-                    }).catch(swal.noop);
+                    closePopup();
+                    openPopup({
+                        text: message || "Your challenge was declined",
+                        no_cancel: true,
+                    })
+                        .then(() => 0)
+                        .catch(() => 0);
                 }
 
                 function off() {
@@ -149,7 +144,7 @@ export function Play(): JSX.Element {
                 }
             })
             .catch((err) => {
-                swal.close();
+                closePopup();
                 errorAlerter(err);
             });
     };
@@ -241,17 +236,26 @@ function useEnsureUserIsCreated(): void {
 
 function CheckForChallengeReceived(): JSX.Element {
     const navigate = useNavigate();
-    const [active_challenge, setActiveChallenge] = React.useState(null);
+    //const [active_challenge, setActiveChallenge] = React.useState(null);
+    const [, refresh] = React.useState(0);
+    const active_challenge = React.useRef(null);
 
     React.useEffect(() => {
         const checkForChallenge = (notification) => {
             if (notification.type === "challenge") {
-                setActiveChallenge(notification);
+                active_challenge.current = notification;
+                refresh(Math.random());
             } else if (notification.type === "gameEnded") {
                 notification_manager.deleteNotification(notification);
             } else if (notification.type === "gameStarted") {
                 navigate(`/game/${notification.game_id}`);
                 //notification_manager.deleteNotification(notification);
+            } else if (notification.type === "delete") {
+                console.log("delete notification:", notification, active_challenge);
+                if (active_challenge.current?.id === notification.id) {
+                    active_challenge.current = null;
+                    refresh(Math.random());
+                }
             } else {
                 console.log("challenge received check notification:", notification);
             }
@@ -264,21 +268,36 @@ function CheckForChallengeReceived(): JSX.Element {
     }, []);
 
     const accept = () => {
-        post("me/challenges/%%/accept", active_challenge.challenge_id, {})
+        post("me/challenges/%%/accept", active_challenge.current.challenge_id, {})
             .then(() => {
-                navigate(`/game/${active_challenge.game_id}`);
+                if (active_challenge.current) {
+                    navigate(`/game/${active_challenge.current.game_id}`);
+                }
             })
-            .catch(errorAlerter);
+            .catch((err) => {
+                active_challenge.current = null;
+                refresh(Math.random());
+                errorAlerter(err);
+            });
     };
 
     const decline = () => {
-        console.log("decline");
+        del("me/challenges/%%", active_challenge.current.challenge_id)
+            .then(() => {
+                active_challenge.current = null;
+                refresh(Math.random());
+            })
+            .catch((err) => {
+                active_challenge.current = null;
+                refresh(Math.random());
+                errorAlerter(err);
+            });
     };
 
-    if (active_challenge) {
+    if (active_challenge.current) {
         return (
             <PopupDialog
-                text={`Challenge received from ${active_challenge.user.username}`}
+                text={`Challenge received from ${active_challenge.current.user.username}`}
                 onAccept={accept}
                 onCancel={decline}
             />
