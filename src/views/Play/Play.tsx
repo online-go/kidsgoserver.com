@@ -245,42 +245,13 @@ function CheckForChallengeReceived(): JSX.Element {
 
     React.useEffect(() => {
         const checkForChallenge = (notification) => {
-            /*
-            if (notification.type === "gameOfferRejected") {
-                notification_manager.deleteNotification(notification);
-                if (notification.game_id === game_id) {
-                    onRejected(notification.message);
-                }
-            }
-            */
             if (notification.type === "challenge") {
                 setActiveChallenge(notification);
-                /*
-                console.log("NOtificaiotn:", notification);
-
-                swal({
-                    title: "Challenge received",
-                    html: `<span>Challenge received from <img className="challenger-icon" src="${notification.user.icon_url}></img> ${notification.user.username}</span>`,
-                    confirmButtonClass: "btn-primary",
-                    confirmButtonText: "Accept",
-                    cancelButtonClass: "btn-danger",
-                    cancelButtonText: "Decline",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                })
-                    .then(() => {
-                        post("me/challenges/%%/accept", notification.challenge_id, {})
-                            .then(() => {
-                                this.del();
-                                navigate(`/game/${notification.game_id}`);
-                            })
-                            .catch(this.onError);
-                    })
-                    .catch(() => {
-                        //notification_manager.deleteNotification(this.props.notification);
-                        //off();
-                    });
-                    */
+            } else if (notification.type === "gameEnded") {
+                notification_manager.deleteNotification(notification);
+            } else if (notification.type === "gameStarted") {
+                navigate(`/game/${notification.game_id}`);
+                //notification_manager.deleteNotification(notification);
             } else {
                 console.log("challenge received check notification:", notification);
             }

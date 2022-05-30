@@ -145,7 +145,7 @@ export function KidsGame(): JSX.Element {
         if (user.id in goban_ref.current.engine.player_pool) {
             goban_ref.current.resign();
         }
-        navigate("/");
+        navigate("/play");
     }
 
     const pass = () => {
