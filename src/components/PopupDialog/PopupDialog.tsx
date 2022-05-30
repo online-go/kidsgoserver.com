@@ -29,12 +29,8 @@ export function PopupDialog(props: PopupDialogProps): JSX.Element {
             <div className="PopupDialog">
                 <div className="PopupDialog-text">{props.text}</div>
                 <div className="PopupDialog-buttons">
-                    <button className="PopupDialog-button" onClick={props.onAccept}>
-                        Accept
-                    </button>
-                    <button className="PopupDialog-button" onClick={props.onCancel}>
-                        Cancel
-                    </button>
+                    <span className="green-check" onClick={props.onAccept} />
+                    <span className="red-x" onClick={props.onCancel} />
                 </div>
             </div>
         </div>

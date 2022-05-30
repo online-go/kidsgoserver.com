@@ -28,7 +28,51 @@
     justify-content: center;
 }
 
+popup-height=20rem;
+
 .PopupDialog {
-    background: rgba(0,0,0,0.5);
-    padding: 1rem;
+    display: inline-flex;
+    padding: 0;
+    width: popup-height * 1.71512;
+    height: popup-height;
+    max-width: 100vw;
+    max-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: svg-load("../assets/misc/modal_background.svg");
+    color: #32529a;
+    text-shadow: 0 0 2px #fff;
+    font-size: 3rem;
+    line-height: 3.5rem;
+
+    flex-direction: column;
+
+    .PopupDialog-text {
+        flex-grow: 1;
+        padding-top: 3rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .PopupDialog-buttons {
+        flex-shrink: 0;
+
+        height: 6rem;
+        padding-bottom: 3rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .red-x, .green-check {
+        display: inline-block;
+        width: 3rem;
+        height: 3rem;
+        opacity: 0.8;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1.0;
+        }
+    }
 }
