@@ -40,7 +40,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
         return () => {
             proxy.current.part();
         };
-    }, [props.channel]);
+    }, [props.channel, user.username]);
 
     const sorted_users: Array<any> = proxy.current?.channel.users_by_name || [];
 
@@ -60,4 +60,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
             </select>
         </div>
     );
+
+    /*
+                */
 }

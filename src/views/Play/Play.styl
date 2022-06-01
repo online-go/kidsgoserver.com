@@ -27,11 +27,23 @@
     text-align: center;
     font-size: 2rem;
     display: flex;
-    color: white;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    .container {
+    .outer-container {
+        display: flex;
+        flex-direction: column;
+        color: black;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255,255,255,0.8);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #fff;
+    }
+
+    .inner-container {
         display: inline-flex;
         flex-direction: row;
     }
@@ -43,8 +55,15 @@
     }
 
     .NameSelection {
-        font-size: 1.8rem;
-        background-color: rgba(0, 0, 0, 0.4);
+        font-size: 1.5rem;
+        position: relative;
+
+        .refresh {
+            font-size: 1.8rem;
+            position: absolute;
+            left: -1rem;
+            top: -0.2rem;
+        }
     }
 
     .NameSelection.refreshing {
@@ -63,5 +82,58 @@
 
     select {
         background-color: rgba(255,255,255,0.5);
+    }
+
+    .CharacterManagement {
+        .AvatarSelection {
+            .Avatar {
+                .Avatar-svg {
+                    width: 15rem;
+                    height: 15rem;
+                }
+            }
+        }
+
+        .NameSelection {
+        }
+    }
+
+    button.play {
+        margin: 2rem;
+        font-size: 2rem;
+        height: 5rem;
+        width: 30rem;
+        max-width: 90vw;
+        background-color: #6CC489;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #85F2A9
+        }
+    }
+
+    .vs {
+        display: inline-flex;
+        flex-direction: column;
+        font-size: 1rem;
+        color: #333;
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+        .line {
+            flex: 1;
+            border-left: 1px solid #333;
+            themed border-color shade3
+            margin-left: 0.35em;
+
+        }
+
+    }
+
+    .right, .left {
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
     }
 }

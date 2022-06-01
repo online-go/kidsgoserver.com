@@ -32,13 +32,14 @@ import { notification_manager } from "Notifications";
 import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
+import { Avatar } from "Avatar";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
 export function Play(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
-    const [opponent, setOpponent] = React.useState("");
+    const [opponent, setOpponent] = React.useState("easy");
     useEnsureUserIsCreated();
 
     const play = (e) => {
@@ -154,20 +155,24 @@ export function Play(): JSX.Element {
     return (
         <div id="Play" className="bg-earth">
             <CheckForChallengeReceived />
-            <div className="container">
-                <div className="left">
-                    <CharacterManagement />
-
-                    <div className="OpponentSelection">
-                        <h3>Opponent</h3>
+            <div className="outer-container">
+                <div className="inner-container">
+                    <div className="left">
+                        <CharacterManagement />
+                    </div>
+                    <div className="vs">
+                        <span className="line" />
+                        <span className="v">V</span>
+                        <span className="s">S</span>
+                        <span className="line" />
+                    </div>
+                    <div className="right">
                         <OpponentList channel="kidsgo" value={opponent} onChange={setOpponent} />
                     </div>
                 </div>
-                <div className="right">
-                    <button className="btn btn-primary" disabled={!canPlay} onClick={play}>
-                        PLAY
-                    </button>
-                </div>
+                <button className="play" disabled={!canPlay} onClick={play}>
+                    {canPlay ? "Play!" : "Choose your opponent"}
+                </button>
             </div>
         </div>
     );
@@ -175,16 +180,19 @@ export function Play(): JSX.Element {
 
 function CharacterManagement(): JSX.Element {
     return (
-        <div className="AvatarSelection">
-            <h3>Avatar</h3>
-            <AvatarSelection />
+        <div className="CharacterManagement">
             <NameSelection />
+            <AvatarSelection />
         </div>
     );
 }
 
 function AvatarSelection(): JSX.Element {
-    return <div className="AvatarSelection" />;
+    return (
+        <div className="AvatarSelection">
+            <Avatar race="aquatic" random />
+        </div>
+    );
 }
 
 function NameSelection(): JSX.Element {
@@ -210,7 +218,7 @@ function NameSelection(): JSX.Element {
     return (
         <div className={`NameSelection ${refreshing ? "refreshing" : ""}`}>
             <span className="username">{user.username}</span>
-            <span className="refresh" onClick={refresh}>
+            <span className="refresh" onClick={refresh} title="New name">
                 &#10226;
             </span>
         </div>
