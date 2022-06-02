@@ -17,6 +17,7 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
+import { KBShortcut } from "KBShortcut";
 
 interface PopupDialogProps {
     text: string;
@@ -27,6 +28,7 @@ interface PopupDialogProps {
 export function PopupDialog(props: PopupDialogProps): JSX.Element {
     return (
         <div className="PopupDialog-container">
+            <KBShortcut shortcut="esc" action={props.onCancel || props.onAccept || (() => 0)} />
             <div className="PopupDialog">
                 <div className="PopupDialog-text">{props.text}</div>
                 <div className="PopupDialog-buttons">

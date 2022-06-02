@@ -26,7 +26,7 @@ import { Avatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
-import { PopupDialog } from "PopupDialog";
+import { PopupDialog, openPopup } from "PopupDialog";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
 
 export function KidsGame(): JSX.Element {
@@ -147,10 +147,21 @@ export function KidsGame(): JSX.Element {
     }, [game_id, container]);
 
     function quit() {
-        if (user.id in goban_ref.current.engine.player_pool) {
-            goban_ref.current.resign();
+        if (
+            user.id in goban_ref.current.engine.player_pool &&
+            goban_ref.current?.engine.phase === "play"
+        ) {
+            openPopup({
+                text: _("Are you sure you want to quit this game?"),
+            })
+                .then(() => {
+                    goban_ref.current.resign();
+                    navigate("/play");
+                })
+                .catch(() => 0);
+        } else {
+            navigate("/play");
         }
-        navigate("/play");
     }
 
     const pass = () => {
