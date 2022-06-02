@@ -41,6 +41,7 @@ export function KidsGame(): JSX.Element {
     const player_to_move = usePlayerToMove(goban_ref.current);
     const show_undo_requested =
         useShowUndoRequested(goban_ref.current) && goban_ref.current?.engine.phase === "play";
+    const [gameFinishedClosed, setGameFinishedClosed] = useState(false);
 
     const game_id = parseInt(params.id);
 
@@ -188,17 +189,20 @@ export function KidsGame(): JSX.Element {
             : goban_ref.current?.engine.players.white
         : goban_ref.current?.engine.players.white;
 
-    //const opponent_color =
-    //    opponent?.id === goban_ref.current?.engine.players.black.id ? "black" : "white";
-    //const self_color = opponent_color === "black" ? "white" : "black";
-
     const move_number = goban_ref.current?.engine.last_official_move.move_number || 0;
+    const phase = goban_ref.current?.engine.phase;
     const can_undo =
         goban_ref.current?.engine.phase === "play" &&
         user.id !== player_to_move &&
         user.id in (goban_ref.current?.engine.player_pool || {}) &&
         move_number > 1;
     const can_pass = user.id === player_to_move;
+
+    const result =
+        phase === "finished" &&
+        goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username +
+            " wins by " +
+            goban_ref.current?.engine.outcome;
 
     return (
         <>
@@ -212,6 +216,9 @@ export function KidsGame(): JSX.Element {
                             player_to_move === user.id ? cancelUndo : is_player ? cancelUndo : null
                         }
                     />
+                )}
+                {phase === "finished" && !gameFinishedClosed && (
+                    <PopupDialog text={result} onAccept={() => setGameFinishedClosed(true)} />
                 )}
 
                 <div className="portrait-top-spacer" />
