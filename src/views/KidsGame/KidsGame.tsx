@@ -27,7 +27,7 @@ import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
 import { PopupDialog } from "PopupDialog";
-import { usePlayerToMove, useShowUndoRequested } from "Game/GameHooks";
+import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -42,6 +42,7 @@ export function KidsGame(): JSX.Element {
     const show_undo_requested =
         useShowUndoRequested(goban_ref.current) && goban_ref.current?.engine.phase === "play";
     const [gameFinishedClosed, setGameFinishedClosed] = useState(false);
+    const phase = usePhase(goban_ref.current);
 
     const game_id = parseInt(params.id);
 
@@ -190,7 +191,6 @@ export function KidsGame(): JSX.Element {
         : goban_ref.current?.engine.players.white;
 
     const move_number = goban_ref.current?.engine.last_official_move.move_number || 0;
-    const phase = goban_ref.current?.engine.phase;
     const can_undo =
         goban_ref.current?.engine.phase === "play" &&
         user.id !== player_to_move &&
@@ -198,11 +198,15 @@ export function KidsGame(): JSX.Element {
         move_number > 1;
     const can_pass = user.id === player_to_move;
 
+    const winner_username =
+        `${goban_ref.current?.engine.winner}` === `${user.id}`
+            ? "You"
+            : goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username;
+
     const result =
-        phase === "finished" &&
-        goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username +
-            " wins by " +
-            goban_ref.current?.engine.outcome;
+        phase === "finished" && winner_username === "You"
+            ? "You have won by " + goban_ref.current?.engine.outcome
+            : winner_username + " wins by " + goban_ref.current?.engine.outcome;
 
     return (
         <>

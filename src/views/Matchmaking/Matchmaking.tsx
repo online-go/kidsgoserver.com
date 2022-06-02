@@ -154,7 +154,9 @@ export function Matchmaking(): JSX.Element {
         navigate("/");
     }
 
-    const canMatchmaking = !user.anonymous && opponent && opponent !== `${user.id}`;
+    // The 0-9 regex disabled the computer opponents for now.
+    const canPlay =
+        !user.anonymous && opponent && opponent !== `${user.id}` && /[0-9]+/.test(opponent);
 
     return (
         <div id="Matchmaking" className="bg-earth">
@@ -175,8 +177,8 @@ export function Matchmaking(): JSX.Element {
                         <OpponentList channel="kidsgo" value={opponent} onChange={setOpponent} />
                     </div>
                 </div>
-                <button className="play" disabled={!canMatchmaking} onClick={play}>
-                    {canMatchmaking ? "Matchmaking!" : "Choose your opponent"}
+                <button className="play" disabled={!canPlay} onClick={play}>
+                    {canPlay ? "Play!" : "Choose your opponent"}
                 </button>
             </div>
         </div>

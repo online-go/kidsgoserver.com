@@ -47,16 +47,28 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
     return (
         <div className="OpponentList">
             <select size={6} value={props.value} onChange={(ev) => props.onChange(ev.target.value)}>
-                <option value="easy">Easy Computer</option>
-                <option value="medium">Medium Computer</option>
-                <option value="hard">Hard Computer</option>
-                {sorted_users
-                    .filter((u) => u.id !== user.id)
-                    .map((user) => (
-                        <option key={user.id} value={user.id}>
-                            {user.username}
-                        </option>
-                    ))}
+                <optgroup label="Computer Opponents">
+                    <option value="easy" disabled={true}>
+                        Easy Computer
+                    </option>
+                    <option value="medium" disabled={true}>
+                        Medium Computer
+                    </option>
+                    <option value="hard" disabled={true}>
+                        Hard Computer
+                    </option>
+                </optgroup>
+                {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
+                    <optgroup label="Kids to play">
+                        {sorted_users
+                            .filter((u) => u.id !== user.id)
+                            .map((user) => (
+                                <option key={user.id} value={user.id}>
+                                    {user.username}
+                                </option>
+                            ))}
+                    </optgroup>
+                )}
             </select>
         </div>
     );
