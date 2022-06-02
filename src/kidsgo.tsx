@@ -36,6 +36,8 @@ import { sfx } from "sfx";
 import { post } from "requests";
 import { ai_host } from "sockets";
 import * as requests from "requests";
+
+sfx.setVolume("master", 0.0); // disable sound for the time being, pending on AGF guidance
 sfx.sync();
 
 (window as any)["requests"] = requests;
