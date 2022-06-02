@@ -68,16 +68,25 @@
         max-width : 3.0rem;
     }
 
-    cursor: pointer;
+    &:not(.disabled) {
+        cursor: pointer;
+    }
+    &.disabled {
+        cursor: not-allowed;
+    }
+
+    &.disabled {
+        opacity: 0.8;
+    }
 }
 
 button.check, .stone-button-check {
     @extend .stone-button;
     @extend .check-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .check-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .check-dark-green;
     }
 }
@@ -85,10 +94,10 @@ button.check, .stone-button-check {
 button.x, .stone-button-x {
     @extend .stone-button;
     @extend .x-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .x-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .x-dark-green;
     }
 }
@@ -96,10 +105,10 @@ button.x, .stone-button-x {
 button.flag, .stone-button-flag {
     @extend .stone-button;
     @extend .flag-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .flag-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .flag-dark-green;
     }
 }
@@ -107,10 +116,10 @@ button.flag, .stone-button-flag {
 button.chat, .stone-button-chat {
     @extend .stone-button;
     @extend .chat-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .chat-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .chat-dark-green;
     }
 }
@@ -118,10 +127,10 @@ button.chat, .stone-button-chat {
 button.return, .stone-button-return {
     @extend .stone-button;
     @extend .return-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .return-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .return-dark-green;
     }
 }
@@ -129,10 +138,10 @@ button.return, .stone-button-return {
 button.left, .stone-button-left {
     @extend .stone-button;
     @extend .left-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .left-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .left-dark-green;
     }
 }
@@ -140,10 +149,10 @@ button.left, .stone-button-left {
 button.right, .stone-button-right {
     @extend .stone-button;
     @extend .right-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .right-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .right-dark-green;
     }
 }
@@ -151,10 +160,10 @@ button.right, .stone-button-right {
 button.up, .stone-button-up {
     @extend .stone-button;
     @extend .up-light;
-    &:hover {
+    &:not(.disabled):hover {
         @extend .up-light-green;
     }
-    &:active {
+    &:not(.disabled):active {
         @extend .up-dark-green;
     }
 }

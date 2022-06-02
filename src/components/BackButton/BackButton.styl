@@ -17,8 +17,9 @@
 
 
 .BackButton {
+    @extend .stone-button
+    @extend .x-light;
     display: inline-block;
-    background-image: svg-load("../assets/buttons/red-x.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -28,4 +29,11 @@
     left: 1rem;
     top: 1rem;
     cursor: pointer;
+
+    &:hover {
+        @extend .x-light-green;
+    }
+    &:active {
+        @extend .x-dark-green;
+    }
 }

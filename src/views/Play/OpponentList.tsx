@@ -60,7 +60,4 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
             </select>
         </div>
     );
-
-    /*
-                */
 }

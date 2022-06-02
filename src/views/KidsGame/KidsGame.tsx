@@ -26,7 +26,8 @@ import { Avatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
-import { usePlayerToMove } from "Game/GameHooks";
+import { PopupDialog } from "PopupDialog";
+import { usePlayerToMove, useShowUndoRequested } from "Game/GameHooks";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -38,6 +39,8 @@ export function KidsGame(): JSX.Element {
     const goban_opts_ref = useRef<any>({});
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const player_to_move = usePlayerToMove(goban_ref.current);
+    const show_undo_requested =
+        useShowUndoRequested(goban_ref.current) && goban_ref.current?.engine.phase === "play";
 
     const game_id = parseInt(params.id);
 
@@ -160,7 +163,17 @@ export function KidsGame(): JSX.Element {
         }
     };
 
-    console.log("Player to move: ", player_to_move);
+    const cancelUndo = () => {
+        if (goban_ref.current) {
+            goban_ref.current.cancelUndo();
+        }
+    };
+
+    const acceptUndo = () => {
+        if (goban_ref.current) {
+            goban_ref.current.acceptUndo();
+        }
+    };
 
     const is_player = user.id in (goban_ref.current?.engine.player_pool || {});
 
@@ -175,14 +188,33 @@ export function KidsGame(): JSX.Element {
             : goban_ref.current?.engine.players.white
         : goban_ref.current?.engine.players.white;
 
-    const opponent_color =
-        opponent?.id === goban_ref.current?.engine.players.black.id ? "black" : "white";
-    const self_color = opponent_color === "black" ? "white" : "black";
+    //const opponent_color =
+    //    opponent?.id === goban_ref.current?.engine.players.black.id ? "black" : "white";
+    //const self_color = opponent_color === "black" ? "white" : "black";
+
+    const move_number = goban_ref.current?.engine.last_official_move.move_number || 0;
+    const can_undo =
+        goban_ref.current?.engine.phase === "play" &&
+        user.id !== player_to_move &&
+        user.id in (goban_ref.current?.engine.player_pool || {}) &&
+        move_number > 1;
+    const can_pass = user.id === player_to_move;
+
+    console.log("Show undo requested", show_undo_requested);
 
     return (
         <>
             <div id="KidsGame" className="bg-mars">
                 <BackButton onClick={quit} />
+                {show_undo_requested && (
+                    <PopupDialog
+                        text="Undo requested"
+                        onAccept={player_to_move === user.id ? acceptUndo : null}
+                        onCancel={
+                            player_to_move === user.id ? cancelUndo : is_player ? cancelUndo : null
+                        }
+                    />
+                )}
 
                 <div className="portrait-top-spacer" />
 
@@ -193,10 +225,12 @@ export function KidsGame(): JSX.Element {
                     <span className="username">{opponent?.username}</span>
                     <Captures />
                     <div className="landscape-bottom-buttons">
-                        <div className="game-button-container" onClick={requestUndo}>
-                            <span className="stone-button-return" />
-                            <span className="button-text">Undo</span>
-                        </div>
+                        <StoneButton
+                            onClick={requestUndo}
+                            className="stone-button-return"
+                            text="Undo"
+                            disabled={!can_undo}
+                        />
                     </div>
                 </div>
 
@@ -215,34 +249,36 @@ export function KidsGame(): JSX.Element {
                     <span className="username">{self_player?.username}</span>
                     <Bowl bouncing={player_to_move === self_player?.id} />
                     <div className="landscape-bottom-buttons">
-                        <div className="game-button-container" onClick={pass}>
-                            <span className="stone-button-up" />
-                            <span className="button-text">Pass</span>
-                        </div>
+                        <StoneButton
+                            onClick={pass}
+                            className="stone-button-up"
+                            text="Pass"
+                            disabled={!can_pass}
+                        />
                     </div>
                 </div>
 
                 <div className="portrait-bottom-buttons">
                     <div className="left">
-                        <div className="game-button-container" onClick={requestUndo}>
-                            <span className="stone-button-return" />
-                            <span className="button-text">Undo</span>
-                        </div>
+                        <StoneButton
+                            onClick={requestUndo}
+                            className="stone-button-return"
+                            text="Undo"
+                            disabled={!can_undo}
+                        />
                     </div>
 
                     <div className="center">Opponent Name</div>
 
                     <div className="right">
-                        <div className="game-button-container" onClick={pass}>
-                            <span className="stone-button-up" />
-                            <span className="button-text">Pass</span>
-                        </div>
+                        <StoneButton
+                            onClick={pass}
+                            className="stone-button-up"
+                            text="Pass"
+                            disabled={!can_pass}
+                        />
                     </div>
                 </div>
-            </div>
-
-            <div id="quit">
-                <span className="stone-button-x" onClick={quit} />
             </div>
         </>
     );
@@ -251,4 +287,20 @@ export function KidsGame(): JSX.Element {
                 <i className="fa fa-ellipsis-h" />
             </div>
             */
+}
+
+interface StoneButtonProps {
+    className: string;
+    text: string;
+    onClick: () => void;
+    disabled: boolean;
+}
+
+function StoneButton({ className, text, onClick, disabled }): JSX.Element {
+    return (
+        <div className="StoneButton" onClick={disabled ? null : onClick}>
+            <span className={className + (disabled ? " disabled" : "")} />
+            <span className={"button-text" + (disabled ? " disabled" : "")}>{text}</span>
+        </div>
+    );
 }

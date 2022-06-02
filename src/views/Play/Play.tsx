@@ -33,6 +33,7 @@ import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
 import { Avatar } from "Avatar";
+import { BackButton } from "BackButton";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
@@ -60,7 +61,7 @@ export function Play(): JSX.Element {
                 komi: null,
                 disable_analysis: false,
                 initial_state: null,
-                private: true,
+                private: false,
                 rengo: false,
                 rengo_casual_mode: false,
                 pause_on_weekends: false,
@@ -149,11 +150,15 @@ export function Play(): JSX.Element {
                 errorAlerter(err);
             });
     };
+    function back() {
+        navigate("/");
+    }
 
     const canPlay = !user.anonymous && opponent && opponent !== `${user.id}`;
 
     return (
         <div id="Play" className="bg-earth">
+            <BackButton onClick={back} />
             <CheckForChallengeReceived />
             <div className="outer-container">
                 <div className="inner-container">
