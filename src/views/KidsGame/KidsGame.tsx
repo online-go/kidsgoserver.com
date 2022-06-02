@@ -200,8 +200,6 @@ export function KidsGame(): JSX.Element {
         move_number > 1;
     const can_pass = user.id === player_to_move;
 
-    console.log("Show undo requested", show_undo_requested);
-
     return (
         <>
             <div id="KidsGame" className="bg-mars">
