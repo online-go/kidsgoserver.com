@@ -37,7 +37,7 @@ import { BackButton } from "BackButton";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
-export function Play(): JSX.Element {
+export function Matchmaking(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
     const [opponent, setOpponent] = React.useState("easy");
@@ -154,10 +154,10 @@ export function Play(): JSX.Element {
         navigate("/");
     }
 
-    const canPlay = !user.anonymous && opponent && opponent !== `${user.id}`;
+    const canMatchmaking = !user.anonymous && opponent && opponent !== `${user.id}`;
 
     return (
-        <div id="Play" className="bg-earth">
+        <div id="Matchmaking" className="bg-earth">
             <BackButton onClick={back} />
             <CheckForChallengeReceived />
             <div className="outer-container">
@@ -175,8 +175,8 @@ export function Play(): JSX.Element {
                         <OpponentList channel="kidsgo" value={opponent} onChange={setOpponent} />
                     </div>
                 </div>
-                <button className="play" disabled={!canPlay} onClick={play}>
-                    {canPlay ? "Play!" : "Choose your opponent"}
+                <button className="play" disabled={!canMatchmaking} onClick={play}>
+                    {canMatchmaking ? "Matchmaking!" : "Choose your opponent"}
                 </button>
             </div>
         </div>
