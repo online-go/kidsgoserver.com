@@ -2,6 +2,8 @@ NODE_PATH:=node_modules:$(NODE_PATH)
 PATH:=node_modules/.bin/:$(PATH)
 
 dev: node_modules
+	# if online-go.com/node_modules exists is really messes things up, so make sure it doesn't
+	rm -Rf online-go.com/node_modules
 	npm run dev
 
 node_modules: package.json
