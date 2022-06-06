@@ -32,7 +32,7 @@ import { notification_manager } from "Notifications";
 import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
-import { Avatar } from "Avatar";
+import { AvatarSelection, Race, raceIdxToUiClass, uiClassToRaceIdx } from "Avatar";
 import { BackButton } from "BackButton";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
@@ -77,8 +77,6 @@ export function Matchmaking(): JSX.Element {
 
         post(`players/${opponent}/challenge`, challenge)
             .then((res) => {
-                // console.log("Challenge response: ", res);
-
                 const challenge_id = res.challenge;
                 const game_id = typeof res.game === "object" ? res.game.id : res.game;
                 let keepalive_interval;
@@ -186,18 +184,53 @@ export function Matchmaking(): JSX.Element {
 }
 
 function CharacterManagement(): JSX.Element {
+    const user = useUser();
+
+    const [race, idx] = uiClassToRaceIdx(user.ui_class);
+    const [avatarRace, setAvatarRace] = React.useState<Race>(race);
+    const [avatarIdx, setAvatarIdx] = React.useState(idx);
+    const last_ui_class = React.useRef<string>(raceIdxToUiClass(race, idx));
+    const updating = React.useRef<boolean>(false);
+
+    const update_server = (ui_class: string): void => {
+        last_ui_class.current = ui_class;
+        if (updating.current) {
+            return;
+        }
+
+        updating.current = true;
+
+        post("kidsgo/update_avatar", { ui_class })
+            .then(() => {
+                updating.current = false;
+                if (ui_class !== last_ui_class.current) {
+                    update_server(last_ui_class.current);
+                }
+            })
+            .catch((err) => {
+                updating.current = false;
+                console.error("Failed to update avatar", err);
+            });
+    };
+
+    const update = (race: Race, idx: number): void => {
+        setAvatarRace(race);
+        setAvatarIdx(idx);
+
+        update_server(raceIdxToUiClass(race, idx));
+
+        const config = data.get("cached.config");
+        config.user.ui_class = raceIdxToUiClass(race, idx);
+        data.setWithoutEmit("cached.config", config);
+        data.setWithoutEmit("config", config);
+        data.set("config.user", JSON.parse(JSON.stringify(config.user)));
+        data.set("user", JSON.parse(JSON.stringify(config.user)));
+    };
+
     return (
         <div className="CharacterManagement">
             <NameSelection />
-            <AvatarSelection />
-        </div>
-    );
-}
-
-function AvatarSelection(): JSX.Element {
-    return (
-        <div className="AvatarSelection">
-            <Avatar race="aquatic" random />
+            <AvatarSelection race={avatarRace} idx={avatarIdx} onChange={update} />
         </div>
     );
 }
@@ -212,7 +245,7 @@ function NameSelection(): JSX.Element {
 
     const refresh = (e) => {
         setRefreshing(true);
-        post("me/kidsgo/regenerate_username")
+        post("kidsgo/regenerate_username")
             .then((config) => {
                 data.set(cached.config, config);
                 setRefreshing(false);
@@ -239,7 +272,6 @@ function useEnsureUserIsCreated(): void {
         if (user.anonymous) {
             post("/api/v0/register/kidsgo")
                 .then((config) => {
-                    console.log(config);
                     data.set(cached.config, config);
                 })
                 .catch((err) => {

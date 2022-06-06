@@ -15,15 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.OpponentList {
+.OpponentList-container {
     display: inline-flex;
     justify-content: stretch;
+    text-align: left;
 
-    select {
+    font-size: 1.2rem;
+
+    .OpponentList {
         width: 20rem;
         max-width: 90vw;
+        overflow: auto;
+        height: 22rem;
     }
-    optgroup {
+
+    h4 {
+        font-size: 1.5rem;
+        margin: 0;
+        padding: 0;
         margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        .Avatar {
+            flex: 0;
+        }
+
+        &:hover, &.active {
+            background-color: #ACE5FF;
+            cursor: pointer;
+        }
+
+        &.disabled {
+            color: gray;
+            background-color: transparent;
+            cursor: not-allowed;
+        }
     }
 }

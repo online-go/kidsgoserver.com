@@ -22,7 +22,7 @@ import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
 import { Goban, GoMath, GobanConfig } from "goban";
-import { Avatar } from "Avatar";
+import { PlayerAvatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
@@ -241,7 +241,7 @@ export function KidsGame(): JSX.Element {
                 <div id="opponent-container">
                     <div className="top-spacer" />
                     <Bowl bouncing={player_to_move === opponent?.id} />
-                    <Avatar race="aquatic" random />
+                    <PlayerAvatar user_id={opponent?.id} />
                     <span className="username">{opponent?.username}</span>
                     <Captures />
                     <div className="landscape-bottom-buttons">
@@ -265,7 +265,7 @@ export function KidsGame(): JSX.Element {
                 <div id="my-container">
                     <div className="top-spacer" />
                     <Captures />
-                    <Avatar race="wisdom" random />
+                    <PlayerAvatar user_id={self_player?.id} />
                     <span className="username">{self_player?.username}</span>
                     <Bowl bouncing={player_to_move === self_player?.id} />
                     <div className="landscape-bottom-buttons">

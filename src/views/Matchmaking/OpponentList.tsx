@@ -18,6 +18,7 @@
 import * as React from "react";
 import { chat_manager, ChatChannelProxy } from "chat_manager";
 import { useUser } from "hooks";
+import { Avatar, uiClassToRaceIdx } from "Avatar";
 
 interface OpponentListProperties {
     channel: string;
@@ -40,36 +41,51 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
         return () => {
             proxy.current.part();
         };
-    }, [props.channel, user.username]);
+    }, [props.channel, user.username, user.ui_class]);
 
     const sorted_users: Array<any> = proxy.current?.channel.users_by_name || [];
 
     return (
-        <div className="OpponentList">
-            <select size={6} value={props.value} onChange={(ev) => props.onChange(ev.target.value)}>
-                <optgroup label="Computer Opponents">
-                    <option value="easy" disabled={true}>
-                        Easy Computer
-                    </option>
-                    <option value="medium" disabled={true}>
-                        Medium Computer
-                    </option>
-                    <option value="hard" disabled={true}>
-                        Hard Computer
-                    </option>
-                </optgroup>
+        <div className="OpponentList-container">
+            <div className="OpponentList">
+                <h4>Computer Opponents</h4>
+                <span className="disabled">
+                    <Avatar race={"aquatic"} idx={9} />
+                    Easy Computer
+                </span>
+                <span className="disabled">
+                    <Avatar race={"bird"} idx={26} />
+                    Medium Computer
+                </span>
+                <span className="disabled">
+                    <Avatar race={"wisdom"} idx={2} />
+                    Hard Computer
+                </span>
+
                 {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
-                    <optgroup label="Kids to play">
+                    <>
+                        <h4>Kids to Play</h4>
                         {sorted_users
                             .filter((u) => u.id !== user.id)
-                            .map((user) => (
-                                <option key={user.id} value={user.id}>
-                                    {user.username}
-                                </option>
-                            ))}
-                    </optgroup>
+                            .map((user) => {
+                                const [race, idx] = uiClassToRaceIdx(user.ui_class);
+
+                                return (
+                                    <span
+                                        key={user.id}
+                                        className={
+                                            "kid" + (props.value === user.id ? " active" : "")
+                                        }
+                                        onClick={() => props.onChange(user.id)}
+                                    >
+                                        <Avatar race={race} idx={idx} />
+                                        {user.username}
+                                    </span>
+                                );
+                            })}
+                    </>
                 )}
-            </select>
+            </div>
         </div>
     );
 }

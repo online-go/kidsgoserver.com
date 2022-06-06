@@ -16,3 +16,7 @@
  */
 
 export * from "./Avatar";
+export * from "./PlayerAvatar";
+export * from "./AvatarSelection";
+export * from "./avatar_list";
+export * from "./util";

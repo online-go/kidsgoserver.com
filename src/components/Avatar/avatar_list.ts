@@ -15,8 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as React from "react";
-export const avatar_list = [
+export type Race = "aquatic" | "bird" | "fuzzball" | "wisdom";
+
+interface Entry {
+    race: Race;
+    id: number;
+    ai?: boolean;
+}
+
+export const avatar_list: Array<Entry> = [
     { race: "aquatic", id: 63 },
     { race: "aquatic", id: 15 },
     { race: "aquatic", id: 21 },
@@ -27,7 +34,7 @@ export const avatar_list = [
     { race: "aquatic", id: 27 },
     { race: "aquatic", id: 20 },
     { race: "aquatic", id: 5 },
-    { race: "aquatic", id: 9 },
+    { race: "aquatic", id: 9, ai: true },
     { race: "aquatic", id: 60 },
     { race: "aquatic", id: 62 },
     { race: "aquatic", id: 57 },
@@ -95,7 +102,7 @@ export const avatar_list = [
     { race: "bird", id: 29 },
     { race: "bird", id: 20 },
     { race: "bird", id: 12 },
-    { race: "bird", id: 26 },
+    { race: "bird", id: 26, ai: true },
     { race: "bird", id: 31 },
     { race: "bird", id: 9 },
     { race: "bird", id: 16 },
@@ -354,7 +361,7 @@ export const avatar_list = [
     { race: "wisdom", id: 6 },
     { race: "wisdom", id: 24 },
     { race: "wisdom", id: 21 },
-    { race: "wisdom", id: 2 },
+    { race: "wisdom", id: 2, ai: true },
     { race: "wisdom", id: 45 },
     { race: "wisdom", id: 55 },
     { race: "wisdom", id: 92 },
@@ -393,3 +400,29 @@ export const avatar_list = [
     { race: "wisdom", id: 96 },
     { race: "wisdom", id: 12 },
 ];
+
+function sortById(a: Entry, b: Entry): number {
+    return a.id - b.id;
+}
+
+export const avatars: { [race: string]: Array<number> } = {
+    aquatic: avatar_list
+        .filter((x) => x.race === "aquatic" && !x.ai)
+        .sort(sortById)
+        .map((a) => a.id),
+
+    bird: avatar_list
+        .filter((x) => x.race === "bird" && !x.ai)
+        .sort(sortById)
+        .map((a) => a.id),
+
+    fuzzball: avatar_list
+        .filter((x) => x.race === "fuzzball" && !x.ai)
+        .sort(sortById)
+        .map((a) => a.id),
+
+    wisdom: avatar_list
+        .filter((x) => x.race === "wisdom" && !x.ai)
+        .sort(sortById)
+        .map((a) => a.id),
+};
