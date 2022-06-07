@@ -19,11 +19,136 @@
 
 #LearnToPlay {
     position: absolute;
-    background-color: #eee;
+    background-color: #001533;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
-    text-align: center;
-    font-size: 2rem;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: stretch;
+
+    +portrait() {
+        flex-direction: column;
+    }
+
+    .spacer {
+        flex-grow: 0;
+        flex-shrink: 1;
+        +portrait() {
+            height: "calc((100vh - 100vw) / 2)" % "";
+        }
+        +landscape() {
+            width: "calc((100vw - 100vh) / 2)" % "";
+        }
+    }
+
+    .back-background {
+        position: absolute;
+        display: inline-block;
+        margin: auto;
+        top: 20%;
+        bottom: 20%;
+        left: 20%;
+        right: 20%;
+        /*
+        top: 30vh;
+        bottom: 30vh;
+        left: 30vw;
+        right: 30vw;
+        */
+        background-size: cover;
+        background-image: url("/0.1/pages/lessons/planet.jpg") !important;
+    }
+
+    .background-container {
+        flex-grow: 1;
+        position: relative;
+        text-align: center;
+        background-image: svg-load("../assets/pages/lessons/background.svg");
+        background-repeat: no-repeat;
+    }
+
+    .background {
+        flex-grow: 1;
+        z-index: 1;
+        position: absolute;
+        display: inline-block;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        background-image: svg-load("../assets/pages/lessons/background.svg");
+        background-repeat: no-repeat;
+
+    }
+
+    .ChapterButton {
+        position: absolute;
+        display: inline-flex;
+        width: 3rem;
+        height: 3rem;
+        z-index: 1;
+        background-image: svg-load("../assets/pages/lessons/button.svg");
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 1.0;
+            cursor: pointer;
+        }
+
+        &.disabled {
+            background-image: svg-load("../assets/pages/lessons/active.svg");
+            cursor: not-allowed;
+        }
+
+        // top bottom
+        &.chapter-1 {
+            left: "calc(50% - 1.5rem)" % "";
+            top: 12%;
+        }
+        &.chapter-5 {
+            left: "calc(50% - 1.5rem)" % "";
+            bottom: 12%;
+        }
+
+        // left right
+        &.chapter-7 {
+            top: "calc(50% - 1.5rem)" % "";
+            left: 12%;
+        }
+        &.chapter-3 {
+            top: "calc(50% - 1.5rem)" % "";
+            right: 11%;
+        }
+
+        // ne se
+        &.chapter-2 {
+            right: 22%
+            top: 22%;
+        }
+        &.chapter-4 {
+            right: 22%
+            bottom: 22%;
+        }
+
+        // nw sw
+        &.chapter-6 {
+            left: 22%
+            bottom: 22%;
+        }
+        &.chapter-8 {
+            left: 22%
+            top: 22%;
+        }
+    }
 }

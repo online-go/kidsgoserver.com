@@ -48,12 +48,19 @@ FLAMEHEIGHT=12rem;
     justify-content: center;
     align-items: stretch;
 
-
+    +portrait() {
+        flex-direction: column;
+    }
 
     .spacer {
         flex-grow: 0;
         flex-shrink: 1;
-        width: "calc((100vw - 100vh) / 2)" % "";
+        +portrait() {
+            height: "calc((100vh - 100vw) / 2)" % "";
+        }
+        +landscape() {
+            width: "calc((100vw - 100vh) / 2)" % "";
+        }
     }
 
     .mountain-background {

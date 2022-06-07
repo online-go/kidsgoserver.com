@@ -16,41 +16,84 @@
  */
 
 import * as React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { _, interpolate } from "translate";
-import * as data from "data";
-import * as preferences from "preferences";
-import { errorAlerter, ignore } from "misc";
+import { useNavigate } from "react-router-dom";
+import { BackButton } from "BackButton";
+//import { useState } from "react";
+//import { Link } from "react-router-dom";
+//import { _ } from "translate";
+//import * as data from "data";
+//import * as preferences from "preferences";
+//import { errorAlerter, ignore } from "misc";
 
 export function LearnToPlay(): JSX.Element {
+    const navigate = useNavigate();
+
+    function back() {
+        navigate("/");
+    }
+
     return (
         <div id="LearnToPlay">
-            Learn to play
-            <div>
-                <Link to="/learn-to-play/1">Lesson 1</Link>
+            <BackButton onClick={back} />
+            <div className="spacer" />
+            <div className="background-container">
+                <div className="back-background" />
+                <div className="background">
+                    <ChapterButton chapter={1} />
+                    <ChapterButton chapter={2} />
+                    <ChapterButton chapter={3} />
+                    <ChapterButton chapter={4} />
+                    <ChapterButton chapter={5} />
+                    <ChapterButton chapter={6} />
+                    <ChapterButton chapter={7} />
+                    <ChapterButton chapter={8} />
+                </div>
             </div>
-            <div>
-                <Link to="/learn-to-play/2">Lesson 2</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/3">Lesson 3</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/4">Lesson 4</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/5">Lesson 5</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/6">Lesson 6</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/7">Lesson 7</Link>
-            </div>
-            <div>
-                <Link to="/learn-to-play/8">Lesson 8</Link>
-            </div>
+            <div className="spacer" />
         </div>
     );
 }
+
+export function ChapterButton({ chapter }: { chapter: number }): JSX.Element {
+    const navigate = useNavigate();
+
+    return (
+        <span
+            className={"ChapterButton" + (chapter > 1 ? " disabled" : "") + ` chapter-${chapter}`}
+            onClick={() => {
+                if (chapter > 1) {
+                    return;
+                }
+                navigate(`/learn-to-play/${chapter}`);
+            }}
+        >
+            {chapter}
+        </span>
+    );
+}
+/*
+                <div>
+                    <Link to="/learn-to-play/1">Lesson 1</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/2">Lesson 2</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/3">Lesson 3</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/4">Lesson 4</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/5">Lesson 5</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/6">Lesson 6</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/7">Lesson 7</Link>
+                </div>
+                <div>
+                    <Link to="/learn-to-play/8">Lesson 8</Link>
+                </div>
+                */

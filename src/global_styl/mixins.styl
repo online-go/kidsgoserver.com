@@ -1,9 +1,14 @@
 
+
+    //@media only screen and (max-width: 1020px){
+    //@media only screen and (min-width: 1021px)
+
 portrait()
-    @media only screen and (max-width: 1020px) {
+    @media handheld, (max-width: 1020px), (orientation: portrait) {
         {block}
     }
 
 landscape()
-    @media only screen and (min-width: 1021px)
+    @media (min-width: 1021px), (orientation: lanscape) {
         {block}
+    }

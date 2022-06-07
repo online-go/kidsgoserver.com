@@ -42,8 +42,6 @@ export function LandingPage(): JSX.Element {
         }
         set_learn_to_play_launching(true);
         navigate_timeout = setTimeout(() => {
-            //set_learn_to_play_launching(false);
-            console.log("Go to learn to play");
             navigate("/learn-to-play");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }
@@ -61,8 +59,6 @@ export function LandingPage(): JSX.Element {
         set_play_launching(true);
         setTimeout(() => set_play_launching(false), 3000);
         navigate_timeout = setTimeout(() => {
-            //set_play_launching(false);
-            console.log("Go to play");
             navigate("/play");
         }, ROCKET_LAUNCH_DURATION * 1000);
     }

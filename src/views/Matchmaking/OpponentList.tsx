@@ -26,6 +26,8 @@ interface OpponentListProperties {
     onChange: (user: string) => void;
 }
 
+window["chat_manager"] = chat_manager;
+
 export function OpponentList(props: OpponentListProperties): JSX.Element {
     const user = useUser();
     const [, refresh] = React.useState<number>(0);
@@ -66,7 +68,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                     <>
                         <h4>Kids to Play</h4>
                         {sorted_users
-                            .filter((u) => u.id !== user.id)
+                            .filter((u) => u.id !== user.id && u.id > 0)
                             .map((user) => {
                                 const [race, idx] = uiClassToRaceIdx(user.ui_class);
 

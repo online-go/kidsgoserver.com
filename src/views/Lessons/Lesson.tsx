@@ -285,9 +285,12 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                     <span className="stone-button-x" />
                 </Link>
             </div>
-            <div id="menu">
-                <i className="fa fa-ellipsis-h" />
-            </div>
         </>
     );
 }
+
+/*
+            <div id="menu">
+                <i className="fa fa-ellipsis-h" />
+            </div>
+*/
