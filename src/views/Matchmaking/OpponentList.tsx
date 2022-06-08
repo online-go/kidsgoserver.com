@@ -35,8 +35,8 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
 
     React.useEffect(() => {
         proxy.current = chat_manager.join(props.channel);
-        proxy.current.on("join", () => refresh(proxy.current.channel.users_by_name.length));
-        proxy.current.on("part", () => refresh(proxy.current.channel.users_by_name.length));
+        proxy.current.on("join", () => refresh(Math.random()));
+        proxy.current.on("part", () => refresh(Math.random()));
         window["proxy"] = proxy.current;
         refresh(proxy.current.channel.users_by_name.length);
 
