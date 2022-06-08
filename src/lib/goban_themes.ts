@@ -41,7 +41,7 @@ function image_url(colorset: string, name: string) {
     const firefox = navigator.userAgent.toLocaleLowerCase().indexOf("firefox") > -1;
     const suffix = firefox ? "png" : "svg";
 
-    return `${cdn_service}/0.1/stones/${colorset}/${name}.${suffix}`;
+    return `${cdn_service}/0.2/stones/${colorset}/${name}.${suffix}`;
 }
 
 function image_urls(colorset: string) {
