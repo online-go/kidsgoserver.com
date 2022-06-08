@@ -296,7 +296,7 @@ function CheckForChallengeReceived(): JSX.Element {
                 notification_manager.deleteNotification(notification);
             } else if (notification.type === "gameStarted") {
                 navigate(`/game/${notification.game_id}`);
-                //notification_manager.deleteNotification(notification);
+                notification_manager.deleteNotification(notification);
             } else if (notification.type === "delete") {
                 console.log("delete notification:", notification, active_challenge);
                 if (active_challenge.current?.id === notification.id) {
