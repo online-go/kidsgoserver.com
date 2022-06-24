@@ -91,7 +91,8 @@ function reset_game_when_changed(goban: GobanCore) {
 export function initialize_kidsgo_themes() {
     console.log("Initializing colored stones");
 
-    class Common extends GoTheme {
+    abstract class Common extends GoTheme {
+        public abstract getSadStoneSvgUrl(): string;
         stoneCastsShadow(radius: number): boolean {
             return stoneCastsShadow(radius * deviceCanvasScalingRatio());
         }
@@ -209,6 +210,9 @@ export function initialize_kidsgo_themes() {
         getBlackTextColor(_color: string): string {
             return "#ffffff";
         }
+        getSadStoneSvgUrl(): string {
+            return image_url("dark_blue", "sad");
+        }
     }
 
     GoThemes["black"]["DarkBlue"] = DarkBlue;
@@ -230,6 +234,9 @@ export function initialize_kidsgo_themes() {
         }
         getBlackTextColor(_color: string): string {
             return "#ffffff";
+        }
+        getSadStoneSvgUrl(): string {
+            return image_url("pink", "sad");
         }
     }
 
@@ -253,6 +260,9 @@ export function initialize_kidsgo_themes() {
         getBlackTextColor(_color: string): string {
             return "#000000";
         }
+        getSadStoneSvgUrl(): string {
+            return image_url("light_blue", "sad");
+        }
     }
 
     GoThemes["white"]["LightBlue"] = LightBlue;
@@ -274,6 +284,9 @@ export function initialize_kidsgo_themes() {
         }
         getBlackTextColor(_color: string): string {
             return "#000000";
+        }
+        getSadStoneSvgUrl(): string {
+            return image_url("white", "sad");
         }
     }
 

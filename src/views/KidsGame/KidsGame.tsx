@@ -21,7 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
-import { Goban, GoMath, GobanConfig } from "goban";
+import { Goban, GoMath, GobanConfig, JGOFIntersection } from "goban";
 import { PlayerAvatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
@@ -93,6 +93,7 @@ export function KidsGame(): JSX.Element {
         goban_opts_ref.current = opts;
         goban_ref.current = new Goban(opts);
         const goban: Goban = goban_ref.current;
+
         try {
             onResize(board_container_resizer.width, board_container_resizer.height);
         } catch (e) {
@@ -114,7 +115,12 @@ export function KidsGame(): JSX.Element {
             //this.setState({ move_string });
         };
 
+        const onCapturedStones = ({ removed_stones }) => {
+            animateCaptures(removed_stones, goban, goban.engine.colorToMove());
+        };
+
         goban.on("update", onUpdate);
+        goban.on("captured-stones", onCapturedStones);
         window["global_goban"] = goban;
 
         let t = setTimeout(() => {
@@ -201,6 +207,10 @@ export function KidsGame(): JSX.Element {
             : goban_ref.current?.engine.players.white
         : goban_ref.current?.engine.players.white;
 
+    const opponent_color =
+        opponent?.id === goban_ref.current?.engine.players.black.id ? "black" : "white";
+    const self_color = opponent_color === "black" ? "white" : "black";
+
     const move_number = goban_ref.current?.engine.last_official_move.move_number || 0;
     const can_undo =
         goban_ref.current?.engine.phase === "play" &&
@@ -240,10 +250,10 @@ export function KidsGame(): JSX.Element {
 
                 <div id="opponent-container">
                     <div className="top-spacer" />
-                    <Bowl bouncing={player_to_move === opponent?.id} />
+                    <Bowl bouncing={player_to_move === opponent?.id} color={opponent_color} />
                     <PlayerAvatar user_id={opponent?.id} />
                     <span className="username">{opponent?.username}</span>
-                    <Captures />
+                    <Captures color={opponent_color} />
                     <div className="landscape-bottom-buttons">
                         <StoneButton
                             onClick={requestUndo}
@@ -264,10 +274,10 @@ export function KidsGame(): JSX.Element {
 
                 <div id="my-container">
                     <div className="top-spacer" />
-                    <Captures />
+                    <Captures color={self_color} />
                     <PlayerAvatar user_id={self_player?.id} />
                     <span className="username">{self_player?.username}</span>
-                    <Bowl bouncing={player_to_move === self_player?.id} />
+                    <Bowl bouncing={player_to_move === self_player?.id} color={self_color} />
                     <div className="landscape-bottom-buttons">
                         <StoneButton
                             onClick={pass}
@@ -323,4 +333,83 @@ function StoneButton({ className, text, onClick, disabled }): JSX.Element {
             <span className={"button-text" + (disabled ? " disabled" : "")}>{text}</span>
         </div>
     );
+}
+
+function getScreenCoordinatesOfStone(x: number, y: number, goban: Goban): { x: number; y: number } {
+    const rect = (goban as any).board.getBoundingClientRect();
+    const ss = (goban as any).square_size;
+    return {
+        x: (x + (goban.draw_left_labels ? 1 : 0)) * ss + rect.left,
+        y: (y + (goban.draw_top_labels ? 1 : 0)) * ss + rect.top,
+    };
+}
+
+window["getScreenCoordinatesOfStone"] = getScreenCoordinatesOfStone;
+
+function animateCaptures(
+    removed_stones: Array<JGOFIntersection>,
+    goban: Goban,
+    color: "black" | "white",
+): void {
+    const ss = (goban as any).square_size;
+    /* TODO: I'M HERE */
+    removed_stones.forEach((stone) => {
+        const { x, y } = stone;
+        const { x: screen_x, y: screen_y } = getScreenCoordinatesOfStone(x, y, goban);
+        const stone_element = document.createElement("img") as HTMLImageElement;
+        stone_element.className = "AnimatedStoneCapture";
+        stone_element.style.left = screen_x + "px";
+        stone_element.style.top = screen_y + "px";
+        stone_element.style.width = ss + "px";
+        stone_element.style.height = ss + "px";
+        stone_element.src = (
+            color === "black" ? (goban as any).theme_black : (goban as any).theme_white
+        ).getSadStoneSvgUrl();
+        document.body.appendChild(stone_element);
+
+        const target = document.getElementById(`captures-${color}`)?.getBoundingClientRect();
+
+        const src = {
+            x: screen_x,
+            y: screen_y,
+            width: ss,
+            height: ss,
+        };
+        const dst = {
+            x: (target?.left ?? 0) + target?.width / 2,
+            y: (target?.top ?? 0) + target?.height / 4,
+            width: 32,
+            height: 32,
+        };
+        const duration = 3000;
+        const start = performance.now();
+
+        const frame = () => {
+            if (performance.now() - start > duration) {
+                stone_element.remove();
+                return;
+            }
+
+            stone_element.style.left =
+                src.x + ((dst.x - src.x) * (performance.now() - start)) / duration + "px";
+            stone_element.style.top =
+                src.y + ((dst.y - src.y) * (performance.now() - start)) / duration + "px";
+            stone_element.style.width =
+                src.width +
+                ((dst.width - src.width) * (performance.now() - start)) / duration +
+                "px";
+            stone_element.style.height =
+                src.height +
+                ((dst.height - src.height) * (performance.now() - start)) / duration +
+                "px";
+
+            requestAnimationFrame(frame);
+        };
+
+        setTimeout(() => {
+            frame();
+        }, 250);
+    });
+
+    //console.log("animateCaptures", removed_stones, goban, color);
 }

@@ -19,6 +19,7 @@ import * as React from "react";
 
 interface BowlProps {
     bouncing: boolean;
+    color: "black" | "white";
 }
 
 export function Bowl({ bouncing }: BowlProps): JSX.Element {

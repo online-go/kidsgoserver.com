@@ -17,10 +17,14 @@
 
 import * as React from "react";
 
-export function Captures(): JSX.Element {
+interface CapturesProps {
+    color: "black" | "white";
+}
+
+export function Captures({ color }: CapturesProps): JSX.Element {
     return (
         <div className="Captures">
-            <div className="Captures-svg"></div>
+            <div className="Captures-svg" id={`captures-${color}`}></div>
         </div>
     );
 }
