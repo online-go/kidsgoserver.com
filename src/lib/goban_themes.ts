@@ -18,6 +18,7 @@
 import {
     GoTheme,
     GoThemes,
+    GoMath,
     GobanCore,
     deviceCanvasScalingRatio,
     placeRenderedImageStone,
@@ -58,8 +59,14 @@ function image_urls(colorset: string) {
     ];
 }
 
+let last_game_id = 0;
 let last_goban_liberties: Array<Array<number>>;
 let last_goban_liberties_hash = null;
+/** y,x is 0 if the location is not currently "scared". If it is
+ * scared, this is the timestamp of when it became scared, so that
+ * we can then devolve into shifty-eyes after a certain amount of time.
+ */
+let scared_map: Array<Array<number>>;
 
 function getCachedLiberties(goban: GobanCore): Array<Array<number>> {
     const hash = JSON.stringify(goban.engine.board);
@@ -71,6 +78,14 @@ function getCachedLiberties(goban: GobanCore): Array<Array<number>> {
 
     last_goban_liberties = goban.engine.computeLibertyMap();
     return last_goban_liberties;
+}
+
+function reset_game_when_changed(goban: GobanCore) {
+    if (last_game_id !== goban.game_id) {
+        last_goban_liberties_hash = null;
+        scared_map = GoMath.makeMatrix(goban.width, goban.height, 0);
+        last_game_id = +goban.game_id;
+    }
 }
 
 export function initialize_kidsgo_themes() {
@@ -130,21 +145,33 @@ export function initialize_kidsgo_themes() {
             return stones[0];
         }
         getStoneHash(x: number, y: number, stones: StoneTypeArray, goban: GobanCore): string {
+            reset_game_when_changed(goban);
+            if (goban.engine.board[y][x] === 0) {
+                return "plain";
+            }
+
             const liberties = getCachedLiberties(goban);
             const rng = (x + 1) * 53 * ((y + 1) * 97);
 
             if (liberties[y][x] === 1) {
-                const t = (rng + Math.round(Date.now() / 1000)) % 3;
-
-                switch (t) {
-                    case 0:
-                        return "shifty1";
-                    case 1:
-                        return "shifty2";
-                    case 2:
-                        return "scared";
+                if (scared_map[y][x] === 0) {
+                    scared_map[y][x] = Date.now();
                 }
-                //return "scared";
+
+                if (Date.now() - scared_map[y][x] < 2000) {
+                    return "scared";
+                } else {
+                    const t = (rng + Math.round(Date.now() / 1000)) % 2;
+
+                    switch (t) {
+                        case 0:
+                            return "shifty1";
+                        case 1:
+                            return "shifty2";
+                    }
+                }
+            } else {
+                scared_map[y][x] = 0;
             }
 
             let threat = false;
