@@ -367,7 +367,8 @@ function animateCaptures(
         ).getSadStoneSvgUrl();
         document.body.appendChild(stone_element);
 
-        const target = document.getElementById(`captures-${color}`)?.getBoundingClientRect();
+        const other_color = color === "black" ? "white" : "black";
+        const target = document.getElementById(`captures-${other_color}`)?.getBoundingClientRect();
 
         const src = {
             x: screen_x,
@@ -377,7 +378,7 @@ function animateCaptures(
         };
         const dst = {
             x: (target?.left ?? 0) + target?.width / 2,
-            y: (target?.top ?? 0) + target?.height / 4,
+            y: target?.top ?? 0,
             width: 32,
             height: 32,
         };
@@ -390,18 +391,17 @@ function animateCaptures(
                 return;
             }
 
-            stone_element.style.left =
-                src.x + ((dst.x - src.x) * (performance.now() - start)) / duration + "px";
-            stone_element.style.top =
-                src.y + ((dst.y - src.y) * (performance.now() - start)) / duration + "px";
-            stone_element.style.width =
-                src.width +
-                ((dst.width - src.width) * (performance.now() - start)) / duration +
-                "px";
-            stone_element.style.height =
-                src.height +
-                ((dst.height - src.height) * (performance.now() - start)) / duration +
-                "px";
+            let a = (performance.now() - start) / duration;
+            //a = a * a; // ease in
+            a = a * a * a; // ease in
+            const yoffset = Math.sin(a * Math.PI) * ss * 5;
+            const srcy = src.y - yoffset;
+
+            stone_element.style.left = src.x + (dst.x - src.x) * a + "px";
+            stone_element.style.top = srcy + (dst.y - srcy) * a + "px";
+
+            stone_element.style.width = src.width + (dst.width - src.width) * a + "px";
+            stone_element.style.height = src.height + (dst.height - src.height) * a + "px";
 
             requestAnimationFrame(frame);
         };
