@@ -250,7 +250,11 @@ export function KidsGame(): JSX.Element {
 
                 <div id="opponent-container">
                     <div className="top-spacer" />
-                    <Bowl bouncing={player_to_move === opponent?.id} color={opponent_color} />
+                    <Bowl
+                        bouncing={player_to_move === opponent?.id}
+                        color={opponent_color}
+                        goban={goban_ref.current}
+                    />
                     <PlayerAvatar user_id={opponent?.id} />
                     <span className="username">{opponent?.username}</span>
                     <Captures color={opponent_color} />
@@ -277,7 +281,11 @@ export function KidsGame(): JSX.Element {
                     <Captures color={self_color} />
                     <PlayerAvatar user_id={self_player?.id} />
                     <span className="username">{self_player?.username}</span>
-                    <Bowl bouncing={player_to_move === self_player?.id} color={self_color} />
+                    <Bowl
+                        bouncing={player_to_move === self_player?.id}
+                        color={self_color}
+                        goban={goban_ref.current}
+                    />
                     <div className="landscape-bottom-buttons">
                         <StoneButton
                             onClick={pass}

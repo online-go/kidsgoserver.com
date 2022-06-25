@@ -16,16 +16,28 @@
  */
 
 import * as React from "react";
+import { Goban } from "goban";
 
 interface BowlProps {
     bouncing: boolean;
     color: "black" | "white";
+    goban: Goban;
 }
 
-export function Bowl({ bouncing }: BowlProps): JSX.Element {
+export function Bowl({ bouncing, color, goban }: BowlProps): JSX.Element {
+    const svg_url = (color === "black" ? (goban as any)?.theme_black : (goban as any)?.theme_white)
+        ?.getSadStoneSvgUrl()
+        .replace("sad", "neutral");
+
     return (
         <div className={"Bowl" + (bouncing ? " bouncing" : "")}>
-            <div className="Bowl-svg"></div>
+            <div className="spacer" />
+            <div className="Bowl-svg">
+                {[0, 1, 2, 3, 4].map((i) => (
+                    <img key={i} className={`Bowl-stone s${i}`} src={svg_url} />
+                ))}
+            </div>
+            <div className="spacer" />
         </div>
     );
 }

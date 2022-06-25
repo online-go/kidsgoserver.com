@@ -28,24 +28,86 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    .spacer {
+        flex: 1;
+        flex-basis: 1rem;
+    }
+
     
     .Bowl-svg {
+        position: relative;
         background-image: svg-load("../assets/img/bowl.svg");
         background-repeat: no-repeat;
-        background-position: center;
+        //background-position: center;
         background-size: contain;
 
         display: inline-block;
         flex: 1;
-        min-height: 50%;
-        min-width: 50%;
+        //min-height: 3rem;
+        //min-width: 3rem;
+        width: 50%;
+        height: 50%;
+        min-height: 3rem;
+        min-width: 3rem;
         max-height: 10rem;
         max-width: 10rem;
+        aspect-ratio: 1 / 1;
+
+        .Bowl-stone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 12%
+            aspect-ratio: 1 / 1;
+
+            &.s0 {
+                left: 14%;
+            }
+            &.s1 {
+                left: 28%;
+            }
+            &.s2 {
+                left: 38%;
+            }
+            &.s3 {
+                left: 53%;
+            }
+            &.s4 {
+                left: 70%;
+            }
+        }
+
     }
 
     &.bouncing {
         animation: bowlbounce 3s infinite;
         animation-timing-function:  steps(15);
         //animation-timing-function:  ease-in-out;
+        .Bowl-stone {
+            animation: bowlbounce 3s infinite;
+            animation-timing-function:  steps(12);
+            &.s0 {
+                animation: bowlbounce 4s infinite;
+            animation-timing-function:  steps(12);
+            }
+            &.s1 {
+                animation: bowlbounce 3.5s infinite;
+            animation-timing-function:  steps(12);
+            }
+            &.s2 {
+                animation: bowlbounce 5s infinite;
+            animation-timing-function:  steps(12);
+            }
+            &.s3 {
+                animation: bowlbounce 4.2s infinite;
+            animation-timing-function:  steps(12);
+            }
+            &.s4 {
+                animation: bowlbounce 3.4s infinite;
+            animation-timing-function:  steps(12);
+            }
+        }
     }
 }
+
