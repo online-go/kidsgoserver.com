@@ -24,22 +24,30 @@
     justify-content: center;
 
     .Captures-svg {
+        position: relative;
         background-image: svg-load("../assets/img/captures.svg");
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
 
         display: inline-block;
-        flex: 1;
+        //flex: 1;
         //min-height: 50%;
         //min-width: 50%;
-        width: 50%;
         height: 50%;
         min-height: 3rem;
         min-width: 3rem;
         max-height: 10rem;
         max-width: 10rem;
-            aspect-ratio: 1 / 1;
+        aspect-ratio: 1 / 1;
 
+        .Captures-stone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20%
+            aspect-ratio: 1 / 1;
+        }
     }
+
 }

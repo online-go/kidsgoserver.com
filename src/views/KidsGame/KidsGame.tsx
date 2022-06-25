@@ -257,7 +257,7 @@ export function KidsGame(): JSX.Element {
                     />
                     <PlayerAvatar user_id={opponent?.id} />
                     <span className="username">{opponent?.username}</span>
-                    <Captures color={opponent_color} />
+                    <Captures color={opponent_color} goban={goban_ref.current} />
                     <div className="landscape-bottom-buttons">
                         <StoneButton
                             onClick={requestUndo}
@@ -278,7 +278,7 @@ export function KidsGame(): JSX.Element {
 
                 <div id="my-container">
                     <div className="top-spacer" />
-                    <Captures color={self_color} />
+                    <Captures color={self_color} goban={goban_ref.current} />
                     <PlayerAvatar user_id={self_player?.id} />
                     <span className="username">{self_player?.username}</span>
                     <Bowl
