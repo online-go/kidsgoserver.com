@@ -16,9 +16,12 @@
  */
 
 import * as React from "react";
+import { socket } from "sockets";
 import { chat_manager, ChatChannelProxy } from "chat_manager";
 import { useUser } from "hooks";
 import { Avatar, uiClassToRaceIdx } from "Avatar";
+import { bots_list } from "bots";
+import { getUserRating } from "rank_utils";
 
 interface OpponentListProperties {
     channel: string;
@@ -32,7 +35,24 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
     const user = useUser();
     const [, refresh] = React.useState<number>(0);
     const proxy = React.useRef<ChatChannelProxy>();
+    const [bots, setBots] = React.useState<Array<any>>(bots_list());
 
+    React.useEffect(() => {
+        const updateBots = (bots: any[]) => {
+            const list = [];
+            for (const id in bots) {
+                list.push(bots[id]);
+            }
+            list.sort((a, b) => getUserRating(a).rating - getUserRating(b).rating);
+
+            setBots(list);
+        };
+
+        socket.on("active-bots", updateBots);
+        return () => {
+            socket.off("active-bots", updateBots);
+        };
+    }, []);
     React.useEffect(() => {
         proxy.current = chat_manager.join(props.channel);
         proxy.current.on("join", () => refresh(Math.random()));
@@ -51,6 +71,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
         <div className="OpponentList-container">
             <div className="OpponentList">
                 <h4>Computer Opponents</h4>
+                {/*
                 <span className="disabled">
                     <Avatar race={"aquatic"} idx={9} />
                     Easy Computer
@@ -63,6 +84,26 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                     <Avatar race={"wisdom"} idx={2} />
                     Hard Computer
                 </span>
+                */}
+
+                {(bots.length >= 1 || null) &&
+                    bots
+                        .filter((bot) => !!bot.kidsgo_bot_name)
+                        .map((bot: any) => {
+                            const race = "aquatic";
+                            const race_idx = 9;
+
+                            return (
+                                <span
+                                    key={bot.id}
+                                    className={"bot" + (props.value === bot.id ? " active" : "")}
+                                    onClick={() => props.onChange(bot.id)}
+                                >
+                                    <Avatar race={race} idx={race_idx} />
+                                    {bot.kidsgo_bot_name}
+                                </span>
+                            );
+                        })}
 
                 {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
                     <>

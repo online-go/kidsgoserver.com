@@ -27,7 +27,6 @@ import cached from "cached";
 import { OpponentList } from "./OpponentList";
 //import * as preferences from "preferences";
 //import { errorAlerter, ignore } from "misc";
-import { socket } from "sockets";
 import { notification_manager } from "Notifications";
 import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
@@ -41,6 +40,7 @@ export function Matchmaking(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
     const [opponent, setOpponent] = React.useState("easy");
+
     useEnsureUserIsCreated();
 
     const play = (e) => {
