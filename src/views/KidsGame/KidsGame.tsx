@@ -83,7 +83,8 @@ export function KidsGame(): JSX.Element {
             draw_bottom_labels: false,
             player_id: user.id,
             game_id: game_id,
-            dont_draw_last_move: true,
+            dont_draw_last_move: false,
+            last_move_radius: 0.45,
             one_click_submit: true,
 
             //server_socket: null,

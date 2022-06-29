@@ -81,7 +81,7 @@ function getCachedLiberties(goban: GobanCore): Array<Array<number>> {
 }
 
 function reset_game_when_changed(goban: GobanCore) {
-    if (last_game_id !== goban.game_id) {
+    if (last_game_id !== goban.game_id || !scared_map) {
         last_goban_liberties_hash = null;
         scared_map = GoMath.makeMatrix(goban.width, goban.height, 0);
         last_game_id = +goban.game_id;
