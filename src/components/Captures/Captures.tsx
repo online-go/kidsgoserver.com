@@ -75,10 +75,15 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
 
     return (
         <div className="Captures">
-            <div className="Captures-svg" id={`captures-${color}`}>
+            <div className="Captures-svg-background" id={`captures-${color}`}>
                 {stones.map((stone, i) => (
                     <img key={i} className={`Captures-stone`} src={svg_url} style={stone} />
                 ))}
+                <div className="Captures-svg-foreground" id={`captures-${color}`} />
+                <div className="score">
+                    {numCaptures}
+                    {color === "white" ? ` + ${goban?.engine?.komi}` : ""}
+                </div>
             </div>
         </div>
     );

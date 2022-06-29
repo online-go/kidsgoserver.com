@@ -32,10 +32,11 @@ export function Bowl({ bouncing, color, goban }: BowlProps): JSX.Element {
     return (
         <div className={"Bowl" + (bouncing ? " bouncing" : "")}>
             <div className="spacer" />
-            <div className="Bowl-svg">
+            <div className="Bowl-svg-background">
                 {[0, 1, 2, 3, 4].map((i) => (
                     <img key={i} className={`Bowl-stone s${i}`} src={svg_url} />
                 ))}
+                <div className="Bowl-svg-foreground" />
             </div>
             <div className="spacer" />
         </div>

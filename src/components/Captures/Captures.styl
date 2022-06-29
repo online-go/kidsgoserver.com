@@ -23,9 +23,9 @@
     align-items: center;
     justify-content: center;
 
-    .Captures-svg {
+    .Captures-svg-background {
         position: relative;
-        background-image: svg-load("../assets/img/captures.svg");
+        background-image: svg-load("../assets/misc/captures-back.svg");
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
@@ -47,6 +47,34 @@
             left: 0;
             height: 20%
             aspect-ratio: 1 / 1;
+        }
+
+        .Captures-svg-foreground {
+            position: absolute;
+            background-image: svg-load("../assets/misc/captures-front.svg");
+            background-repeat: no-repeat;
+            z-index: 999;
+            width: 100%;
+            height: 60%;
+            top: 13%;
+            left: 8%;
+        }
+
+        .score {
+            position: absolute;
+            border: 2px solid #85C442;
+            color: #85C442;
+            border-radius: 0.5rem;
+            padding: 0.2rem;
+            min-width: 4rem;
+            font-size: 1.3rem;
+            //top: -3rem;
+            //top: -3rem;
+            bottom: -2.5rem;
+            right: calc(50% - 2.3rem);
+            text-align: center;
+            background-color: rgba(80,80,80,0.8);
+            font-weight: normal;
         }
     }
 
