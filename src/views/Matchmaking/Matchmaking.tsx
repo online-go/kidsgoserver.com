@@ -35,6 +35,7 @@ import { closePopup, openPopup } from "PopupDialog";
 import { AvatarSelection, Race, raceIdxToUiClass, uiClassToRaceIdx } from "Avatar";
 import { BackButton } from "BackButton";
 import { ActiveGamesList } from "./ActiveGamesList";
+import { bots } from "bots";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
@@ -43,6 +44,7 @@ export function Matchmaking(): JSX.Element {
     const user = useUser();
     const [opponent, _setOpponent] = React.useState("easy");
     const [game_to_view, _setGameToView] = React.useState<any>(null);
+    const [handicap, setHandicap] = React.useState(0);
 
     useEnsureUserIsCreated();
 
@@ -56,11 +58,13 @@ export function Matchmaking(): JSX.Element {
     };
 
     const play = (e) => {
+        const hc = isBot(opponent) ? handicap : 0;
+
         const challenge: ChallengeDetails = {
             initialized: true,
             min_ranking: 0,
             max_ranking: 99,
-            challenger_color: "random",
+            challenger_color: hc > 0 ? "black" : "random",
             rengo_auto_start: 0,
             game: {
                 name: "Kidsgo Match",
@@ -68,7 +72,7 @@ export function Matchmaking(): JSX.Element {
                 ranked: false,
                 width: 9,
                 height: 9,
-                handicap: 0,
+                handicap: hc,
                 komi_auto: null,
                 komi: null,
                 disable_analysis: false,
@@ -175,6 +179,7 @@ export function Matchmaking(): JSX.Element {
     const canPlay =
         !user.anonymous && opponent && opponent !== `${user.id}` && /[0-9]+/.test(opponent);
     const canView = !!game_to_view;
+    const showGameSettings = canPlay && isBot(opponent);
 
     return (
         <div id="Matchmaking" className="bg-earth">
@@ -199,7 +204,28 @@ export function Matchmaking(): JSX.Element {
                 <button className="play" disabled={!canPlay && !canView} onClick={playOrView}>
                     {canPlay ? "Play!" : canView ? "View game" : "Choose your opponent"}
                 </button>
+                {showGameSettings && (
+                    <div>
+                        <Handicap value={handicap} onChange={setHandicap} />
+                    </div>
+                )}
             </div>
+        </div>
+    );
+}
+
+interface HandicapProperties {
+    value: number;
+    onChange: (value: number) => void;
+}
+
+function Handicap(props: HandicapProperties): JSX.Element {
+    return (
+        <div className="Handicap">
+            <span className="label">Extra Handicap Stones: </span>
+            <button onClick={() => props.onChange(Math.max(0, props.value - 1))}>-</button>
+            {props.value}
+            <button onClick={() => props.onChange(Math.min(9, props.value + 1))}>+</button>
         </div>
     );
 }
@@ -375,4 +401,12 @@ function CheckForChallengeReceived(): JSX.Element {
     }
 
     return null;
+}
+
+function isBot(user_id: string | number): boolean {
+    if (user_id in bots()) {
+        return true;
+    }
+
+    return false;
 }
