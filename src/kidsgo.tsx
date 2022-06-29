@@ -97,6 +97,10 @@ try {
 import * as data from "data";
 import * as preferences from "preferences";
 
+// Disable the desktop notifications preemptiely so we don't get the OGS
+// desktop notification toast prompt
+preferences.set("desktop-notifications", false);
+
 try {
     // default_theme is set in index.html based on looking at the OS theme
     data.setDefault("theme", window["default_theme"]);
