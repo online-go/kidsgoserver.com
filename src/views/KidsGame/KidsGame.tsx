@@ -219,6 +219,9 @@ export function KidsGame(): JSX.Element {
         user.id in (goban_ref.current?.engine.player_pool || {}) &&
         move_number > 1;
     const can_pass = user.id === player_to_move;
+    const bot_game =
+        isBot(goban_ref.current?.engine.players.black) ||
+        isBot(goban_ref.current?.engine.players.white);
 
     const winner_username =
         `${goban_ref.current?.engine.winner}` === `${user.id}`
@@ -262,12 +265,14 @@ export function KidsGame(): JSX.Element {
                     </div>
                     <Captures color={opponent_color} goban={goban_ref.current} />
                     <div className="landscape-bottom-buttons">
-                        <StoneButton
-                            onClick={requestUndo}
-                            className="stone-button-return"
-                            text="Undo"
-                            disabled={!can_undo}
-                        />
+                        {(!bot_game || null) && (
+                            <StoneButton
+                                onClick={requestUndo}
+                                className="stone-button-return"
+                                text="Undo"
+                                disabled={!can_undo}
+                            />
+                        )}
                     </div>
                 </div>
 
@@ -303,15 +308,15 @@ export function KidsGame(): JSX.Element {
 
                 <div className="portrait-bottom-buttons">
                     <div className="left">
-                        <StoneButton
-                            onClick={requestUndo}
-                            className="stone-button-return"
-                            text="Undo"
-                            disabled={!can_undo}
-                        />
+                        {(!bot_game || null) && (
+                            <StoneButton
+                                onClick={requestUndo}
+                                className="stone-button-return"
+                                text="Undo"
+                                disabled={!can_undo}
+                            />
+                        )}
                     </div>
-
-                    <div className="center">Opponent Name</div>
 
                     <div className="right">
                         <StoneButton
@@ -425,4 +430,16 @@ function animateCaptures(
     });
 
     //console.log("animateCaptures", removed_stones, goban, color);
+}
+
+function isBot(player: any): boolean {
+    if (!player) {
+        return false;
+    }
+    for (const keyword of ["fuego", "katago", "gnugo", "computer", "easy", "hard", "medium"]) {
+        if (player.username.toLowerCase().includes(keyword)) {
+            return true;
+        }
+    }
+    return false;
 }
