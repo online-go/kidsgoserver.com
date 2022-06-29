@@ -73,9 +73,13 @@ export function ActiveGamesList(props: ActiveGamesListProperties): JSX.Element {
                         onClick={() => props.onChange(game)}
                     >
                         <span> vs </span>
-                        <div>
-                            <PlayerAvatar user_id={game.white.id} /> {game.white.username}
-                            <PlayerAvatar user_id={game.black.id} /> {game.black.username}
+                        <div className="players">
+                            <div className="player-row">
+                                <PlayerAvatar user_id={game.white.id} /> {game.white.username}
+                            </div>
+                            <div className="player-row">
+                                <PlayerAvatar user_id={game.black.id} /> {game.black.username}
+                            </div>
                         </div>
                     </div>
                 );
