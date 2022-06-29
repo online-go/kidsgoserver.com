@@ -42,13 +42,10 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
                 console.log("Delayed refresh");
                 setTimeout(() => {
                     setNumCaptures(goban.engine[color + "_prisoners"]);
-                    //refresh(Math.random());
                 }, 3000);
             };
             const doImmediateRefresh = () => {
                 setNumCaptures(goban.engine[color + "_prisoners"]);
-                console.log("Immediate refresh");
-                //refresh(Math.random());
             };
 
             goban.on("captured-stones", doDelayedRefresh);

@@ -19,6 +19,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "hooks";
 import { post, del } from "requests";
+import { socket } from "sockets";
 //import { useState } from "react";
 //import { Link } from "react-router-dom";
 import { _ } from "translate";
@@ -33,15 +34,26 @@ import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
 import { AvatarSelection, Race, raceIdxToUiClass, uiClassToRaceIdx } from "Avatar";
 import { BackButton } from "BackButton";
+import { ActiveGamesList } from "./ActiveGamesList";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
 export function Matchmaking(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
-    const [opponent, setOpponent] = React.useState("easy");
+    const [opponent, _setOpponent] = React.useState("easy");
+    const [game_to_view, _setGameToView] = React.useState<any>(null);
 
     useEnsureUserIsCreated();
+
+    const setOpponent = (o: string) => {
+        _setOpponent(o);
+        _setGameToView(null);
+    };
+    const setGameToView = (g: any) => {
+        _setOpponent(null);
+        _setGameToView(g);
+    };
 
     const play = (e) => {
         const challenge: ChallengeDetails = {
@@ -148,6 +160,13 @@ export function Matchmaking(): JSX.Element {
                 errorAlerter(err);
             });
     };
+    const playOrView = (e) => {
+        if (game_to_view) {
+            navigate(`/game/${game_to_view.id}`);
+        } else {
+            play(e);
+        }
+    };
     function back() {
         navigate("/");
     }
@@ -155,6 +174,7 @@ export function Matchmaking(): JSX.Element {
     // The 0-9 regex disabled the computer opponents for now.
     const canPlay =
         !user.anonymous && opponent && opponent !== `${user.id}` && /[0-9]+/.test(opponent);
+    const canView = !!game_to_view;
 
     return (
         <div id="Matchmaking" className="bg-earth">
@@ -173,10 +193,11 @@ export function Matchmaking(): JSX.Element {
                     </div>
                     <div className="right">
                         <OpponentList channel="kidsgo" value={opponent} onChange={setOpponent} />
+                        <ActiveGamesList value={game_to_view} onChange={setGameToView} />
                     </div>
                 </div>
-                <button className="play" disabled={!canPlay} onClick={play}>
-                    {canPlay ? "Play!" : "Choose your opponent"}
+                <button className="play" disabled={!canPlay && !canView} onClick={playOrView}>
+                    {canPlay ? "Play!" : canView ? "View game" : "Choose your opponent"}
                 </button>
             </div>
         </div>
@@ -303,8 +324,10 @@ function CheckForChallengeReceived(): JSX.Element {
                     active_challenge.current = null;
                     refresh(Math.random());
                 }
+            } else if (notification.type === "gameOfferRejected") {
+                notification_manager.deleteNotification(notification);
             } else {
-                console.log("challenge received check notification:", notification);
+                console.log("Unhandled notification: ", notification);
             }
         };
 
