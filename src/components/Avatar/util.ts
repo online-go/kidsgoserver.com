@@ -30,6 +30,7 @@ export function uiClassToRaceIdx(uiClass: string): [Race, number] {
                     case "bird":
                     case "fuzzball":
                     case "wisdom":
+                    case "robot":
                         break;
                     default:
                         r = "aquatic";

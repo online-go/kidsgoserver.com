@@ -84,6 +84,12 @@ export function AvatarSelection(props: AvatarSelectionInterface): JSX.Element {
                 >
                     Wisdom
                 </button>
+                <button
+                    className={race === "robot" ? "active" : ""}
+                    onClick={() => updateRace("robot")}
+                >
+                    Robot
+                </button>
             </div>
 
             <div className="selector">

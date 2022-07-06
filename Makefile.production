@@ -75,8 +75,10 @@ prepare-cdn-files: purge-cdn-files sync-translations dist/kidsgo.min.js dist/kid
 	cp -p dist/kidsgo.$(VERSION).css.map deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/img deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/avatars deployment-staging-area/$(RELEASE)/
+	cp -Rp assets/backgrounds deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/sound deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/pages deployment-staging-area/$(RELEASE)/
+	cp -Rp assets/misc deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/buttons deployment-staging-area/$(RELEASE)/
 	cp -Rp assets/stones deployment-staging-area/$(RELEASE)/
 	ls i18n/locale/*.js | sed 's@i18n/locale/\([^\.]\+\).js@\1@' | xargs -n1 -I {} cp i18n/locale/{}.js deployment-staging-area/$(RELEASE)/locale/{}.$(LANGUAGE_VERSION).js
