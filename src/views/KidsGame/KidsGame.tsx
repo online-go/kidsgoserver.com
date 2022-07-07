@@ -21,13 +21,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
-import { Goban, GoMath, GobanConfig, JGOFIntersection } from "goban";
+import { Goban, GoMath, GobanConfig } from "goban";
 import { PlayerAvatar } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
 import { PopupDialog, openPopup } from "PopupDialog";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
+import { animateCaptures } from "animateCaptures";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -330,11 +331,6 @@ export function KidsGame(): JSX.Element {
             </div>
         </>
     );
-    /*
-            <div id="menu">
-                <i className="fa fa-ellipsis-h" />
-            </div>
-            */
 }
 
 interface StoneButtonProps {
@@ -344,92 +340,13 @@ interface StoneButtonProps {
     disabled: boolean;
 }
 
-function StoneButton({ className, text, onClick, disabled }): JSX.Element {
+function StoneButton({ className, text, onClick, disabled }: StoneButtonProps): JSX.Element {
     return (
         <div className="StoneButton" onClick={disabled ? null : onClick}>
             <span className={className + (disabled ? " disabled" : "")} />
             <span className={"button-text" + (disabled ? " disabled" : "")}>{text}</span>
         </div>
     );
-}
-
-function getScreenCoordinatesOfStone(x: number, y: number, goban: Goban): { x: number; y: number } {
-    const rect = (goban as any).board.getBoundingClientRect();
-    const ss = (goban as any).square_size;
-    return {
-        x: (x + (goban.draw_left_labels ? 1 : 0)) * ss + rect.left,
-        y: (y + (goban.draw_top_labels ? 1 : 0)) * ss + rect.top,
-    };
-}
-
-window["getScreenCoordinatesOfStone"] = getScreenCoordinatesOfStone;
-
-function animateCaptures(
-    removed_stones: Array<JGOFIntersection>,
-    goban: Goban,
-    color: "black" | "white",
-): void {
-    const ss = (goban as any).square_size;
-    /* TODO: I'M HERE */
-    removed_stones.forEach((stone) => {
-        const { x, y } = stone;
-        const { x: screen_x, y: screen_y } = getScreenCoordinatesOfStone(x, y, goban);
-        const stone_element = document.createElement("img") as HTMLImageElement;
-        stone_element.className = "AnimatedStoneCapture";
-        stone_element.style.left = screen_x + "px";
-        stone_element.style.top = screen_y + "px";
-        stone_element.style.width = ss + "px";
-        stone_element.style.height = ss + "px";
-        stone_element.src = (
-            color === "black" ? (goban as any).theme_black : (goban as any).theme_white
-        ).getSadStoneSvgUrl();
-        document.body.appendChild(stone_element);
-
-        const other_color = color === "black" ? "white" : "black";
-        const target = document.getElementById(`captures-${other_color}`)?.getBoundingClientRect();
-
-        const src = {
-            x: screen_x,
-            y: screen_y,
-            width: ss,
-            height: ss,
-        };
-        const dst = {
-            x: (target?.left ?? 0) + target?.width / 2,
-            y: target?.top ?? 0,
-            width: 32,
-            height: 32,
-        };
-        const duration = 3000;
-        const start = performance.now();
-
-        const frame = () => {
-            if (performance.now() - start > duration) {
-                stone_element.remove();
-                return;
-            }
-
-            let a = (performance.now() - start) / duration;
-            //a = a * a; // ease in
-            a = a * a * a; // ease in
-            const yoffset = Math.sin(a * Math.PI) * ss * 5;
-            const srcy = src.y - yoffset;
-
-            stone_element.style.left = src.x + (dst.x - src.x) * a + "px";
-            stone_element.style.top = srcy + (dst.y - srcy) * a + "px";
-
-            stone_element.style.width = src.width + (dst.width - src.width) * a + "px";
-            stone_element.style.height = src.height + (dst.height - src.height) * a + "px";
-
-            requestAnimationFrame(frame);
-        };
-
-        setTimeout(() => {
-            frame();
-        }, 250);
-    });
-
-    //console.log("animateCaptures", removed_stones, goban, color);
 }
 
 function isBot(player: any): boolean {

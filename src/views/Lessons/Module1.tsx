@@ -240,13 +240,15 @@ class Puzzle1 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[0][3] === 0) {
-                swal({
-                    title: "Good job!",
-                })
-                    .then(() => {
-                        this.gotoNext();
+                this.captureDelay(() => {
+                    swal({
+                        title: "Good job!",
                     })
-                    .catch(() => 0);
+                        .then(() => {
+                            this.gotoNext();
+                        })
+                        .catch(() => 0);
+                });
             }
         });
     }
@@ -267,13 +269,15 @@ class Puzzle2 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
-                swal({
-                    title: "You did it!",
-                })
-                    .then(() => {
-                        this.gotoNext();
+                this.captureDelay(() => {
+                    swal({
+                        title: "You did it!",
                     })
-                    .catch(() => 0);
+                        .then(() => {
+                            this.gotoNext();
+                        })
+                        .catch(() => 0);
+                });
             }
         });
     }
@@ -295,14 +299,15 @@ class Puzzle3 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
-                console.log("SUCCESS");
-                swal({
-                    title: "Nice work!",
-                })
-                    .then(() => {
-                        this.gotoNext();
+                this.captureDelay(() => {
+                    swal({
+                        title: "Nice work!",
                     })
-                    .catch(() => 0);
+                        .then(() => {
+                            this.gotoNext();
+                        })
+                        .catch(() => 0);
+                });
             }
         });
     }
@@ -324,14 +329,15 @@ class Puzzle4 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
-                console.log("SUCCESS");
-                swal({
-                    title: "Very clever!",
-                })
-                    .then(() => {
-                        this.gotoNext();
+                this.captureDelay(() => {
+                    swal({
+                        title: "Very clever!",
                     })
-                    .catch(() => 0);
+                        .then(() => {
+                            this.gotoNext();
+                        })
+                        .catch(() => 0);
+                });
             }
         });
     }

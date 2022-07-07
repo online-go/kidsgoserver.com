@@ -26,6 +26,7 @@ import { setContentNavigate } from "./Content";
 import { chapters } from "./chapters";
 import { PersistentElement } from "PersistentElement";
 import { useNavigate } from "react-router-dom";
+import { animateCaptures } from "animateCaptures";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
     setContentNavigate(useNavigate());
@@ -135,11 +136,16 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
         goban_opts_ref.current = opts;
         console.log(opts);
-        console.log("BUILDING NEW GOBAN");
         goban_ref.current = new Goban(opts);
         const goban: Goban = goban_ref.current;
         content.setGoban(goban);
         content.setNext(next);
+
+        console.log("Listening for capturing");
+        goban.on("captured-stones", ({ removed_stones }) => {
+            console.log("Animating captures", removed_stones);
+            animateCaptures(removed_stones, goban, goban.engine.colorNotToMove());
+        });
 
         goban.on("puzzle-correct-answer", () => {
             console.log("CORRECT!");

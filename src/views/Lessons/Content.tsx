@@ -95,7 +95,7 @@ export class Content {
         };
     }
 
-    delay(cb: () => any, increment: number = 750): Animation {
+    delay(cb: () => any, increment: number = 2000): Animation {
         const animation_id = ++this.last_animation_id;
         const t = (this.current_delay += increment);
 
@@ -117,6 +117,10 @@ export class Content {
                 }
             },
         };
+    }
+
+    captureDelay(cb: () => any): Animation {
+        return this.delay(cb, 3000);
     }
 
     setGoban(goban: Goban) {
