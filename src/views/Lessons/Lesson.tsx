@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
     setContentNavigate(useNavigate());
     //const id:number = parseInt(this.props.match?.params?.id);
-    let next = "/";
+    let next = "/learn-to-play/";
     {
         let next_page = page + 1;
         let next_chapter = chapter;
@@ -39,12 +39,12 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             next_page = 0;
         }
         if (next_chapter >= chapters.length) {
-            next = "/";
+            next = "/learn-to-play/";
         } else {
             next = `/learn-to-play/${next_chapter + 1}/${next_page + 1}`;
         }
     }
-    let back = "/";
+    let back = "/learn-to-play/";
     {
         let next_page = page - 1;
         let next_chapter = chapter;
