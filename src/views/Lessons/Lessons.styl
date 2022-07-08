@@ -267,7 +267,7 @@
         }
     }
 
-    .portrait-top-spacer {
+    .landscape-top-spacer {
         flex: 0;
         height: 2rem;
         min-height: 4rem;
@@ -346,6 +346,16 @@
     .fade-in {
         display: inline-block;
         animation: fadeIn linear 3s;
+    }
+}
+
+#portrait-replay {
+    position: absolute;
+    right: 0.3rem;
+    top: 0.3rem;
+
+    +landscape() {
+        display: none;
     }
 }
 

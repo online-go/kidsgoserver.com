@@ -235,7 +235,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
     return (
         <>
             <div id="Lesson" className="bg-earth">
-                <div className="portrait-top-spacer">
+                <div className="landscape-top-spacer">
                     <div className="lesson-title">Lesson 1</div>
                 </div>
                 <div id="Lesson-bottom-container">
@@ -304,6 +304,10 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                 <Link to="/learn-to-play">
                     <span className="stone-button-x" />
                 </Link>
+            </div>
+
+            <div id="portrait-replay">
+                <span className="stone-button-refresh" onClick={() => setReplay(Math.random())} />
             </div>
         </>
     );
