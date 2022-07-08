@@ -124,6 +124,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                 player_id: 0,
                 server_socket: null,
                 square_size: "auto",
+                dont_draw_last_move: true,
 
                 puzzle_opponent_move_mode: "automatic",
                 puzzle_player_move_mode: "free",
@@ -294,9 +295,3 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         </>
     );
 }
-
-/*
-            <div id="menu">
-                <i className="fa fa-ellipsis-h" />
-            </div>
-*/

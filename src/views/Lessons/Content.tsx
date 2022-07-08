@@ -16,14 +16,20 @@
  */
 
 import * as React from "react";
+import * as data from "data";
 import { PuzzleConfig, Goban, GoMath } from "goban";
 import { Timeout } from "misc";
+import { TypedEventEmitter } from "TypedEventEmitter";
+
+interface Events {
+    "animation-complete": void;
+}
 
 interface Animation {
     cancel: () => void;
 }
 
-export class Content {
+export class Content extends TypedEventEmitter<Events> {
     animations: { [id: string]: Timeout } = {};
     delays: { [id: string]: Timeout } = {};
     last_animation_id: number = 0;
@@ -31,7 +37,9 @@ export class Content {
     current_delay: number = 0;
     next_path: string = "";
 
-    constructor() {}
+    constructor() {
+        super();
+    }
 
     text(): JSX.Element | Array<JSX.Element> {
         return (
@@ -63,6 +71,12 @@ export class Content {
         };
     }
 
+    checkAnimationComplete() {
+        if (Object.keys(this.animations).length === 0) {
+            this.emit("animation-complete");
+        }
+    }
+
     /* Calls cb every interval ms until the callback returns falsy. Manages
      * tearing down the animation when the Content is destroyed. */
     animate(cb: () => any, interval: number): Animation {
@@ -80,6 +94,7 @@ export class Content {
                 this.animations[animation_id] = setTimeout(loop, interval);
             } else {
                 delete this.animations[animation_id];
+                this.checkAnimationComplete();
             }
         };
 
@@ -95,7 +110,10 @@ export class Content {
         };
     }
 
-    delay(cb: () => any, increment: number = 2000): Animation {
+    delay(
+        cb: () => any,
+        increment: number = data.get("animation-duration" as any) || 2000,
+    ): Animation {
         const animation_id = ++this.last_animation_id;
         const t = (this.current_delay += increment);
 
@@ -107,6 +125,7 @@ export class Content {
             }
 
             delete this.delays[animation_id];
+            this.checkAnimationComplete();
         }, t);
 
         return {
@@ -120,7 +139,27 @@ export class Content {
     }
 
     captureDelay(cb: () => any): Animation {
-        return this.delay(cb, 3000);
+        const delay = 3000;
+
+        const animation_id = ++this.last_animation_id;
+        this.delays[animation_id] = setTimeout(() => {
+            try {
+                cb();
+            } catch (e) {
+                console.error(e);
+            }
+
+            delete this.delays[animation_id];
+        }, delay);
+
+        return {
+            cancel: () => {
+                if (this.delays[animation_id]) {
+                    clearTimeout(this.delays[animation_id]);
+                    delete this.delays[animation_id];
+                }
+            },
+        };
     }
 
     setGoban(goban: Goban) {
