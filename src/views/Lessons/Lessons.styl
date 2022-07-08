@@ -22,6 +22,8 @@
   100% {opacity:1;}
 }
 
+backdropcolor=rgba(90, 90, 110, 0.6)
+backdropborder-color=rgba(255, 255, 255, 0.6)
 
 
 #Lesson {
@@ -103,7 +105,7 @@
             margin-right: 2rem;
             margin-left: 2rem;
             border: 2px solid #fff;
-            border-color:rgba(255, 255, 255, 0.5); 
+            border-color: backdropborder-color
             border-top-left-radius: 1.5rem;
             border-top-right-radius: 1.5rem;
             margin-left: auto;
@@ -111,7 +113,7 @@
             padding-left: 1rem;
             padding-right: 1rem;
             padding-top: 0.5rem;
-            background: rgba(255, 255, 255, 0.2);
+            background: backdropcolor
 
             +portrait() {
                 display: none !important;
@@ -151,10 +153,10 @@
     .Goban-container {
         display: inline-block;
         padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.2);
+        background: backdropcolor;
         border: 2px solid #fff;
         border-radius: 0.5rem;
-        border-color:rgba(255, 255, 255, 0.7); 
+        border-color: backdropborder-color
 
         /*
         +portrait() {
@@ -214,7 +216,7 @@
         min-height: 5rem;
         height: 5rem;
         border: 2px solid #fff;
-        border-color:rgba(255, 255, 255, 0.5); 
+        border-color: backdropborder-color;
         border-top-left-radius: 2rem;
         border-top-right-radius: 2rem;
         margin-left: auto;
@@ -222,7 +224,7 @@
         padding-left: 1rem;
         padding-right: 1rem;
         padding-top: 0.5rem;
-        background: rgba(255, 255, 255, 0.2);
+        background: backdropcolor;
 
         +portrait() {
             display: none;
@@ -237,7 +239,7 @@
         width: 90vw;
         height: 4rem;
         border: 2px solid #fff;
-        border-color:rgba(255, 255, 255, 0.5); 
+        border-color: backdropborder-color;
         border-top-left-radius: 2rem;
         border-top-right-radius: 2rem;
         margin-left: auto;
@@ -245,7 +247,7 @@
         padding-left: 0.2rem;
         padding-right: 0.2rem;
         padding-top: 0.5rem;
-        background: rgba(255, 255, 255, 0.2);
+        background: backdropcolor;
         align-content: center;
         align-items: stretch;
         justify-content: stretch;
@@ -297,7 +299,7 @@
         font-weight: bold;
 
         border: 2px solid #fff;
-        border-color:rgba(255, 255, 255, 0.5); 
+        border-color: backdropborder-color;
         border-bottom-left-radius: 2rem;
         border-bottom-right-radius: 2rem;
         margin-left: auto;
@@ -305,7 +307,7 @@
         padding-left: 1rem;
         padding-right: 1rem;
         padding-bottom: 0.5rem;
-        background: rgba(255, 255, 255, 0.2);
+        background: backdropcolor;
     }
 
     .explanation-text {
@@ -315,7 +317,7 @@
 
         border-top-left-radius: 2rem;
         border-top-right-radius: 2rem;
-        background: rgba(90, 90, 110, 0.6);
+        background: backdropcolor;
         font-size: 1.5rem;
         font-weight: bold;
         text-shadow: 0px 0px 3px #000;
@@ -325,7 +327,7 @@
         margin-top: 4rem;
         padding-top: 1.4rem;
         overflow: auto;
-        max-height: calc(100vh - 15rem);
+        max-height: calc(100vh - 10rem);
 
         p {
             margin-top: 0;
