@@ -201,7 +201,11 @@ export function Matchmaking(): JSX.Element {
                         <ActiveGamesList value={game_to_view} onChange={setGameToView} />
                     </div>
                 </div>
-                <button className="play primary-button" disabled={!canPlay && !canView} onClick={playOrView}>
+                <button
+                    className="play primary-button"
+                    disabled={!canPlay && !canView}
+                    onClick={playOrView}
+                >
                     {canPlay ? "Play!" : canView ? "View game" : "Choose your opponent"}
                 </button>
                 {showGameSettings && (

@@ -159,10 +159,13 @@ export function initialize_kidsgo_themes() {
                     scared_map[y][x] = Date.now();
                 }
 
-                if (Date.now() - scared_map[y][x] < 2000) {
+                if (Date.now() - scared_map[y][x] < 1000) {
+                    return "neutral";
+                }
+                if (Date.now() - scared_map[y][x] < 3000) {
                     return "scared";
                 } else {
-                    const t = (rng + Math.round(Date.now() / 1000)) % 2;
+                    const t = (rng + Math.round(Date.now() / 1500)) % 2;
 
                     switch (t) {
                         case 0:

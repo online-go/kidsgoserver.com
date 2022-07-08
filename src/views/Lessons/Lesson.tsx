@@ -208,6 +208,10 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             onResize(w, h);
         }, 10);
 
+        const animation_interval = setInterval(() => {
+            goban.redraw();
+        }, 100);
+
         return () => {
             content.destroy();
             console.log(`lesson ${chapter} ${page} teardown`);
@@ -217,6 +221,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             goban_ref.current.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
+            clearTimeout(animation_interval);
             hup(Math.random());
         };
     }, [chapter, page, replay]);
