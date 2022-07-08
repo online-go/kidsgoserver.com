@@ -50,6 +50,8 @@
 .up-light-green { @extend .right-light-green; transform: rotate(-90deg); }
 .red-x { background-image: svg-load("../assets/buttons/red-x.svg"); }
 .green-check{ background-image: svg-load("../assets/buttons/green-check.svg"); }
+.refresh-light { background-image: svg-load("../assets/buttons/refresh-light.svg"); }
+.refresh-light-green { background-image: svg-load("../assets/buttons/refresh-light-green.svg"); }
 
 .stone-button {
     display: inline-flex;
@@ -168,3 +170,10 @@ button.up, .stone-button-up {
     }
 }
         
+.stone-button-refresh {
+    @extend .stone-button;
+    @extend .refresh-light;
+    &:not(.disabled):hover {
+        @extend .refresh-light-green;
+    }
+}

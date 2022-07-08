@@ -69,6 +69,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         Array<JSX.Element>
     >([]);
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
+    const [replay, setReplay]: [number, (x: number) => void] = useState<number>(Math.random());
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
@@ -218,7 +219,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             goban_opts_ref.current = null;
             hup(Math.random());
         };
-    }, [chapter, page]);
+    }, [chapter, page, replay]);
 
     /*
     useEffect(() => {
@@ -260,6 +261,13 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                                 <span className="stone-button-left" />
                                 <span className="button-text">Back</span>
                             </Link>
+                            <span
+                                className="game-button-container"
+                                onClick={() => setReplay(Math.random())}
+                            >
+                                <span className="stone-button-refresh" />
+                                <span className="button-text">Replay</span>
+                            </span>
                             <Link to={next} className="game-button-container">
                                 <span className="stone-button-right" />
                                 <span className="button-text">next</span>
