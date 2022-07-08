@@ -4,11 +4,16 @@
     //@media only screen and (min-width: 1021px)
 
 portrait()
-    @media handheld, (max-width: 1020px), (orientation: portrait) {
+    @media (orientation: portrait) {
         {block}
     }
 
 landscape()
-    @media (min-width: 1021px), (orientation: lanscape) {
+    @media (orientation: landscape) {
+        {block}
+    }
+
+phonelandscape()
+    @media (orientation: landscape) and (max-width: 800px) {
         {block}
     }

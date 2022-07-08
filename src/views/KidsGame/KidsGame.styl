@@ -43,10 +43,14 @@
 
     #opponent-container, #my-container {
         flex: 1;
-        min-width: 20rem;
+        min-width: 10rem;
         max-width: 100vw;
         flex-basis: 10rem;
         min-height: 10rem;
+
+        +phonelandscape() {
+            min-width: 7rem;
+        }
 
 
         +portrait() {
@@ -127,6 +131,10 @@
         height: 5rem;
 
         +portrait() {
+            display: none;
+        }
+
+        +phonelandscape() {
             display: none;
         }
     }
