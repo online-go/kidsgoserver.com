@@ -17,6 +17,7 @@
 
 import * as React from "react";
 import { Goban } from "goban";
+import { countPasses } from "countPasses";
 
 interface CapturesProps {
     color: "black" | "white";
@@ -37,15 +38,18 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
 
     React.useEffect(() => {
         if (goban) {
-            setNumCaptures(goban?.engine[color + "_prisoners"] || 0);
+            const passes = countPasses(goban);
+            setNumCaptures((goban?.engine[color + "_prisoners"] || 0) + passes[color]);
             const doDelayedRefresh = () => {
+                const passes = countPasses(goban);
                 console.log("Delayed refresh");
                 setTimeout(() => {
-                    setNumCaptures(goban.engine[color + "_prisoners"]);
+                    setNumCaptures(goban.engine[color + "_prisoners"] + passes[color]);
                 }, 3000);
             };
             const doImmediateRefresh = () => {
-                setNumCaptures(goban.engine[color + "_prisoners"]);
+                const passes = countPasses(goban);
+                setNumCaptures(goban.engine[color + "_prisoners"] + passes[color]);
             };
 
             goban.on("captured-stones", doDelayedRefresh);

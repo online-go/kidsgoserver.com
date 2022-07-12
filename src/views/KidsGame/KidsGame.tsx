@@ -27,6 +27,7 @@ import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
 import { PopupDialog, openPopup } from "PopupDialog";
+import { ResultsDialog } from "ResultsDialog";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
 import { animateCaptures } from "animateCaptures";
 
@@ -110,11 +111,13 @@ export function KidsGame(): JSX.Element {
                 goban.width,
                 goban.height,
             );
-            const move_string = mvs
-                .map((p) => GoMath.prettyCoords(p.x, p.y, goban.height))
-                .join(",");
-            //console.log("Move string: ", move_string);
-            //this.setState({ move_string });
+            mvs.map((p) => GoMath.prettyCoords(p.x, p.y, goban.height));
+
+            if (goban.engine.phase === "finished") {
+                const s = goban.engine.computeScore(false);
+                console.log(s);
+                goban.showScores(s, true);
+            }
         };
 
         const onCapturedStones = ({ removed_stones }) => {
@@ -248,7 +251,15 @@ export function KidsGame(): JSX.Element {
                     />
                 )}
                 {phase === "finished" && !gameFinishedClosed && (
-                    <PopupDialog text={result} onAccept={() => setGameFinishedClosed(true)} />
+                    <ResultsDialog
+                        goban={goban_ref?.current}
+                        onPlayAgain={() => {
+                            navigate("/play");
+                        }}
+                        onClose={() => {
+                            setGameFinishedClosed(true);
+                        }}
+                    />
                 )}
 
                 <div className="portrait-top-spacer" />
@@ -298,36 +309,40 @@ export function KidsGame(): JSX.Element {
                         goban={goban_ref.current}
                     />
                     <div className="landscape-bottom-buttons">
-                        <StoneButton
-                            onClick={pass}
-                            className="stone-button-up"
-                            text="Pass"
-                            disabled={!can_pass}
-                        />
-                    </div>
-                </div>
-
-                <div className="portrait-bottom-buttons">
-                    <div className="left">
-                        {(!bot_game || null) && (
+                        {goban_ref.current?.engine.phase === "play" && (
                             <StoneButton
-                                onClick={requestUndo}
-                                className="stone-button-return"
-                                text="Undo"
-                                disabled={!can_undo}
+                                onClick={pass}
+                                className="stone-button-up"
+                                text="Pass"
+                                disabled={!can_pass}
                             />
                         )}
                     </div>
-
-                    <div className="right">
-                        <StoneButton
-                            onClick={pass}
-                            className="stone-button-up"
-                            text="Pass"
-                            disabled={!can_pass}
-                        />
-                    </div>
                 </div>
+
+                {goban_ref.current?.engine.phase === "play" && (
+                    <div className="portrait-bottom-buttons">
+                        <div className="left">
+                            {(!bot_game || null) && (
+                                <StoneButton
+                                    onClick={requestUndo}
+                                    className="stone-button-return"
+                                    text="Undo"
+                                    disabled={!can_undo}
+                                />
+                            )}
+                        </div>
+
+                        <div className="right">
+                            <StoneButton
+                                onClick={pass}
+                                className="stone-button-up"
+                                text="Pass"
+                                disabled={!can_pass}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

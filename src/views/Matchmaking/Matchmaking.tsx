@@ -73,8 +73,8 @@ export function Matchmaking(): JSX.Element {
                 width: 9,
                 height: 9,
                 handicap: hc,
-                komi_auto: null,
-                komi: null,
+                komi_auto: hc ? "custom" : "automatic",
+                komi: hc ? 0.5 : null,
                 disable_analysis: false,
                 initial_state: null,
                 private: false,
@@ -174,12 +174,16 @@ export function Matchmaking(): JSX.Element {
     function back() {
         navigate("/");
     }
+    const setOpponentAndHandicap = (o: string, h: number) => {
+        setOpponent(o);
+        setHandicap(h);
+    };
 
     // The 0-9 regex disabled the computer opponents for now.
     const canPlay =
         !user.anonymous && opponent && opponent !== `${user.id}` && /[0-9]+/.test(opponent);
     const canView = !!game_to_view;
-    const showGameSettings = canPlay && isBot(opponent);
+    //const showGameSettings = canPlay && isBot(opponent);
 
     return (
         <div id="Matchmaking" className="bg-earth">
@@ -197,7 +201,12 @@ export function Matchmaking(): JSX.Element {
                         <span className="line" />
                     </div>
                     <div className="right">
-                        <OpponentList channel="kidsgo" value={opponent} onChange={setOpponent} />
+                        <OpponentList
+                            channel="kidsgo"
+                            value={opponent}
+                            handicap={handicap}
+                            onChange={setOpponentAndHandicap}
+                        />
                         <ActiveGamesList value={game_to_view} onChange={setGameToView} />
                     </div>
                 </div>
@@ -208,16 +217,19 @@ export function Matchmaking(): JSX.Element {
                 >
                     {canPlay ? "Play!" : canView ? "View game" : "Choose your opponent"}
                 </button>
+                {/*
                 {showGameSettings && (
                     <div>
                         <Handicap value={handicap} onChange={setHandicap} />
                     </div>
                 )}
+                */}
             </div>
         </div>
     );
 }
 
+/*
 interface HandicapProperties {
     value: number;
     onChange: (value: number) => void;
@@ -233,6 +245,7 @@ function Handicap(props: HandicapProperties): JSX.Element {
         </div>
     );
 }
+*/
 
 function CharacterManagement(): JSX.Element {
     const user = useUser();

@@ -26,7 +26,8 @@ import { getUserRating } from "rank_utils";
 interface OpponentListProperties {
     channel: string;
     value: string;
-    onChange: (user: string) => void;
+    handicap: number;
+    onChange: (user: string, handicap: number) => void;
 }
 
 window["chat_manager"] = chat_manager;
@@ -94,14 +95,27 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                             const race_idx = 9;
 
                             return (
-                                <span
-                                    key={bot.id}
-                                    className={"bot" + (props.value === bot.id ? " active" : "")}
-                                    onClick={() => props.onChange(bot.id)}
-                                >
-                                    <Avatar race={race} idx={race_idx} />
-                                    {bot.kidsgo_bot_name}
-                                </span>
+                                <React.Fragment key={bot.id}>
+                                    {[4, 3, 2, 1, 0].map((handicap) => (
+                                        <span
+                                            key={bot.id + "-" + handicap}
+                                            className={
+                                                "bot" +
+                                                (props.value === bot.id &&
+                                                props.handicap === handicap
+                                                    ? " active"
+                                                    : "")
+                                            }
+                                            onClick={() => {
+                                                props.onChange(bot.id, handicap);
+                                            }}
+                                        >
+                                            <Avatar race={race} idx={race_idx} />
+                                            {bot.kidsgo_bot_name}
+                                            {handicap > 0 ? ` + ${handicap} stones` : ""}
+                                        </span>
+                                    ))}
+                                </React.Fragment>
                             );
                         })}
 
@@ -119,7 +133,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                                         className={
                                             "kid" + (props.value === user.id ? " active" : "")
                                         }
-                                        onClick={() => props.onChange(user.id)}
+                                        onClick={() => props.onChange(user.id, 0)}
                                     >
                                         <Avatar race={race} idx={idx} />
                                         {user.username}
