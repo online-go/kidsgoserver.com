@@ -135,6 +135,9 @@ export function KidsGame(): JSX.Element {
                     last_player_to_move = goban.engine.playerToMove();
                     if (goban.engine.playerToMove() === user.id) {
                         say_your_move_timeout = setTimeout(() => {
+                            if (goban.engine.phase !== "play") {
+                                return;
+                            }
                             console.log("SHould be our move");
                             const opponent = is_player
                                 ? goban_ref.current?.engine.players.black.id === user.id
@@ -159,8 +162,25 @@ export function KidsGame(): JSX.Element {
             }
         };
 
+        let pass_last_move = 0;
+
+        const passStoneHandler = () => {
+            if (goban.engine.phase === "play") {
+                if (pass_last_move !== goban.engine.last_official_move.move_number) {
+                    /* If we just joined the game, don't replay the animation */
+                    if (pass_last_move !== 0) {
+                        if (goban.engine.last_official_move.passed()) {
+                            animateCaptures([{ x: -1, y: -1 }], goban, goban.engine.colorToMove());
+                        }
+                    }
+                    pass_last_move = goban.engine.last_official_move.move_number;
+                }
+            }
+        };
+
         goban.on("update", onUpdate);
         goban.on("update", sayYourMoveChecker);
+        goban.on("update", passStoneHandler);
         goban.on("captured-stones", onCapturedStones);
         window["global_goban"] = goban;
 

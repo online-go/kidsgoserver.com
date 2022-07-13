@@ -39,23 +39,31 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
     React.useEffect(() => {
         if (goban) {
             const passes = countPasses(goban);
-            setNumCaptures((goban?.engine[color + "_prisoners"] || 0) + passes[color]);
+            const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
+            const captures = prisoners[color].prisoners + passes[color];
+            setNumCaptures(captures);
+
             const doDelayedRefresh = () => {
                 const passes = countPasses(goban);
-                console.log("Delayed refresh");
+                const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
+                const captures = prisoners[color].prisoners + passes[color];
                 setTimeout(() => {
-                    setNumCaptures(goban.engine[color + "_prisoners"] + passes[color]);
+                    setNumCaptures(captures);
                 }, 3000);
             };
             const doImmediateRefresh = () => {
                 const passes = countPasses(goban);
-                setNumCaptures(goban.engine[color + "_prisoners"] + passes[color]);
+                const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
+                const captures = prisoners[color].prisoners + passes[color];
+                setNumCaptures(captures);
             };
 
             goban.on("captured-stones", doDelayedRefresh);
+            goban.on("update", doDelayedRefresh);
             goban.on("load", doImmediateRefresh);
             return () => {
                 goban.off("captured-stones", doDelayedRefresh);
+                goban.off("update", doDelayedRefresh);
                 goban.off("load", doImmediateRefresh);
             };
         }

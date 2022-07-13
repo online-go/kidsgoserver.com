@@ -18,6 +18,13 @@
 import { Goban, JGOFIntersection } from "goban";
 
 function getScreenCoordinatesOfStone(x: number, y: number, goban: Goban): { x: number; y: number } {
+    if (x === -1 || y === -1) {
+        const color = goban.engine.colorToMove();
+        const elt = document.getElementById(`Bowl-${color}`);
+        const rect = elt.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 5 };
+    }
+
     const rect = (goban as any).board.getBoundingClientRect();
     const ss = (goban as any).square_size;
     return {
@@ -34,6 +41,7 @@ export function animateCaptures(
     color: "black" | "white",
 ): void {
     const ss = (goban as any).square_size;
+
     removed_stones.forEach((stone) => {
         const { x, y } = stone;
         const { x: screen_x, y: screen_y } = getScreenCoordinatesOfStone(x, y, goban);

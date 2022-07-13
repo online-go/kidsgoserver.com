@@ -36,7 +36,7 @@ export function Bowl({ bouncing, color, goban }: BowlProps): JSX.Element {
                 {[0, 1, 2, 3, 4].map((i) => (
                     <img key={i} className={`Bowl-stone s${i}`} src={svg_url} />
                 ))}
-                <div className="Bowl-svg-foreground" />
+                <div id={`Bowl-${color}`} className="Bowl-svg-foreground ${color}" />
             </div>
             <div className="spacer" />
         </div>

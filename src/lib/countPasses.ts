@@ -46,3 +46,5 @@ export function countPasses(goban: Goban): { black: number; white: number } {
 
     return { black, white };
 }
+
+window["countPasses"] = countPasses;

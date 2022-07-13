@@ -38,6 +38,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     const score = props.goban.engine.computeScore(false);
     const score_prisoners = props.goban.engine.computeScore(true);
     const passes = countPasses(props.goban);
+    console.log("Prisoners:", score_prisoners);
     score.black.prisoners = score_prisoners.black.prisoners + passes.black;
     score.white.prisoners = score_prisoners.white.prisoners + passes.white;
 
