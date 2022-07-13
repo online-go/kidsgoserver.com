@@ -235,8 +235,13 @@ export function initialize_kidsgo_themes() {
         ): StoneTypeArray {
             return preRenderImageStone(radius, image_urls("pink"), deferredRenderCallback);
         }
+        getWhiteTextColor(_color: string): string {
+            //return "#ffffff";
+            return "#BC32A1";
+        }
         getBlackTextColor(_color: string): string {
-            return "#ffffff";
+            //return "#ffffff";
+            return "#CAE6F3";
         }
         getSadStoneSvgUrl(): string {
             return image_url("pink", "sad");
@@ -260,8 +265,11 @@ export function initialize_kidsgo_themes() {
         ): StoneTypeArray {
             return preRenderImageStone(radius, image_urls("light_blue"), deferredRenderCallback);
         }
+        getWhiteTextColor(_color: string): string {
+            return "#BC32A1";
+        }
         getBlackTextColor(_color: string): string {
-            return "#000000";
+            return "#CAE6F3";
         }
         getSadStoneSvgUrl(): string {
             return image_url("light_blue", "sad");
