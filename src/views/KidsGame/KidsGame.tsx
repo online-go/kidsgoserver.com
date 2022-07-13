@@ -30,6 +30,8 @@ import { PopupDialog, openPopup } from "PopupDialog";
 import { ResultsDialog } from "ResultsDialog";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
 import { animateCaptures } from "animateCaptures";
+import { ChatBubble } from "./ChatBubble";
+import { openChat } from "ChatDialog";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -79,6 +81,7 @@ export function KidsGame(): JSX.Element {
             mode: "play",
             width: 9,
             height: 9,
+            connect_to_chat: true,
             draw_top_labels: false,
             draw_right_labels: false,
             draw_left_labels: false,
@@ -273,6 +276,11 @@ export function KidsGame(): JSX.Element {
                     />
                     <div className="Player">
                         <PlayerAvatar user_id={opponent?.id} />
+                        <ChatBubble
+                            goban={goban_ref.current}
+                            user_id={opponent?.id}
+                            side="opponent"
+                        />
                         {/* <span className="username">{opponent?.username}</span> */}
                     </div>
                     <Captures color={opponent_color} goban={goban_ref.current} />
@@ -285,6 +293,12 @@ export function KidsGame(): JSX.Element {
                                 disabled={!can_undo}
                             />
                         )}
+                        <StoneButton
+                            onClick={() => openChat({ goban: goban_ref.current })}
+                            className="stone-button-chat"
+                            text="Chat"
+                            disabled={false}
+                        />
                     </div>
                 </div>
 
@@ -301,6 +315,11 @@ export function KidsGame(): JSX.Element {
                     <Captures color={self_color} goban={goban_ref.current} />
                     <div className="Player">
                         <PlayerAvatar user_id={self_player?.id} />
+                        <ChatBubble
+                            goban={goban_ref.current}
+                            user_id={self_player?.id}
+                            side="player"
+                        />
                         {/* <span className="username">{self_player?.username}</span> */}
                     </div>
                     <Bowl
@@ -331,6 +350,12 @@ export function KidsGame(): JSX.Element {
                                     disabled={!can_undo}
                                 />
                             )}
+                            <StoneButton
+                                onClick={() => openChat({ goban: goban_ref.current })}
+                                className="stone-button-chat"
+                                text="Chat"
+                                disabled={false}
+                            />
                         </div>
 
                         <div className="right">

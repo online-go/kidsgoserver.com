@@ -41,11 +41,11 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     score.black.prisoners = score_prisoners.black.prisoners + passes.black;
     score.white.prisoners = score_prisoners.white.prisoners + passes.white;
 
-    let black_svg_url = ((props.goban as any)?.theme_black?.getSadStoneSvgUrl() || "").replace(
+    const black_svg_url = ((props.goban as any)?.theme_black?.getSadStoneSvgUrl() || "").replace(
         "sad",
         "neutral",
     );
-    let white_svg_url = ((props.goban as any)?.theme_white?.getSadStoneSvgUrl() || "").replace(
+    const white_svg_url = ((props.goban as any)?.theme_white?.getSadStoneSvgUrl() || "").replace(
         "sad",
         "neutral",
     );
