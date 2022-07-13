@@ -91,9 +91,6 @@ export function KidsGame(): JSX.Element {
             dont_draw_last_move: false,
             last_move_radius: 0.45,
             one_click_submit: true,
-
-            //server_socket: null,
-            //"square_size": 20
         };
 
         goban_opts_ref.current = opts;
@@ -127,7 +124,43 @@ export function KidsGame(): JSX.Element {
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
         };
 
+        let last_player_to_move = 0;
+        let say_your_move_timeout = null;
+        const sayYourMoveChecker = () => {
+            if (goban.engine.phase === "play") {
+                if (last_player_to_move !== goban.engine.playerToMove()) {
+                    if (say_your_move_timeout) {
+                        clearTimeout(say_your_move_timeout);
+                    }
+                    last_player_to_move = goban.engine.playerToMove();
+                    if (goban.engine.playerToMove() === user.id) {
+                        say_your_move_timeout = setTimeout(() => {
+                            console.log("SHould be our move");
+                            const opponent = is_player
+                                ? goban_ref.current?.engine.players.black.id === user.id
+                                    ? goban_ref.current?.engine.players.white
+                                    : goban_ref.current?.engine.players.black
+                                : goban_ref.current?.engine.players.black;
+
+                            if (goban.engine.last_official_move.passed()) {
+                                goban.emit("chat", {
+                                    body: "I've passed",
+                                    player_id: opponent.id,
+                                });
+                            } else {
+                                goban.emit("chat", {
+                                    body: "Your move",
+                                    player_id: opponent.id,
+                                });
+                            }
+                        }, 15000);
+                    }
+                }
+            }
+        };
+
         goban.on("update", onUpdate);
+        goban.on("update", sayYourMoveChecker);
         goban.on("captured-stones", onCapturedStones);
         window["global_goban"] = goban;
 
