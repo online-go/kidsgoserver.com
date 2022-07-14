@@ -22,7 +22,7 @@ import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
 import { Goban, GoMath, GobanConfig } from "goban";
-import { PlayerAvatar } from "Avatar";
+import { PlayerAvatar, uiClassToRaceIdx, avatar_background_class } from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
@@ -47,6 +47,7 @@ export function KidsGame(): JSX.Element {
         useShowUndoRequested(goban_ref.current) && goban_ref.current?.engine.phase === "play";
     const [gameFinishedClosed, setGameFinishedClosed] = useState(false);
     const phase = usePhase(goban_ref.current);
+    const [race] = uiClassToRaceIdx(user.ui_class);
 
     const game_id = parseInt(params.id);
 
@@ -145,16 +146,18 @@ export function KidsGame(): JSX.Element {
                                     : goban_ref.current?.engine.players.black
                                 : goban_ref.current?.engine.players.black;
 
-                            if (goban.engine.last_official_move.passed()) {
-                                goban.emit("chat", {
-                                    body: "I've passed",
-                                    player_id: opponent.id,
-                                });
-                            } else {
-                                goban.emit("chat", {
-                                    body: "Your move",
-                                    player_id: opponent.id,
-                                });
+                            if (opponent) {
+                                if (goban.engine.last_official_move.passed()) {
+                                    goban.emit("chat", {
+                                        body: "I've passed",
+                                        player_id: opponent.id,
+                                    });
+                                } else {
+                                    goban.emit("chat", {
+                                        body: "Your move",
+                                        player_id: opponent.id,
+                                    });
+                                }
                             }
                         }, 15000);
                     }
@@ -199,6 +202,9 @@ export function KidsGame(): JSX.Element {
         return () => {
             if (t) {
                 clearTimeout(t);
+            }
+            if (say_your_move_timeout) {
+                clearTimeout(say_your_move_timeout);
             }
             goban.destroy();
             goban_ref.current = null;
@@ -295,7 +301,7 @@ export function KidsGame(): JSX.Element {
 
     return (
         <>
-            <div id="KidsGame" className="bg-mars">
+            <div id="KidsGame" className={avatar_background_class(race)}>
                 <BackButton onClick={quit} />
                 {show_undo_requested && (
                     <PopupDialog

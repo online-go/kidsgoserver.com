@@ -543,3 +543,18 @@ export const avatars: { [race: string]: Array<number> } = {
         .sort(sortById)
         .map((a) => a.id),
 };
+
+export function avatar_background_class(race: Race): string {
+    switch (race) {
+        case "aquatic":
+            return "bg-blue";
+        case "fuzzball":
+            return "bg-yellow";
+        case "bird":
+            return "bg-green";
+        case "wisdom":
+            return "bg-magenta";
+        case "robot":
+            return "bg-red";
+    }
+}

@@ -234,7 +234,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
     return (
         <>
-            <div id="Lesson" className="bg-earth">
+            <div id="Lesson" className="bg-blue">
                 <div className="landscape-top-spacer">
                     <div className="lesson-title">Lesson 1</div>
                 </div>

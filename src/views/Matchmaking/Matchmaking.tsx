@@ -32,7 +32,13 @@ import { notification_manager } from "Notifications";
 import { ignore, errorAlerter } from "misc";
 import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
-import { AvatarSelection, Race, raceIdxToUiClass, uiClassToRaceIdx } from "Avatar";
+import {
+    AvatarSelection,
+    Race,
+    raceIdxToUiClass,
+    uiClassToRaceIdx,
+    avatar_background_class,
+} from "Avatar";
 import { BackButton } from "BackButton";
 import { ActiveGamesList } from "./ActiveGamesList";
 import { bots } from "bots";
@@ -45,6 +51,7 @@ export function Matchmaking(): JSX.Element {
     const [opponent, _setOpponent] = React.useState("easy");
     const [game_to_view, _setGameToView] = React.useState<any>(null);
     const [handicap, setHandicap] = React.useState(0);
+    const [race] = uiClassToRaceIdx(user.ui_class);
 
     useEnsureUserIsCreated();
 
@@ -186,7 +193,7 @@ export function Matchmaking(): JSX.Element {
     //const showGameSettings = canPlay && isBot(opponent);
 
     return (
-        <div id="Matchmaking" className="bg-earth">
+        <div id="Matchmaking" className={avatar_background_class(race)}>
             <BackButton onClick={back} />
             <CheckForChallengeReceived />
             <div className="outer-container">

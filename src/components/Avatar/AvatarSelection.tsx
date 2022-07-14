@@ -16,7 +16,7 @@
  */
 
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { avatars, Race } from "./avatar_list";
 
 export interface AvatarSelectionInterface {
