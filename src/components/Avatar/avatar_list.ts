@@ -21,6 +21,7 @@ interface Entry {
     race: Race;
     id: number;
     ai?: boolean;
+    shuffle_hash?: number;
 }
 
 export const avatar_list: Array<Entry> = [
@@ -513,34 +514,42 @@ export const avatar_list: Array<Entry> = [
     { race: "robot", id: 274 },
 ];
 
+for (const avatar of avatar_list) {
+    avatar.shuffle_hash = (avatar.id * 1299709) % 1987;
+}
+
 function sortById(a: Entry, b: Entry): number {
     return a.id - b.id;
+}
+
+function sortByShuffleHash(a: Entry, b: Entry): number {
+    return a.shuffle_hash - b.shuffle_hash;
 }
 
 export const avatars: { [race: string]: Array<number> } = {
     aquatic: avatar_list
         .filter((x) => x.race === "aquatic" && !x.ai)
-        .sort(sortById)
+        .sort(sortByShuffleHash)
         .map((a) => a.id),
 
     bird: avatar_list
         .filter((x) => x.race === "bird" && !x.ai)
-        .sort(sortById)
+        .sort(sortByShuffleHash)
         .map((a) => a.id),
 
     fuzzball: avatar_list
         .filter((x) => x.race === "fuzzball" && !x.ai)
-        .sort(sortById)
+        .sort(sortByShuffleHash)
         .map((a) => a.id),
 
     wisdom: avatar_list
         .filter((x) => x.race === "wisdom" && !x.ai)
-        .sort(sortById)
+        .sort(sortByShuffleHash)
         .map((a) => a.id),
 
     robot: avatar_list
         .filter((x) => x.race === "robot" && !x.ai)
-        .sort(sortById)
+        .sort(sortByShuffleHash)
         .map((a) => a.id),
 };
 
