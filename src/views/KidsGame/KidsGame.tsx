@@ -26,7 +26,7 @@ import { PlayerAvatar, uiClassToRaceIdx, avatar_background_class } from "Avatar"
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
-import { PopupDialog, openPopup } from "PopupDialog";
+import { PopupDialog, openPopup, closePopup } from "PopupDialog";
 import { ResultsDialog } from "ResultsDialog";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "Game/GameHooks";
 import { animateCaptures } from "animateCaptures";
@@ -92,6 +92,7 @@ export function KidsGame(): JSX.Element {
             dont_draw_last_move: false,
             last_move_radius: 0.45,
             one_click_submit: true,
+            dont_show_messages: true,
         };
 
         goban_opts_ref.current = opts;
@@ -180,6 +181,18 @@ export function KidsGame(): JSX.Element {
                 }
             }
         };
+
+        goban.on("show-message", ({ formatted, message_id, parameters }) => {
+            openPopup({
+                text: formatted,
+                no_cancel: true,
+            });
+            //console.log("show-message", formatted, message_id, parameters);
+        });
+        goban.on("clear-message", () => {
+            closePopup();
+            //console.log("clear message");
+        });
 
         goban.on("update", onUpdate);
         goban.on("update", sayYourMoveChecker);

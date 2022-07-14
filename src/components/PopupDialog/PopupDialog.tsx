@@ -64,10 +64,12 @@ export function openPopup(props: OpenPopupProps): Promise<void> {
     const promise = new Promise<void>((resolve, reject) => {
         onaccept = () => {
             root.unmount();
+            root = null;
             resolve();
         };
         oncancel = () => {
             root.unmount();
+            root = null;
             reject();
         };
     });
@@ -86,5 +88,7 @@ export function openPopup(props: OpenPopupProps): Promise<void> {
 }
 
 export function closePopup(): void {
-    root.unmount();
+    if (root) {
+        root.unmount();
+    }
 }
