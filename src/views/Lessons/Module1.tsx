@@ -18,8 +18,7 @@
 import * as React from "react";
 import { Content } from "./Content";
 import { PuzzleConfig, Goban, JGOFNumericPlayerColor } from "goban";
-
-declare let swal;
+import { openPopup } from "PopupDialog";
 
 class Module1 extends Content {
     constructor() {
@@ -241,8 +240,9 @@ class Puzzle1 extends Module1 {
         goban.on("update", () => {
             if (goban.engine.board[0][3] === 0) {
                 this.captureDelay(() => {
-                    swal({
-                        title: "Good job!",
+                    openPopup({
+                        text: "Good job!",
+                        no_cancel: true,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -270,8 +270,9 @@ class Puzzle2 extends Module1 {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
-                    swal({
-                        title: "You did it!",
+                    openPopup({
+                        text: "You did it!",
+                        no_cancel: true,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -300,8 +301,9 @@ class Puzzle3 extends Module1 {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
-                    swal({
-                        title: "Nice work!",
+                    openPopup({
+                        text: "Nice work!",
+                        no_cancel: true,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -330,8 +332,9 @@ class Puzzle4 extends Module1 {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
-                    swal({
-                        title: "Very clever!",
+                    openPopup({
+                        text: "Very clever!",
+                        no_cancel: true,
                     })
                         .then(() => {
                             this.gotoNext();

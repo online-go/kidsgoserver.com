@@ -183,7 +183,7 @@ export function KidsGame(): JSX.Element {
         };
 
         goban.on("show-message", ({ formatted, message_id, parameters }) => {
-            openPopup({
+            void openPopup({
                 text: formatted,
                 no_cancel: true,
             });
