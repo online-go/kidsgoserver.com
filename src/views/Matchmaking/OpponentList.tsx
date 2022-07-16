@@ -71,22 +71,31 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
     return (
         <div className="OpponentList-container">
             <div className="OpponentList">
-                <h4>Computer Opponents</h4>
-                {/*
-                <span className="disabled">
-                    <Avatar race={"aquatic"} idx={9} />
-                    Easy Computer
-                </span>
-                <span className="disabled">
-                    <Avatar race={"bird"} idx={26} />
-                    Medium Computer
-                </span>
-                <span className="disabled">
-                    <Avatar race={"wisdom"} idx={2} />
-                    Hard Computer
-                </span>
-                */}
+                {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
+                    <>
+                        <h4>Kids to Play</h4>
+                        {sorted_users
+                            .filter((u) => u.id !== user.id && u.id > 0)
+                            .map((user) => {
+                                const [race, idx] = uiClassToRaceIdx(user.ui_class);
 
+                                return (
+                                    <span
+                                        key={user.id}
+                                        className={
+                                            "kid" + (props.value === user.id ? " active" : "")
+                                        }
+                                        onClick={() => props.onChange(user.id, 0)}
+                                    >
+                                        <Avatar race={race} idx={idx} />
+                                        {user.username}
+                                    </span>
+                                );
+                            })}
+                    </>
+                )}
+
+                <h4>Computer Opponents</h4>
                 {(bots.length >= 1 || null) &&
                     bots
                         .filter((bot) => !!bot.kidsgo_bot_name)
@@ -112,36 +121,16 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                                         >
                                             <Avatar race={race} idx={race_idx} />
                                             {bot.kidsgo_bot_name}
-                                            {handicap > 0 ? ` + ${handicap} stones` : ""}
+                                            {handicap > 0
+                                                ? handicap === 1
+                                                    ? " with no Komi"
+                                                    : ` + ${handicap} stones`
+                                                : ""}
                                         </span>
                                     ))}
                                 </React.Fragment>
                             );
                         })}
-
-                {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
-                    <>
-                        <h4>Kids to Play</h4>
-                        {sorted_users
-                            .filter((u) => u.id !== user.id && u.id > 0)
-                            .map((user) => {
-                                const [race, idx] = uiClassToRaceIdx(user.ui_class);
-
-                                return (
-                                    <span
-                                        key={user.id}
-                                        className={
-                                            "kid" + (props.value === user.id ? " active" : "")
-                                        }
-                                        onClick={() => props.onChange(user.id, 0)}
-                                    >
-                                        <Avatar race={race} idx={idx} />
-                                        {user.username}
-                                    </span>
-                                );
-                            })}
-                    </>
-                )}
             </div>
         </div>
     );
