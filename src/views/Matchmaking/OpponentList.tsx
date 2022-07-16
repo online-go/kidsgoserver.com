@@ -100,8 +100,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                     bots
                         .filter((bot) => !!bot.kidsgo_bot_name)
                         .map((bot: any) => {
-                            const race = "aquatic";
-                            const race_idx = 9;
+                            const [race, idx] = uiClassToRaceIdx(bot.ui_class);
 
                             return (
                                 <React.Fragment key={bot.id}>
@@ -119,7 +118,7 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
                                                 props.onChange(bot.id, handicap);
                                             }}
                                         >
-                                            <Avatar race={race} idx={race_idx} />
+                                            <Avatar race={race} idx={idx} />
                                             {bot.kidsgo_bot_name}
                                             {handicap > 0
                                                 ? handicap === 1

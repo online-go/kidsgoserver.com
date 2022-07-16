@@ -17,6 +17,7 @@
 
 import * as React from "react";
 import { Goban } from "goban";
+import { ChatPhrases } from "ChatDialog";
 
 interface ChatBubbleProps {
     user_id?: number;
@@ -47,8 +48,12 @@ export function ChatBubble({ user_id, side, goban }: ChatBubbleProps): JSX.Eleme
             }
 
             if (line.player_id === user_id) {
-                console.log(line);
-                doSetChat(line);
+                if (ChatPhrases.indexOf(line.body) >= 0) {
+                    console.log(line);
+                    doSetChat(line);
+                } else {
+                    console.error("Received chat line not in our acceptable chat messages: ", line);
+                }
             }
         };
 

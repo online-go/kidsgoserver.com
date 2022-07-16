@@ -25,9 +25,14 @@ interface ChatDialogProps {
     onClose: () => void;
 }
 
-export function ChatDialog(props: ChatDialogProps): JSX.Element {
-    const phrases = ["Have a good game!", "Nice move!", "Well played!", "Thanks for the game!"];
+export const ChatPhrases = [
+    "Have a good game!",
+    "Nice move!",
+    "Well played!",
+    "Thanks for the game!",
+];
 
+export function ChatDialog(props: ChatDialogProps): JSX.Element {
     if (!props.goban) {
         return null;
     }
@@ -50,7 +55,7 @@ export function ChatDialog(props: ChatDialogProps): JSX.Element {
             <KBShortcut shortcut="esc" action={props.onClose} />
             <div className="ChatDialog">
                 <div className="ChatDialog-phrases">
-                    {phrases.map((phrase, i) => (
+                    {ChatPhrases.map((phrase, i) => (
                         <div key={i} className="phrase" onClick={() => send(phrase)}>
                             {phrase}
                         </div>

@@ -22,7 +22,13 @@ import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
 import { Goban, GoMath, GobanConfig } from "goban";
-import { PlayerAvatar, uiClassToRaceIdx, avatar_background_class } from "Avatar";
+import {
+    PlayerAvatar,
+    //uiClassToRaceIdx,
+    avatar_background_class,
+    Race,
+    usePlayerRace,
+} from "Avatar";
 import { Bowl } from "Bowl";
 import { Captures } from "Captures";
 import { BackButton } from "BackButton";
@@ -47,7 +53,10 @@ export function KidsGame(): JSX.Element {
         useShowUndoRequested(goban_ref.current) && goban_ref.current?.engine.phase === "play";
     const [gameFinishedClosed, setGameFinishedClosed] = useState(false);
     const phase = usePhase(goban_ref.current);
-    const [race] = uiClassToRaceIdx(user.ui_class);
+    //const [race] = uiClassToRaceIdx(user.ui_class);
+    const [whiteId, setWhiteId] = useState(0);
+    const race = usePlayerRace(whiteId);
+    console.log(whiteId, race);
 
     const game_id = parseInt(params.id);
 
@@ -199,6 +208,9 @@ export function KidsGame(): JSX.Element {
         goban.on("update", passStoneHandler);
         goban.on("captured-stones", onCapturedStones);
         window["global_goban"] = goban;
+        goban.on("load", () => {
+            setWhiteId(goban.engine.players.white.id);
+        });
 
         let t = setTimeout(() => {
             t = null;
@@ -314,7 +326,7 @@ export function KidsGame(): JSX.Element {
 
     return (
         <>
-            <div id="KidsGame" className={avatar_background_class(race)}>
+            <div id="KidsGame" className={race ? avatar_background_class(race as Race) : ""}>
                 <BackButton onClick={quit} />
                 {show_undo_requested && (
                     <PopupDialog
@@ -369,7 +381,7 @@ export function KidsGame(): JSX.Element {
                             onClick={() => openChat({ goban: goban_ref.current })}
                             className="stone-button-chat"
                             text="Chat"
-                            disabled={false}
+                            disabled={!is_player}
                         />
                     </div>
                 </div>
@@ -426,7 +438,7 @@ export function KidsGame(): JSX.Element {
                                 onClick={() => openChat({ goban: goban_ref.current })}
                                 className="stone-button-chat"
                                 text="Chat"
-                                disabled={false}
+                                disabled={!is_player}
                             />
                         </div>
 

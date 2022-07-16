@@ -300,7 +300,7 @@ export const avatar_list: Array<Entry> = [
     { race: "fuzzball", id: 106 },
     { race: "fuzzball", id: 114 },
     { race: "fuzzball", id: 174 },
-    { race: "fuzzball", id: 2 },
+    { race: "fuzzball", id: 2, ai: true }, // not really designated but sure lets reserve one for ai
     { race: "fuzzball", id: 42 },
     { race: "fuzzball", id: 151 },
     { race: "wisdom", id: 27 },
