@@ -21,7 +21,7 @@ import { chat_manager, ChatChannelProxy } from "chat_manager";
 import { useUser } from "hooks";
 import { Avatar, uiClassToRaceIdx } from "Avatar";
 import { bots_list } from "bots";
-import { getUserRating } from "rank_utils";
+//import { getUserRating } from "rank_utils";
 
 interface OpponentListProperties {
     channel: string;
@@ -44,7 +44,9 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
             for (const id in bots) {
                 list.push(bots[id]);
             }
-            list.sort((a, b) => getUserRating(a).rating - getUserRating(b).rating);
+            //list.sort((a, b) => getUserRating(a).rating - getUserRating(b).rating);
+            // we created these in order of easy to hard, so just sort by id for now
+            list.sort((a, b) => a.id - b.id);
 
             setBots(list);
         };
