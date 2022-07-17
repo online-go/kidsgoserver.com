@@ -98,6 +98,9 @@ export function Matchmaking(): JSX.Element {
             },
         };
 
+        openPopup({ text: `Sending challenge`, no_accept: true, no_cancel: true })
+            .then(() => {})
+            .catch(() => {});
         post(`players/${opponent}/challenge`, challenge)
             .then((res) => {
                 const challenge_id = res.challenge;
@@ -106,6 +109,7 @@ export function Matchmaking(): JSX.Element {
 
                 notification_manager.event_emitter.on("notification", checkForReject);
 
+                closePopup();
                 openPopup({ text: `Waiting for opponent to accept challenge`, no_accept: true })
                     .then(() => {
                         off();
@@ -151,6 +155,7 @@ export function Matchmaking(): JSX.Element {
                     socket.off(`game/${game_id}/gamedata`, onGamedata);
                     socket.off(`game/${game_id}/rejected`, onRejected);
                     notification_manager.event_emitter.off("notification", checkForReject);
+                    closePopup();
                 }
 
                 function checkForReject(notification) {
