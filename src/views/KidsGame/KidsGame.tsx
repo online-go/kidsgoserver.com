@@ -183,7 +183,18 @@ export function KidsGame(): JSX.Element {
                     /* If we just joined the game, don't replay the animation */
                     if (pass_last_move !== 0) {
                         if (goban.engine.last_official_move.passed()) {
-                            animateCaptures([{ x: -1, y: -1 }], goban, goban.engine.colorToMove());
+                            const color = goban.engine.colorToMove();
+                            const other_color = color === "black" ? "white" : "black";
+                            animateCaptures([{ x: -1, y: -1 }], goban, other_color);
+
+                            if (
+                                goban.engine.last_official_move.move_number > 1 &&
+                                goban.engine.last_official_move.prev().passed()
+                            ) {
+                                if (color === "white") {
+                                    animateCaptures([{ x: -1, y: -1 }], goban, "white");
+                                }
+                            }
                         }
                     }
                     pass_last_move = goban.engine.last_official_move.move_number;

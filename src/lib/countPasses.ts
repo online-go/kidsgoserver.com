@@ -29,9 +29,9 @@ export function countPasses(goban: Goban): { black: number; white: number } {
     for (let cur = root.next(true); cur; cur = cur.next(true)) {
         if (cur.passed()) {
             if (cur.player === JGOFNumericPlayerColor.BLACK) {
-                black++;
-            } else {
                 white++;
+            } else {
+                black++;
             }
         }
     }
