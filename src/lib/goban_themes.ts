@@ -89,8 +89,6 @@ function reset_game_when_changed(goban: GobanCore) {
 }
 
 export function initialize_kidsgo_themes() {
-    console.log("Initializing colored stones");
-
     abstract class Common extends GoTheme {
         public abstract getSadStoneSvgUrl(): string;
         stoneCastsShadow(radius: number): boolean {

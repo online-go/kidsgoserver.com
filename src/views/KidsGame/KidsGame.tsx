@@ -56,7 +56,6 @@ export function KidsGame(): JSX.Element {
     //const [race] = uiClassToRaceIdx(user.ui_class);
     const [whiteId, setWhiteId] = useState(0);
     const race = usePlayerRace(whiteId);
-    console.log(whiteId, race);
 
     const game_id = parseInt(params.id);
 
@@ -83,8 +82,6 @@ export function KidsGame(): JSX.Element {
     });
 
     useEffect(() => {
-        console.log("Constructing game ", game_id);
-
         const opts: GobanConfig = {
             board_div: container.current || undefined,
             interactive: true,
@@ -126,7 +123,6 @@ export function KidsGame(): JSX.Element {
 
             if (goban.engine.phase === "finished") {
                 const s = goban.engine.computeScore(false);
-                console.log(s);
                 goban.showScores(s, true);
             }
         };
@@ -225,7 +221,6 @@ export function KidsGame(): JSX.Element {
 
         let t = setTimeout(() => {
             t = null;
-            console.log(board_container_resizer.ref.current);
             const w = board_container_resizer.ref.current.clientWidth;
             const h = board_container_resizer.ref.current.clientHeight;
             onResize(w, h);
