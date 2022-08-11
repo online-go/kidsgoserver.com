@@ -29,6 +29,7 @@ import { KidsGame } from "KidsGame";
 import { Matchmaking } from "Matchmaking";
 import { LearnToPlay } from "LearnToPlay";
 import { ErrorBoundary } from "ErrorBoundary";
+import { CharacterSelection } from "CharacterSelection";
 
 /*** Layout our main view and routes ***/
 function Main(props): JSX.Element {
@@ -54,6 +55,7 @@ export const routes = (
                 <Route path="/learn-to-play/:chapter/:page" element={<LessonRouter />} />
                 <Route path="/learn-to-play/:chapter" element={<LessonRouter />} />
                 <Route path="/learn-to-play" element={<LearnToPlay />} />
+                <Route path="/character-selection" element={<CharacterSelection />} />
                 <Route path="/play" element={<Matchmaking />} />
                 <Route path="/" element={<Default />} />
                 <Route path="/*" element={<PageNotFound />} />

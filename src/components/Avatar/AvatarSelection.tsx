@@ -18,6 +18,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { avatars, Race } from "./avatar_list";
+import { Button } from "Button";
 
 export interface AvatarSelectionInterface {
     race: Race;
@@ -59,49 +60,53 @@ export function AvatarSelection(props: AvatarSelectionInterface): JSX.Element {
 
     return (
         <div className="AvatarSelection">
-            <div className="buttons">
-                <button
-                    className={race === "aquatic" ? "active" : ""}
-                    onClick={() => updateRace("aquatic")}
-                >
-                    Aquatic
-                </button>
-                <button
-                    className={race === "fuzzball" ? "active" : ""}
-                    onClick={() => updateRace("fuzzball")}
-                >
-                    Fuzzball
-                </button>
-                <button
-                    className={race === "bird" ? "active" : ""}
-                    onClick={() => updateRace("bird")}
-                >
-                    Bird
-                </button>
-                <button
-                    className={race === "wisdom" ? "active" : ""}
-                    onClick={() => updateRace("wisdom")}
-                >
-                    Wisdom
-                </button>
-                <button
-                    className={race === "robot" ? "active" : ""}
-                    onClick={() => updateRace("robot")}
-                >
-                    Robot
-                </button>
-            </div>
-
             <div className="selector">
-                <div className="previous" onClick={() => increment(-1)}>
-                    &lt;
+                <div className="previous" >
+                    <Button icon="left-arrow" onClick={() => increment(-1)}/>
                 </div>
                 <div className="Avatar">
                     <div className={`Avatar-svg avatar-${race}-${idx}`} />
                 </div>
-                <div className="next" onClick={() => increment(1)}>
-                    &gt;
+                <div className="next">
+                    <Button icon="right-arrow" onClick={() => increment(1)}/>
                 </div>
+            </div>
+
+            <div className="race-selection-container">
+                <span className="pluses">+ + +</span>
+                <span className="race-selection-title">SPECIES</span>
+                <span className="pluses">+ + +</span>
+            </div>
+
+            <div className="race-selection-icons">
+                <div
+                    className={`icon Avatar-svg avatar-aquatic-2 ${
+                        race === "aquatic" ? "active" : ""
+                    }`}
+                    onClick={() => updateRace("aquatic")}
+                />
+                <div
+                    className={`icon Avatar-svg avatar-fuzzball-23 ${
+                        race === "fuzzball" ? "active" : ""
+                    }`}
+                    onClick={() => updateRace("fuzzball")}
+                />
+                <div
+                    className={`icon Avatar-svg avatar-bird-5 ${race === "bird" ? "active" : ""}`}
+                    onClick={() => updateRace("bird")}
+                />
+                <div
+                    className={`icon Avatar-svg avatar-wisdom-72 ${
+                        race === "wisdom" ? "active" : ""
+                    }`}
+                    onClick={() => updateRace("wisdom")}
+                />
+                <div
+                    className={`icon Avatar-svg avatar-robot-117 ${
+                        race === "robot" ? "active" : ""
+                    }`}
+                    onClick={() => updateRace("robot")}
+                />
             </div>
         </div>
     );

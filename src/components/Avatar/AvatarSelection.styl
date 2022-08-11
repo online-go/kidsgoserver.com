@@ -21,12 +21,12 @@
 
     display: inline-flex;
     flex-direction: column;
-    align-items: stretch;
-    align-content: stretch;
+    align-items: center;
+    align-content: center;
     justify-content: center;
     margin-top: 1rem;
 
-    .buttons {
+    .race-selection-icons {
         button {
             border: 1px solid #888;
             border-radius: 0.25rem;
@@ -40,20 +40,96 @@
 
     .selector {
         display: inline-flex;
-        justify-content: stretch;
+        justify-content: center;
         margin-top: 1rem;
 
         .previous, .next {
-            flex: 1;
-            background-color: red;
+            flex: 0;
             display: inline-flex;
             align-items: center;
             padding: 0.5rem;
-            background-color: rgba(255,255,255,0.2);
-            &:hover {
-                cursor: pointer;
-                background-color: rgba(255,255,255,0.3);
+        }
+    }
+
+    .race-selection-icons {
+        display: inline-flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        padding: 1rem;
+        padding-left: 2rem;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 1rem;
+    }
+
+    .Avatar-svg.icon {
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        border 2px solid transparent;
+        border-radius: 0.5rem;
+
+        &:hover, &.active {
+            cursor: pointer;
+            border 2px solid white;
+            background-color: rgba(255,255,255,0.4);
+        }
+    }
+
+    .selector {
+        flex: 1;
+        display: flex;
+        width: 80vw;
+
+        align-items: stretch;
+        align-content: center;
+        justify-content: center;
+        .previous, .next {
+            flex: 0;
+        }
+        .Avatar {
+            display: inline-flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            flex: 1;
+            max-width: 50vw;
+            .Avatar-svg {
+                width: 100%;
+                height: 100%;
+                max-width: 100%;
+                max-height: 100%;
             }
         }
     }
+
+
+    .race-selection-container {
+        display: inline-flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+
+        .race-selection-title {
+            font-size: 0.9rem;
+            letter-spacing: 0.2rem;
+            background-color: rgba(40,40,40,0.8);
+            border: 2px solid white;
+            border-radius: 0.5rem;
+            padding: 0.3rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            color: white;
+        }
+    }
+}
+
+.pluses {
+    color: white;
+    font-family: fixed;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
