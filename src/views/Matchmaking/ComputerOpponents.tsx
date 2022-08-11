@@ -17,8 +17,7 @@
 
 import * as React from "react";
 import { socket } from "sockets";
-import { chat_manager, ChatChannelProxy } from "chat_manager";
-import { useUser } from "hooks";
+import { chat_manager } from "chat_manager";
 import { Avatar, uiClassToRaceIdx } from "Avatar";
 import { bots_list } from "bots";
 //import { getUserRating } from "rank_utils";
@@ -32,10 +31,7 @@ interface OpponentListProperties {
 
 window["chat_manager"] = chat_manager;
 
-export function OpponentList(props: OpponentListProperties): JSX.Element {
-    const user = useUser();
-    const [, refresh] = React.useState<number>(0);
-    const proxy = React.useRef<ChatChannelProxy>();
+export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
     const [bots, setBots] = React.useState<Array<any>>(bots_list());
 
     React.useEffect(() => {
@@ -56,47 +52,10 @@ export function OpponentList(props: OpponentListProperties): JSX.Element {
             socket.off("active-bots", updateBots);
         };
     }, []);
-    React.useEffect(() => {
-        proxy.current = chat_manager.join(props.channel);
-        proxy.current.on("join", () => refresh(Math.random()));
-        proxy.current.on("part", () => refresh(Math.random()));
-        window["proxy"] = proxy.current;
-        refresh(proxy.current.channel.users_by_name.length);
-
-        return () => {
-            proxy.current.part();
-        };
-    }, [props.channel, user.username, user.ui_class]);
-
-    const sorted_users: Array<any> = proxy.current?.channel.users_by_name || [];
 
     return (
         <div className="OpponentList-container">
             <div className="OpponentList">
-                {(sorted_users.length > 1 || null) && ( // > 1 because this player is always in the list
-                    <>
-                        <h4>Kids to Play</h4>
-                        {sorted_users
-                            .filter((u) => u.id !== user.id && u.id > 0)
-                            .map((user) => {
-                                const [race, idx] = uiClassToRaceIdx(user.ui_class);
-
-                                return (
-                                    <span
-                                        key={user.id}
-                                        className={
-                                            "kid" + (props.value === user.id ? " active" : "")
-                                        }
-                                        onClick={() => props.onChange(user.id, 0)}
-                                    >
-                                        <Avatar race={race} idx={idx} />
-                                        {user.username}
-                                    </span>
-                                );
-                            })}
-                    </>
-                )}
-
                 <h4>Computer Opponents</h4>
                 {(bots.length >= 1 || null) &&
                     bots

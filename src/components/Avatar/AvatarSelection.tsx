@@ -61,14 +61,14 @@ export function AvatarSelection(props: AvatarSelectionInterface): JSX.Element {
     return (
         <div className="AvatarSelection">
             <div className="selector">
-                <div className="previous" >
-                    <Button icon="left-arrow" onClick={() => increment(-1)}/>
+                <div className="previous">
+                    <Button icon="left-arrow" onClick={() => increment(-1)} />
                 </div>
                 <div className="Avatar">
                     <div className={`Avatar-svg avatar-${race}-${idx}`} />
                 </div>
                 <div className="next">
-                    <Button icon="right-arrow" onClick={() => increment(1)}/>
+                    <Button icon="right-arrow" onClick={() => increment(1)} />
                 </div>
             </div>
 

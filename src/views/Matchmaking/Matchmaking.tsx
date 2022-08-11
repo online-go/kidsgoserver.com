@@ -25,7 +25,9 @@ import { socket } from "sockets";
 import { _ } from "translate";
 import * as data from "data";
 import cached from "cached";
-import { OpponentList } from "./OpponentList";
+//import { OpponentList } from "./OpponentList";
+import { ComputerOpponents } from "./ComputerOpponents";
+import { KidOpponents } from "./KidOpponents";
 //import * as preferences from "preferences";
 //import { errorAlerter, ignore } from "misc";
 import { notification_manager } from "Notifications";
@@ -34,6 +36,7 @@ import { PopupDialog } from "PopupDialog";
 import { closePopup, openPopup } from "PopupDialog";
 import { uiClassToRaceIdx, avatar_background_class } from "Avatar";
 import { BackButton } from "BackButton";
+import { Avatar } from "Avatar";
 import { ActiveGamesList } from "./ActiveGamesList";
 import { bots } from "bots";
 
@@ -45,7 +48,7 @@ export function Matchmaking(): JSX.Element {
     const [opponent, _setOpponent] = React.useState("easy");
     const [game_to_view, _setGameToView] = React.useState<any>(null);
     const [handicap, setHandicap] = React.useState(0);
-    const [race] = uiClassToRaceIdx(user.ui_class);
+    const [race, idx] = uiClassToRaceIdx(user.ui_class);
 
     useEnsureUserIsCreated();
 
@@ -195,25 +198,41 @@ export function Matchmaking(): JSX.Element {
         <div id="Matchmaking" className={avatar_background_class(race)}>
             <BackButton onClick={back} />
             <CheckForChallengeReceived />
+            <div className="current-user-container">
+                <div className="current-user-race-name">
+                    <Avatar race={race} idx={idx} />
+                    {user.username}
+                </div>
+                <div>
+                    <button onClick={() => navigate("/character-selection")}>Change</button>
+                </div>
+            </div>
+
             <div className="outer-container">
                 <div className="inner-container">
-                    <div className="left"></div>
-                    <div className="vs">
-                        <span className="line" />
-                        <span className="v">V</span>
-                        <span className="s">S</span>
-                        <span className="line" />
-                    </div>
-                    <div className="right">
-                        <OpponentList
+                    <div className="left">
+                        <ComputerOpponents
                             channel="kidsgo"
                             value={opponent}
                             handicap={handicap}
                             onChange={setOpponentAndHandicap}
                         />
-                        <ActiveGamesList value={game_to_view} onChange={setGameToView} />
+                    </div>
+                    <div className="vs"></div>
+                    <div className="right">
+                        <KidOpponents
+                            channel="kidsgo"
+                            value={opponent}
+                            handicap={handicap}
+                            onChange={setOpponentAndHandicap}
+                        />
                     </div>
                 </div>
+                {/*
+                <div className="inner-container">
+                    <ActiveGamesList value={game_to_view} onChange={setGameToView} />
+                </div>
+                */}
                 <button
                     className="play primary-button"
                     disabled={!canPlay && !canView}
