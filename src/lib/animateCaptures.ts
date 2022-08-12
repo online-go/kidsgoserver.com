@@ -77,7 +77,7 @@ export function animateCaptures(
         };
         const dst = {
             x: (target?.left ?? 0) + target?.width / 2,
-            y: target?.top ?? 0,
+            y: (target?.top ?? 0) + target?.height / 2,
             width: 32,
             height: 32,
         };
