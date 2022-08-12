@@ -33,6 +33,7 @@ export const ChatPhrases = [
     "Thanks for the game!",
     "New game?",
     "Play again?",
+    "Your move",
     //"Change the handicap?",
     //"Switch colors?",
     "Yes.",
