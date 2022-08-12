@@ -18,7 +18,7 @@
 import * as React from "react";
 
 interface ButtonProps {
-    icon: "left-arrow" | "right-arrow";
+    icon: "left-arrow" | "right-arrow" | "check";
     onClick?: () => void;
 }
 

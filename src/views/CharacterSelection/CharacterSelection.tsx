@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "hooks";
 import { post } from "requests";
 import { BackButton } from "BackButton";
+import { Button } from "Button";
 import { _ } from "translate";
 import { useEnsureUserIsCreated } from "Matchmaking";
 import {
@@ -83,6 +84,8 @@ export function CharacterSelection(): JSX.Element {
             <BackButton onClick={() => navigate("/play")} />
 
             <NameSelection />
+
+            <Button icon="check" onClick={() => navigate("/play")} />
 
             <AvatarSelection race={avatarRace} idx={avatarIdx} onChange={update} />
         </div>
