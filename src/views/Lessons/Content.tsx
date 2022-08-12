@@ -112,7 +112,7 @@ export class Content extends TypedEventEmitter<Events> {
 
     delay(
         cb: () => any,
-        increment: number = data.get("animation-duration" as any) || 1500,
+        increment: number = data.get("animation-duration" as any) || 1250,
     ): Animation {
         const animation_id = ++this.last_animation_id;
         const t = (this.current_delay += increment);
