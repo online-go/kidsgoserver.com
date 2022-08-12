@@ -22,9 +22,10 @@ interface BowlProps {
     bouncing: boolean;
     color: "black" | "white";
     goban: Goban;
+    label: string;
 }
 
-export function Bowl({ bouncing, color, goban }: BowlProps): JSX.Element {
+export function Bowl({ bouncing, color, goban, label }: BowlProps): JSX.Element {
     const svg_url = (color === "black" ? (goban as any)?.theme_black : (goban as any)?.theme_white)
         ?.getSadStoneSvgUrl()
         .replace("sad", "neutral");
@@ -37,6 +38,7 @@ export function Bowl({ bouncing, color, goban }: BowlProps): JSX.Element {
                     <img key={i} className={`Bowl-stone s${i}`} src={svg_url} />
                 ))}
                 <div id={`Bowl-${color}`} className="Bowl-svg-foreground ${color}" />
+                <div className="label">{label}</div>
             </div>
             <div className="spacer" />
         </div>

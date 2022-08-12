@@ -320,6 +320,15 @@ export function KidsGame(): JSX.Element {
         isBot(goban_ref.current?.engine.players.black) ||
         isBot(goban_ref.current?.engine.players.white);
 
+    const opponent_label = isBot(goban_ref.current?.engine.players[opponent_color])
+        ? "AI"
+        : "Friend";
+    const self_label = isBot(goban_ref.current?.engine.players[self_color])
+        ? "AI"
+        : is_player
+        ? "You"
+        : "Friend";
+
     const winner_username =
         `${goban_ref.current?.engine.winner}` === `${user.id}`
             ? "You"
@@ -363,8 +372,10 @@ export function KidsGame(): JSX.Element {
                         bouncing={player_to_move === opponent?.id}
                         color={opponent_color}
                         goban={goban_ref.current}
+                        label={player_to_move === opponent?.id ? "Their turn" : ""}
                     />
                     <div className="Player">
+                        <div className="label">{opponent_label}</div>
                         <PlayerAvatar user_id={opponent?.id} />
                         <ChatBubble
                             goban={goban_ref.current}
@@ -404,6 +415,7 @@ export function KidsGame(): JSX.Element {
                     <div className="top-spacer" />
                     <Captures color={self_color} goban={goban_ref.current} />
                     <div className="Player">
+                        <div className="label">{self_label}</div>
                         <PlayerAvatar user_id={self_player?.id} />
                         <ChatBubble
                             goban={goban_ref.current}
@@ -416,6 +428,13 @@ export function KidsGame(): JSX.Element {
                         bouncing={player_to_move === self_player?.id}
                         color={self_color}
                         goban={goban_ref.current}
+                        label={
+                            player_to_move === self_player?.id
+                                ? is_player
+                                    ? "Your turn"
+                                    : "Their turn"
+                                : ""
+                        }
                     />
                     <div className="landscape-bottom-buttons">
                         {goban_ref.current?.engine.phase === "play" && (
