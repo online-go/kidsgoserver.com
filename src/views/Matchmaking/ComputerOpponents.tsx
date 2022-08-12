@@ -65,7 +65,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
 
                             return (
                                 <React.Fragment key={bot.id}>
-                                    {[4, 3, 2, 1, 0].map((handicap) => (
+                                    {[4, 2, 0].map((handicap) => (
                                         <span
                                             key={bot.id + "-" + handicap}
                                             className={
