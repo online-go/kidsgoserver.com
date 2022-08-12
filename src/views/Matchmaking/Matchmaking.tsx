@@ -199,12 +199,12 @@ export function Matchmaking(): JSX.Element {
             <BackButton onClick={back} />
             <CheckForChallengeReceived />
             <div className="current-user-container">
-                <div className="current-user-race-name">
-                    <Avatar race={race} idx={idx} />
-                    {user.username}
-                </div>
+                <Avatar race={race} idx={idx} />
                 <div>
-                    <button onClick={() => navigate("/character-selection")}>Change</button>
+                    <div className="current-user-race-name">{user.username}</div>
+                    <div>
+                        <button onClick={() => navigate("/character-selection")}>Change</button>
+                    </div>
                 </div>
             </div>
 
