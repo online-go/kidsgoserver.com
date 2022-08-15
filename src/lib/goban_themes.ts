@@ -34,7 +34,7 @@ function stoneCastsShadow(radius: number): boolean {
     return radius >= 10;
 }
 
-function image_url(colorset: string, name: string) {
+export function image_url(colorset: string, name: string) {
     /* Firefox doesn't support drawing inlined SVGs into canvases. One can
      * attach them to the dom just fine, but not draw them into a canvas for
      * whatever reason. So, for firefox we have to load the exact same SVG off
@@ -42,10 +42,10 @@ function image_url(colorset: string, name: string) {
     const firefox = navigator.userAgent.toLocaleLowerCase().indexOf("firefox") > -1;
     const suffix = firefox ? "png" : "svg";
 
-    return `${cdn_service}/0.2/stones/${colorset}/${name}.${suffix}`;
+    return `${cdn_service}/1.0/stones/${colorset}/${name}.${suffix}`;
 }
 
-function image_urls(colorset: string) {
+export function image_urls(colorset: string) {
     return [
         image_url(colorset, "plain"),
         image_url(colorset, "neutral"),

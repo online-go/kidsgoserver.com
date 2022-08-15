@@ -189,6 +189,41 @@
         }
     }
 
+
+    .settings {
+        display: flex;
+        flex-direction: row;
+        font-size: 1.4rem;
+        align-items: center;
+        align-content: center;
+
+
+        .color-selector {
+            margin: 0.4rem;
+            display: inline-flex;
+            flex-direction: column;
+        }
+        
+        select {
+            margin: 1.0rem;
+            font-size: 1.4rem;
+        }
+
+        label {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0.5rem;
+
+        }
+
+        img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+
 }
 
 .Handicap {
@@ -206,5 +241,26 @@
         padding-left: 1.0rem;
         padding-right: 1.0rem;
         padding-bottom: 0.3rem;
+    }
+}
+
+.ReceivedChallenge {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.7rem;
+    align-items: center;
+    justify-content: center;
+
+    .Avatar .Avatar-svg {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+        height: 8rem;
+        width: 8rem;
+        
+    }
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
     }
 }

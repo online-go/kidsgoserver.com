@@ -20,7 +20,7 @@ import * as ReactDOM from "react-dom/client";
 import { KBShortcut } from "KBShortcut";
 
 interface PopupDialogProps {
-    text: string;
+    text: string | React.ReactNode;
     onAccept?: () => void;
     onCancel?: () => void;
 }
@@ -45,7 +45,7 @@ export function PopupDialog(props: PopupDialogProps): JSX.Element {
 }
 
 interface OpenPopupProps {
-    text: string;
+    text: string | React.ReactNode;
     no_accept?: boolean;
     no_cancel?: boolean;
 }

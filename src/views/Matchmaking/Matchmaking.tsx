@@ -39,16 +39,22 @@ import { BackButton } from "BackButton";
 import { Avatar } from "Avatar";
 import { ActiveGamesList } from "./ActiveGamesList";
 import { bots } from "bots";
+import { image_url } from "goban_themes";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
+
+const black_svg_url = image_url("pink", "plain");
+const white_svg_url = image_url("white", "plain");
 
 export function Matchmaking(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
     const [opponent, _setOpponent] = React.useState("easy");
+    const [opponent_object, setOpponentObject] = React.useState(null);
     const [game_to_view, _setGameToView] = React.useState<any>(null);
     const [handicap, setHandicap] = React.useState(0);
     const [race, idx] = uiClassToRaceIdx(user.ui_class);
+    const [my_color, setMyColor] = React.useState<"black" | "white">("black");
 
     useEnsureUserIsCreated();
 
@@ -59,16 +65,30 @@ export function Matchmaking(): JSX.Element {
     const setGameToView = (g: any) => {
         _setOpponent(null);
         _setGameToView(g);
+        setOpponentObject(null);
     };
 
     const play = (e) => {
-        const hc = isBot(opponent) ? handicap : 0;
+        //const hc = isBot(opponent) ? handicap : 0;
+        const hc = handicap;
 
+        /*
+        openPopup({
+            text: (
+                <ChallengeDialog
+                    opponent={opponent_object}
+                    onChange={(settings) => console.log(settings)}
+                />
+            ),
+        })
+            .then(() => {
+            */
         const challenge: ChallengeDetails = {
             initialized: true,
             min_ranking: 0,
             max_ranking: 99,
-            challenger_color: hc > 0 ? "black" : "random",
+            //challenger_color: hc > 0 ? "black" : "random",
+            challenger_color: my_color,
             rengo_auto_start: 0,
             game: {
                 name: "Kidsgo Match",
@@ -107,7 +127,10 @@ export function Matchmaking(): JSX.Element {
                 notification_manager.event_emitter.on("notification", checkForReject);
 
                 closePopup();
-                openPopup({ text: `Waiting for opponent to accept challenge`, no_accept: true })
+                openPopup({
+                    text: `Waiting for opponent to accept challenge`,
+                    no_accept: true,
+                })
                     .then(() => {
                         off();
                     })
@@ -172,6 +195,13 @@ export function Matchmaking(): JSX.Element {
                 closePopup();
                 errorAlerter(err);
             });
+        /*
+            })
+            .catch((err) => {
+                closePopup();
+                errorAlerter(err);
+            });
+            */
     };
     const playOrView = (e) => {
         if (game_to_view) {
@@ -183,9 +213,10 @@ export function Matchmaking(): JSX.Element {
     function back() {
         navigate("/");
     }
-    const setOpponentAndHandicap = (o: string, h: number) => {
+    const setOpponentAndHandicap = (o: string, h: number, opponent_obj: any) => {
         setOpponent(o);
         setHandicap(h);
+        setOpponentObject(opponent_obj);
     };
 
     // The 0-9 regex disabled the computer opponents for now.
@@ -233,6 +264,42 @@ export function Matchmaking(): JSX.Element {
                     <ActiveGamesList value={game_to_view} onChange={setGameToView} />
                 </div>
                 */}
+
+                <div className="settings">
+                    I play as
+                    <div className="color-selector">
+                        <label>
+                            <input
+                                type="radio"
+                                value={"black"}
+                                onChange={() => setMyColor("black")}
+                                checked={my_color === "black"}
+                            />
+                            <img src={black_svg_url} alt="black" />
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value={"white"}
+                                onChange={() => setMyColor("white")}
+                                checked={my_color === "white"}
+                            />
+                            <img src={white_svg_url} alt="white" />
+                        </label>
+                    </div>
+                    {my_color === "black" ? " with " : " and give "}
+                    <select
+                        value={handicap}
+                        onChange={(ev) => setHandicap(parseInt(ev.target.value))}
+                    >
+                        <option value="0">no</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    {handicap === 1 ? " starting stone and no komi " : " extra stones. "}
+                </div>
+
                 <button
                     className="play primary-button"
                     disabled={!canPlay && !canView}
@@ -331,9 +398,28 @@ function CheckForChallengeReceived(): JSX.Element {
     };
 
     if (active_challenge.current) {
+        console.log(active_challenge.current);
+        const my_color = active_challenge.current.challenger_color === "black" ? "white" : "black";
+        const handicap = active_challenge.current.handicap;
+        const svg = my_color === "black" ? black_svg_url : white_svg_url;
+        const [race, idx] = uiClassToRaceIdx(active_challenge.current.user.ui_class);
+
         return (
             <PopupDialog
-                text={`Challenge received from ${active_challenge.current.user.username}`}
+                text={
+                    <div className="ReceivedChallenge">
+                        <Avatar race={race} idx={idx} />
+                        <div>
+                            {active_challenge.current.user.username} would like to play with you.
+                            You play as <img src={svg} alt={my_color} />{" "}
+                            {handicap > 0
+                                ? (my_color === "black" ? " and get " : " and give ") +
+                                  handicap +
+                                  " extra stones. "
+                                : ""}
+                        </div>
+                    </div>
+                }
                 onAccept={accept}
                 onCancel={decline}
             />
@@ -350,3 +436,23 @@ function isBot(user_id: string | number): boolean {
 
     return false;
 }
+
+/*
+interface ChallengeDialogProps {
+    opponent: any;
+    onChange: (settings) => void;
+}
+
+function ChallengeDialog({ opponent, onChange }: ChallengeDialogProps): JSX.Element {
+    const user = useUser();
+    console.log({ opponent });
+    const [my_race, my_idx] = uiClassToRaceIdx(user?.ui_class);
+    const [orace, oidx] = uiClassToRaceIdx(opponent?.ui_class);
+
+    return (
+        <div>
+            {user?.username} vs {opponent?.username}
+        </div>
+    );
+}
+*/

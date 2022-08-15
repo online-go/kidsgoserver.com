@@ -25,7 +25,7 @@ interface OpponentListProperties {
     channel: string;
     value: string;
     handicap: number;
-    onChange: (user: string, handicap: number) => void;
+    onChange: (user: string, handicap: number, full_user: any) => void;
 }
 
 window["chat_manager"] = chat_manager;
@@ -62,7 +62,7 @@ export function KidOpponents(props: OpponentListProperties): JSX.Element {
                             <span
                                 key={user.id}
                                 className={"kid" + (props.value === user.id ? " active" : "")}
-                                onClick={() => props.onChange(user.id, 0)}
+                                onClick={() => props.onChange(user.id, 0, user)}
                             >
                                 <Avatar race={race} idx={idx} />
                                 {user.username}
