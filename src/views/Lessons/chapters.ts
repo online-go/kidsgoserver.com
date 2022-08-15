@@ -21,4 +21,4 @@ import { module2 } from "./Module2";
 import { module3 } from "./Module3";
 import { module4 } from "./Module4";
 
-export const chapters: Array<Array<typeof Content>> = [module1, module2, module3, module4];
+export const chapters: Array<Array<typeof Content>> = [module1, module2 /*, module3, module4 */];
