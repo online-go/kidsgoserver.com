@@ -30,7 +30,10 @@ class Page1 extends Module1 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <span>In Go we place stones on the lines, not in the squares!</span>,
-            <span>On Earth the stones are Black and White, but in Interstellar Go we play with Pulsar Pink and Whammo White. </span>,
+            <span>
+                On Earth the stones are Black and White, but in Interstellar Go we play with Pulsar
+                Pink and Whammo White.{" "}
+            </span>,
             <span>For the Earthlings we will call them Black and White in these lessons. </span>,
             <span>Black always goes first.</span>,
         ];
