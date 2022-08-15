@@ -85,7 +85,8 @@ export function CharacterSelection(): JSX.Element {
 
             <NameSelection />
 
-            <Button icon="check" onClick={() => navigate("/play")} />
+            {/* <Button icon="check" onClick={() => navigate("/play")} /> */}
+            <button className="ok" onClick={() => navigate("/play")}>OK</button>
 
             <AvatarSelection race={avatarRace} idx={avatarIdx} onChange={update} />
         </div>
