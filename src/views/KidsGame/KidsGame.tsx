@@ -409,7 +409,7 @@ export function KidsGame(): JSX.Element {
                     </div>
                     <Captures color={opponent_color} goban={goban_ref.current} />
                     <div className="landscape-bottom-buttons">
-                        {(!bot_game || null) && (
+                        {((!bot_game && goban_ref.current?.engine.phase === "play") || null) && (
                             <StoneButton
                                 onClick={requestUndo}
                                 className="stone-button-return"
@@ -465,18 +465,18 @@ export function KidsGame(): JSX.Element {
                     <div className="landscape-bottom-buttons">
                         {goban_ref.current?.engine.phase === "play" && (
                             <>
-                            <StoneButton
-                                onClick={resign}
-                                className="stone-button-x"
-                                text="Resign"
-                                disabled={false}
-                            />
-                            <StoneButton
-                                onClick={pass}
-                                className="stone-button-up"
-                                text="Pass"
-                                disabled={!can_pass}
-                            />
+                                <StoneButton
+                                    onClick={resign}
+                                    className="stone-button-x"
+                                    text="Resign"
+                                    disabled={false}
+                                />
+                                <StoneButton
+                                    onClick={pass}
+                                    className="stone-button-up"
+                                    text="Pass"
+                                    disabled={!can_pass}
+                                />
                             </>
                         )}
                     </div>
@@ -485,7 +485,8 @@ export function KidsGame(): JSX.Element {
                 {goban_ref.current?.engine.phase === "play" && (
                     <div className="portrait-bottom-buttons">
                         <div className="left">
-                            {(!bot_game || null) && (
+                            {((!bot_game && goban_ref.current?.engine.phase === "play") ||
+                                null) && (
                                 <StoneButton
                                     onClick={requestUndo}
                                     className="stone-button-return"
