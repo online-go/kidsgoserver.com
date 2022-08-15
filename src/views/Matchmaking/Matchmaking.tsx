@@ -61,6 +61,9 @@ export function Matchmaking(): JSX.Element {
     const setOpponent = (o: string) => {
         _setOpponent(o);
         _setGameToView(null);
+        if (isBot(o)) {
+            setMyColor("black");
+        }
     };
     const setGameToView = (g: any) => {
         _setOpponent(null);

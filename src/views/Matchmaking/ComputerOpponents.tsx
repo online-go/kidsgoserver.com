@@ -84,7 +84,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
                                             {handicap > 0
                                                 ? handicap === 1
                                                     ? " with no Komi"
-                                                    : ` + ${handicap} stones`
+                                                    : ` + ${handicap}`
                                                 : ""}
                                         </span>
                                     ))}
