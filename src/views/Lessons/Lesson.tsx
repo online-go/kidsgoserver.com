@@ -70,6 +70,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
     >([]);
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const [replay, setReplay]: [number, (x: number) => void] = useState<number>(Math.random());
+    const [showAxotol, setShowAxotol]: [boolean, (x: boolean) => void] = useState<boolean>(false);
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
@@ -110,6 +111,13 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             animation.cancel();
             setText(target_text);
         };
+
+        if (content.axolotlFace()) {
+            setShowAxotol(true);
+            return;
+        } else {
+            setShowAxotol(false);
+        }
 
         const opts: GobanConfig = Object.assign(
             {
@@ -236,7 +244,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         <>
             <div id="Lesson" className="bg-blue">
                 <div className="landscape-top-spacer">
-                    <div className="lesson-title">Lesson 1</div>
+                    <div className="lesson-title">Lesson {chapter + 1}</div>
                 </div>
                 <div id="Lesson-bottom-container">
                     <div id="left-container">
@@ -251,11 +259,15 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                     </div>
 
                     <div id="board-container" ref={board_container_resizer.ref}>
-                        <div className="Goban-container">
-                            <div className="Goban">
-                                <PersistentElement elt={container} />
+                        {showAxotol ? (
+                            <div id="axotol" />
+                        ) : (
+                            <div className="Goban-container">
+                                <div className="Goban">
+                                    <PersistentElement elt={container} />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     <div id="right-container">
@@ -289,7 +301,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                         </Link>
                     </div>
 
-                    <div className="center">Lesson 1</div>
+                    <div className="center">Lesson {chapter + 1}</div>
 
                     <div className="right">
                         <Link to={next} className="game-button-container">

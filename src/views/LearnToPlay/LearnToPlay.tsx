@@ -59,9 +59,9 @@ export function ChapterButton({ chapter }: { chapter: number }): JSX.Element {
 
     return (
         <span
-            className={"ChapterButton" + (chapter > 1 ? " disabled" : "") + ` chapter-${chapter}`}
+            className={"ChapterButton" + (chapter > 2 ? " disabled" : "") + ` chapter-${chapter}`}
             onClick={() => {
-                if (chapter > 1) {
+                if (chapter > 2) {
                     return;
                 }
                 navigate(`/learn-to-play/${chapter}`);

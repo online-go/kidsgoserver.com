@@ -234,6 +234,11 @@ export class Content extends TypedEventEmitter<Events> {
     setNext(path: string): void {
         this.next_path = path;
     }
+
+    // set to true if we should show the axolotl instead of the goban
+    axolotlFace() {
+        return false;
+    }
 }
 
 let content_navigate = (_path: string) => {

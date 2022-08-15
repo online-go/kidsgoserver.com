@@ -23,6 +23,7 @@ import { chapters } from "./chapters";
 
 export function LessonRouter(): JSX.Element {
     const params = useParams();
+    console.log(params);
     let chapter = parseInt(params.chapter || "1") - 1;
     let page = parseInt(params.page || "1") - 1;
 
