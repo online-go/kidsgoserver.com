@@ -26,31 +26,24 @@ interface ChatDialogProps {
 }
 
 export const ChatPhrases = [
+    "{bow}",
     "Have a good game!",
     "Nice move!",
-    "Well played!",
-    "Good game!",
-    "Thanks for the game!",
-    "New game?",
-    "Play again?",
-    "Your move",
-    //"Change the handicap?",
-    //"Switch colors?",
-    "Yes.",
-    "No.",
-    "Thanks.",
     "Atari!",
     "Those stones are trapped.",
-    "Your turn.",
-    "I pass.",
     "I resign.",
-    "Trouble!",
-    //"I'll play black.",
-    //"You'll play black.",
-    //"I'll play white.",
-    //"You'll play white.",
-    "See you tomorrow!",
-    "Same time.",
+    "Good game!",
+    "Thanks for the game!",
+    "Play again?",
+    "Change handicap or colors?",
+    "Yes.",
+    "No.",
+    "Same time tomorrow?",
+    "Same time next week?",
+
+    // required verbatim for our auto-chats, update in KidsGame.txt if these are changed.
+    "I've passed.",
+    "Your turn.",
 ];
 
 export function ChatDialog(props: ChatDialogProps): JSX.Element {

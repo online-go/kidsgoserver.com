@@ -145,7 +145,8 @@ export function KidsGame(): JSX.Element {
                             if (goban.engine.phase !== "play") {
                                 return;
                             }
-                            console.log("SHould be our move");
+                            const is_player =
+                                user.id in (goban_ref.current?.engine.player_pool || {});
                             const opponent = is_player
                                 ? goban_ref.current?.engine.players.black.id === user.id
                                     ? goban_ref.current?.engine.players.white
@@ -155,12 +156,12 @@ export function KidsGame(): JSX.Element {
                             if (opponent) {
                                 if (goban.engine.last_official_move.passed()) {
                                     goban.emit("chat", {
-                                        body: "I've passed",
+                                        body: "I've passed.",
                                         player_id: opponent.id,
                                     });
                                 } else {
                                     goban.emit("chat", {
-                                        body: "Your move",
+                                        body: "Your turn.",
                                         player_id: opponent.id,
                                     });
                                 }
@@ -320,6 +321,7 @@ export function KidsGame(): JSX.Element {
         isBot(goban_ref.current?.engine.players.black) ||
         isBot(goban_ref.current?.engine.players.white);
 
+    /*
     const opponent_label = isBot(goban_ref.current?.engine.players[opponent_color])
         ? "AI"
         : "Friend";
@@ -328,6 +330,7 @@ export function KidsGame(): JSX.Element {
         : is_player
         ? "You"
         : "Friend";
+    */
 
     const winner_username =
         `${goban_ref.current?.engine.winner}` === `${user.id}`
@@ -372,10 +375,10 @@ export function KidsGame(): JSX.Element {
                         bouncing={player_to_move === opponent?.id}
                         color={opponent_color}
                         goban={goban_ref.current}
-                        label={player_to_move === opponent?.id ? "Their turn" : ""}
+                        label={"" /* player_to_move === opponent?.id ? "Their turn" : "" */}
                     />
                     <div className="Player">
-                        <div className="label">{opponent_label}</div>
+                        {/* <div className="label">{opponent_label}</div> */}
                         <PlayerAvatar user_id={opponent?.id} />
                         <ChatBubble
                             goban={goban_ref.current}
@@ -415,7 +418,7 @@ export function KidsGame(): JSX.Element {
                     <div className="top-spacer" />
                     <Captures color={self_color} goban={goban_ref.current} />
                     <div className="Player">
-                        <div className="label">{self_label}</div>
+                        {/* <div className="label">{self_label}</div> */}
                         <PlayerAvatar user_id={self_player?.id} />
                         <ChatBubble
                             goban={goban_ref.current}
@@ -429,11 +432,14 @@ export function KidsGame(): JSX.Element {
                         color={self_color}
                         goban={goban_ref.current}
                         label={
+                            ""
+                            /*
                             player_to_move === self_player?.id
                                 ? is_player
                                     ? "Your turn"
                                     : "Their turn"
                                 : ""
+                            */
                         }
                     />
                     <div className="landscape-bottom-buttons">
