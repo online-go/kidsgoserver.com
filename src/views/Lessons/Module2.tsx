@@ -199,9 +199,7 @@ class Page8 extends Module2 {
         };
     }
     onSetGoban(goban: Goban): void {
-        this.delay(() =>
-            goban.setMarkByPrettyCoord("a9a8a7a6a5a4a3a2a1b7b6b5b4b3b2b1c9c8c1c2c4d3d9", "circle"),
-        );
+        goban.setMarkByPrettyCoord("a9a8a7a6a5a4a3a2a1b7b6b5b4b3b2b1c9c8c1c2c4d3d9", "circle");
     }
 }
 
@@ -221,12 +219,7 @@ class Page9 extends Module2 {
         };
     }
     onSetGoban(goban: Goban): void {
-        this.delay(() =>
-            goban.setMarkByPrettyCoord(
-                "g9g8g7g5g2g1h9h8h7h6h5h4h3h2h1j9j8j7j6j5j4j3j2j1",
-                "circle",
-            ),
-        );
+        goban.setMarkByPrettyCoord("g9g8g7g5g2g1h9h8h7h6h5h4h3h2h1j9j8j7j6j5j4j3j2j1", "circle");
     }
 }
 
