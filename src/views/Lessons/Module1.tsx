@@ -30,7 +30,7 @@ class Page1 extends Module1 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <span>In Go, we place stones on the lines, not in the squares!</span>,
-            <span>Black goes first, followed by white.</span>,
+            <span>Black goes first, followed by White.</span>,
             <span>
                 Stones stay on the board once placed and don’t move (unless they are captured).
             </span>,
@@ -203,7 +203,7 @@ class Page8 extends Module1 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                If black goes somewhere else though, then white can capture the stone and remove it
+                If Black goes somewhere else though, then White can capture the stone and remove it
                 from the board
             </p>
         );
