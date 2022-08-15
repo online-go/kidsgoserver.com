@@ -26,12 +26,10 @@ interface ChatDialogProps {
 }
 
 export const ChatPhrases = [
-    "{bow}",
     "Have a good game!",
     "Nice move!",
     "Atari!",
     "Those stones are trapped.",
-    "I resign.",
     "Good game!",
     "Thanks for the game!",
     "Play again?",

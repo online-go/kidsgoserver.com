@@ -154,7 +154,10 @@ export function KidsGame(): JSX.Element {
                                 : goban_ref.current?.engine.players.black;
 
                             if (opponent) {
-                                if (goban.engine.last_official_move.passed()) {
+                                if (
+                                    goban.engine.last_official_move.passed() &&
+                                    goban.engine.last_official_move.move_number > 0
+                                ) {
                                     goban.emit("chat", {
                                         body: "I've passed.",
                                         player_id: opponent.id,
@@ -262,6 +265,23 @@ export function KidsGame(): JSX.Element {
                 .then(() => {
                     goban_ref.current.resign();
                     navigate("/play");
+                })
+                .catch(() => 0);
+        } else {
+            navigate("/play");
+        }
+    }
+
+    function resign() {
+        if (
+            user.id in goban_ref.current.engine.player_pool &&
+            goban_ref.current?.engine.phase === "play"
+        ) {
+            openPopup({
+                text: _("Are you sure you want to resign?"),
+            })
+                .then(() => {
+                    goban_ref.current.resign();
                 })
                 .catch(() => 0);
         } else {
@@ -444,12 +464,20 @@ export function KidsGame(): JSX.Element {
                     />
                     <div className="landscape-bottom-buttons">
                         {goban_ref.current?.engine.phase === "play" && (
+                            <>
+                            <StoneButton
+                                onClick={resign}
+                                className="stone-button-x"
+                                text="Resign"
+                                disabled={false}
+                            />
                             <StoneButton
                                 onClick={pass}
                                 className="stone-button-up"
                                 text="Pass"
                                 disabled={!can_pass}
                             />
+                            </>
                         )}
                     </div>
                 </div>
@@ -474,6 +502,12 @@ export function KidsGame(): JSX.Element {
                         </div>
 
                         <div className="right">
+                            <StoneButton
+                                onClick={resign}
+                                className="stone-button-x"
+                                text="Resign"
+                                disabled={false}
+                            />
                             <StoneButton
                                 onClick={pass}
                                 className="stone-button-up"
