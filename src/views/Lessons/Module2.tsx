@@ -245,7 +245,7 @@ class Page10 extends Module2 {
     }
     onSetGoban(goban: Goban): void {
         goban.setMarkByPrettyCoord("g5g2g1h9h8h7h6h5h4h3h2h1j9j8j7j6j5j4j3j2j1", "circle");
-        goban.setMarkByPrettyCoord("g9g8g7", "triangle");
+        goban.setMarkByPrettyCoord("g9g8g7", "circle");
     }
 }
 

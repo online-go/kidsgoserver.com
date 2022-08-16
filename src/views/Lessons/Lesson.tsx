@@ -126,6 +126,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                 mode: "puzzle",
                 width: 7,
                 height: 7,
+                circle_radius: 0.45,
                 draw_top_labels: false,
                 draw_right_labels: false,
                 draw_left_labels: false,
