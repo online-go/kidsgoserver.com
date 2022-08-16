@@ -245,7 +245,7 @@ class Puzzle1 extends Module1 {
             if (goban.engine.board[0][3] === 0) {
                 this.captureDelay(() => {
                     openPopup({
-                        text: "Good job!",
+                        text: <Axol>Good job!</Axol>,
                         no_cancel: true,
                         timeout: POPUP_TIMEOUT,
                     })
@@ -276,7 +276,7 @@ class Puzzle2 extends Module1 {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
                     openPopup({
-                        text: "You did it!",
+                        text: <Axol>You did it!</Axol>,
                         no_cancel: true,
                         timeout: POPUP_TIMEOUT,
                     })
@@ -308,7 +308,7 @@ class Puzzle3 extends Module1 {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
                     openPopup({
-                        text: "Nice work!",
+                        text: <Axol>Nice work!</Axol>,
                         no_cancel: true,
                         timeout: POPUP_TIMEOUT,
                     })
@@ -340,7 +340,7 @@ class Puzzle4 extends Module1 {
             if (goban.engine.board[3][4] === 0) {
                 this.captureDelay(() => {
                     openPopup({
-                        text: "Very clever!",
+                        text: <Axol>Very clever!</Axol>,
                         no_cancel: true,
                         timeout: POPUP_TIMEOUT,
                     })
@@ -369,3 +369,12 @@ export const module1: Array<typeof Content> = [
     Puzzle3,
     Puzzle4,
 ];
+
+function Axol({ children }: { children: React.ReactNode }): JSX.Element {
+    return (
+        <div className="Axol-container">
+            <div className="Axol" />
+            {children}
+        </div>
+    );
+}

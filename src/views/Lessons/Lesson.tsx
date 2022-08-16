@@ -260,7 +260,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
                     <div id="board-container" ref={board_container_resizer.ref}>
                         {showAxotol ? (
-                            <div id="axotol" />
+                            <div id="axolotl" />
                         ) : (
                             <div className="Goban-container">
                                 <div className="Goban">
