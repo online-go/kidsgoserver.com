@@ -29,6 +29,8 @@ interface ResultsDialogProps {
 }
 
 export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
+    const user = useUser();
+
     if (!props.goban) {
         return null;
     }
@@ -36,7 +38,6 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     // We usually use area scoring for aga, so the computeScore doesn't return
     // captures. But in this case the AGF wants us to report in territory scoring,
     // so we adjust.
-    const user = useUser();
     const score = props.goban.engine.computeScore(false);
     const score_prisoners = props.goban.engine.computeScore(true);
     const passes = countPasses(props.goban);

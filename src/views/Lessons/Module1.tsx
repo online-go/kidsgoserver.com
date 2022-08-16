@@ -20,6 +20,8 @@ import { Content } from "./Content";
 import { PuzzleConfig, Goban, JGOFNumericPlayerColor } from "goban";
 import { openPopup } from "PopupDialog";
 
+const POPUP_TIMEOUT = 3000;
+
 class Module1 extends Content {
     constructor() {
         super();
@@ -245,6 +247,7 @@ class Puzzle1 extends Module1 {
                     openPopup({
                         text: "Good job!",
                         no_cancel: true,
+                        timeout: POPUP_TIMEOUT,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -275,6 +278,7 @@ class Puzzle2 extends Module1 {
                     openPopup({
                         text: "You did it!",
                         no_cancel: true,
+                        timeout: POPUP_TIMEOUT,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -306,6 +310,7 @@ class Puzzle3 extends Module1 {
                     openPopup({
                         text: "Nice work!",
                         no_cancel: true,
+                        timeout: POPUP_TIMEOUT,
                     })
                         .then(() => {
                             this.gotoNext();
@@ -337,6 +342,7 @@ class Puzzle4 extends Module1 {
                     openPopup({
                         text: "Very clever!",
                         no_cancel: true,
+                        timeout: POPUP_TIMEOUT,
                     })
                         .then(() => {
                             this.gotoNext();

@@ -48,6 +48,7 @@ interface OpenPopupProps {
     text: string | React.ReactNode;
     no_accept?: boolean;
     no_cancel?: boolean;
+    timeout?: number;
 }
 
 let root: ReactDOM.Root;
@@ -60,19 +61,32 @@ export function openPopup(props: OpenPopupProps): Promise<void> {
 
     let onaccept: () => void;
     let oncancel: () => void;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const promise = new Promise<void>((resolve, reject) => {
         onaccept = () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
             root.unmount();
             root = null;
             resolve();
         };
         oncancel = () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
             root.unmount();
             root = null;
             reject();
         };
     });
+
+    if (props.timeout) {
+        timeout = setTimeout(() => {
+            onaccept();
+        }, props.timeout);
+    }
 
     root.render(
         <React.StrictMode>
