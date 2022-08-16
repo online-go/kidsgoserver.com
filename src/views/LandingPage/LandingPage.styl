@@ -27,11 +27,15 @@ ROCKET_LAUNCH_DURATION = 1.25s
 }
 
 
-ROCKETWIDTH=10rem;
-ROCKETHEIGHT=ROCKETWIDTH * 3;
-FLAMEWIDTH=5rem;
-FLAMECENTER=2.5rem;
-FLAMEHEIGHT=12rem;
+:root {
+    //--ROCKETWIDTH: min(10vw, 10rem);
+    --ROCKETWIDTH: "min(20vw, 10rem)" % "";
+    --ROCKETHEIGHT: calc(var(--ROCKETWIDTH) * 3);
+    --FLAMEWIDTH: calc(var(--ROCKETWIDTH) / 2);
+    --FLAMECENTER: calc(var(--FLAMEWIDTH) / 2);
+    --FLAMEHEIGHT: calc(var(--ROCKETHEIGHT) / 2);
+}
+
 
 
 #LandingPage {
@@ -47,6 +51,7 @@ FLAMEHEIGHT=12rem;
     align-content: center;
     justify-content: center;
     align-items: stretch;
+    overflow: hidden;
 
     +portrait() {
         flex-direction: column;
@@ -86,10 +91,10 @@ FLAMEHEIGHT=12rem;
 
     .learn-to-play-rocket, .play-rocket {
         position: absolute;
-        bottom: 5.5rem;
-        width: ROCKETWIDTH;
+        bottom: calc(var(--ROCKETHEIGHT) * 0.1 + 0.8rem);
+        width: var(--ROCKETWIDTH);
         text-align: center;
-        height: ROCKETHEIGHT;
+        height: var(--ROCKETHEIGHT);
         background-repeat: no-repeat;
         background-position: bottom;
         z-index: z.rocket;
@@ -98,11 +103,11 @@ FLAMEHEIGHT=12rem;
         .flames {
             display: none;
             z-index: z.flame;
-            height: FLAMEHEIGHT;
-            width: FLAMEWIDTH;
+            height: var(--FLAMEHEIGHT);
+            width: var(--FLAMEWIDTH);
             position: absolute;
-            top: ROCKETHEIGHT;
-            left: ROCKETWIDTH - 6.25rem;
+            top: var(--ROCKETHEIGHT);
+            left: "calc(var(--ROCKETWIDTH) / 2 - (var(--FLAMECENTER) / 2) * 1.2)" % "";
             background-image: svg-load("../assets/pages/home/flame.svg");
             background-repeat: no-repeat;
             background-position: 0 -30px;
@@ -111,7 +116,7 @@ FLAMEHEIGHT=12rem;
         .label {
             position: relative;
             color: white;
-            top: ROCKETHEIGHT * 0.5 - 0.75rem;
+            top: calc(var(--ROCKETHEIGHT) * 0.5 - 0.75rem);
 
         }
     }
@@ -140,9 +145,9 @@ FLAMEHEIGHT=12rem;
     .launchpad {
         position: absolute;
         display: inline-block;
-        bottom: 0.5rem;
-        height: 5rem;
-        width: ROCKETWIDTH;
+        bottom: calc(var(--ROCKETHEIGHT) * 0.05);
+        height: calc(var(--ROCKETHEIGHT) * 0.1);
+        width: var(--ROCKETWIDTH);
         text-align: center;
         background-repeat: no-repeat;
     }
@@ -156,4 +161,8 @@ FLAMEHEIGHT=12rem;
         right: 5vw;
         background-image: svg-load("../assets/pages/home/launchpad.svg");
     }
+
+
+
+
 }
