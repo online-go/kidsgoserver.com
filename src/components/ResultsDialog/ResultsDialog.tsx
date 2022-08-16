@@ -19,6 +19,7 @@ import * as React from "react";
 import { KBShortcut } from "KBShortcut";
 import { Goban } from "goban";
 import { PlayerAvatar } from "Avatar";
+import { useUser } from "hooks";
 import { countPasses } from "countPasses";
 
 interface ResultsDialogProps {
@@ -35,6 +36,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     // We usually use area scoring for aga, so the computeScore doesn't return
     // captures. But in this case the AGF wants us to report in territory scoring,
     // so we adjust.
+    const user = useUser();
     const score = props.goban.engine.computeScore(false);
     const score_prisoners = props.goban.engine.computeScore(true);
     const passes = countPasses(props.goban);
@@ -53,11 +55,26 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     let white_winner = "";
     if ((props.goban?.engine?.winner as any) === (props.goban?.engine?.players.black.id as any)) {
         //black_svg_url = black_svg_url.replace("plain", "neutral");
-        black_winner = "Winner";
+        black_winner = "Wins by " + props.goban?.engine?.outcome;
     } else {
         //white_svg_url = black_svg_url.replace("plain", "neutral");
-        white_winner = "Winner";
+        white_winner = "Wins by " + props.goban?.engine?.outcome;
     }
+
+    const swap = user.id === props.goban.engine.players.black.id;
+
+    const left_winner = swap ? white_winner : black_winner;
+    const right_winner = swap ? black_winner : white_winner;
+    const left_svg = swap ? white_svg_url : black_svg_url;
+    const right_svg = swap ? black_svg_url : white_svg_url;
+    const left_id = swap
+        ? props.goban?.engine?.players.white?.id
+        : props.goban?.engine?.players.black?.id;
+    const right_id = swap
+        ? props.goban?.engine?.players.black?.id
+        : props.goban?.engine?.players.white?.id;
+    const left_score = swap ? score.white : score.black;
+    const right_score = swap ? score.black : score.white;
 
     return (
         <div className="ResultsDialog-container">
@@ -65,19 +82,19 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
             <div className="ResultsDialog">
                 <div className="ResultsDialog-results">
                     <div className="black">
-                        <div className="result-text">{black_winner}</div>
+                        <div className="result-text">{left_winner}</div>
                         <div className="stone-avatar-container">
-                            <PlayerAvatar user_id={props.goban?.engine?.players.black?.id} />
+                            <PlayerAvatar user_id={left_id} />
                         </div>
-                        <Score score={score.black} svg_url={black_svg_url} />
+                        <Score score={left_score} svg_url={left_svg} />
                     </div>
 
                     <div className="white">
-                        <div className="result-text">{white_winner}</div>
+                        <div className="result-text">{right_winner}</div>
                         <div className="stone-avatar-container">
-                            <PlayerAvatar user_id={props.goban?.engine?.players.white?.id} />
+                            <PlayerAvatar user_id={right_id} />
                         </div>
-                        <Score score={score.white} svg_url={white_svg_url} />
+                        <Score score={right_score} svg_url={right_svg} />
                     </div>
                 </div>
                 <div className="ResultsDialog-buttons">
