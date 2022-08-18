@@ -10,8 +10,15 @@
 
     &.opponent {
         left: 10rem;
+
+        +portrait() {
+            left: 0;
+        }
     }
     &.player {
         right: 10rem;
+        +portrait() {
+            right: 0;
+        }
     }
 }
