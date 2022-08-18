@@ -18,6 +18,7 @@
 import * as React from "react";
 import { Content } from "./Content";
 import { PuzzleConfig, Goban, JGOFNumericPlayerColor } from "goban";
+import { Axol } from "./Axol";
 import { openPopup } from "PopupDialog";
 
 const POPUP_TIMEOUT = 3000;
@@ -369,12 +370,3 @@ export const module1: Array<typeof Content> = [
     Puzzle3,
     Puzzle4,
 ];
-
-function Axol({ children }: { children: React.ReactNode }): JSX.Element {
-    return (
-        <div className="Axol-container">
-            <div className="Axol" />
-            {children}
-        </div>
-    );
-}

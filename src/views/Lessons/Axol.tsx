@@ -15,11 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Content } from "./Content";
-import { module1 } from "./Module1";
-import { module2 } from "./Module2";
-import { module3 } from "./Module3";
-import { module4 } from "./Module4";
-import { module5 } from "./Module5";
+import * as React from "react";
 
-export const chapters: Array<Array<typeof Content>> = [module1, module2, module3, module4, module5];
+export function Axol({ children }: { children: React.ReactNode }): JSX.Element {
+    return (
+        <div className="Axol-container">
+            <div className="Axol" />
+            {children}
+        </div>
+    );
+}

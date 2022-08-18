@@ -227,6 +227,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             if (t) {
                 clearTimeout(t);
             }
+            setText([]);
             goban_ref.current.destroy();
             goban_ref.current = null;
             goban_opts_ref.current = null;
