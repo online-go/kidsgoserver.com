@@ -30,7 +30,7 @@ class Page1 extends Module2 {
         return [
             <span>
                 Based on the last lesson you might think the goal of this game is to capture stones,
-                but actually what we count is the territory.
+                but actually whoever has the most territory wins.
             </span>,
         ];
     }
@@ -163,10 +163,10 @@ class Page7 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                In Go, we play until the two colors are touching each other, and the remaining empty
-                space each surrounds is their territory.
+                In Go, we play until the two colors are touching each other, and the empty space
+                each surrounds is their territory.{" "}
             </p>,
-            <p>Black has territory on the left, and White has it on the right.</p>,
+            <p>Black has territory on the left, and White has it on the right. </p>,
             <p>Black also captured three stones, which went in the prisoner bowl.</p>,
         ];
     }
@@ -185,7 +185,7 @@ class Page7 extends Module2 {
 
 class Page8 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>It looks like Black has 23 points.</p>;
+        return <p>We can see Black has 23 points.</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -205,7 +205,7 @@ class Page8 extends Module2 {
 
 class Page9 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>And White has 24, so White would win by one</p>;
+        return <p>And it looks like White has 24, so White would win by one.</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -227,8 +227,8 @@ class Page10 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                But, those three stones that were captured are added to Black's score. Now the score
-                is Black 26 and White 24, so Black wins by two.
+                But, those three stones that Black captured are subtracted from White's territory.
+                Now the score is Black 23 and White 21, so Black wins by two.
             </p>
         );
     }
@@ -275,13 +275,18 @@ class Page11 extends Module2 {
 
 class Page12 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return (
+        return [
             <p>
-                To signal the end of the game, just pass a stone. If your opponent also passes, the
-                game is over. They can also play a move if they want, and then you can either play
-                or pass. Two passes in a row ends the game, and then it can be counted.
-            </p>
-        );
+                If you think the game is over, just pass a stone. If your opponent plays a stone
+                then you can either play or pass. Two passes in a row ends the game. However, as
+                Black played first, White must play (or pass) last.
+            </p>,
+            <p>
+                You now know enough to play your first game of Go! There are actually two more
+                rules, but it can be confusing at first. Play a couple games against the Easy Bot +4
+                and then come back to read the rest of these lessons.
+            </p>,
+        ];
     }
     axolotlFace() {
         return true;
