@@ -53,14 +53,18 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
         "neutral",
     );
     let black_winner = "";
+    let winner_svg_url;
     let white_winner = "";
     if ((props.goban?.engine?.winner as any) === (props.goban?.engine?.players.black.id as any)) {
-        //black_svg_url = black_svg_url.replace("plain", "neutral");
+        //black_winner = "Winner";
         black_winner = "Wins by " + props.goban?.engine?.outcome;
+        winner_svg_url = black_svg_url;
     } else {
-        //white_svg_url = black_svg_url.replace("plain", "neutral");
+        //white_winner = "Winner";
         white_winner = "Wins by " + props.goban?.engine?.outcome;
+        winner_svg_url = white_svg_url;
     }
+    const outcome = "wins by " + props.goban?.engine?.outcome;
 
     const swap = user.id === props.goban.engine.players.black.id;
 
@@ -83,21 +87,29 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
             <div className="ResultsDialog">
                 <div className="ResultsDialog-results">
                     <div className="black">
-                        <div className="result-text">{left_winner}</div>
                         <div className="stone-avatar-container">
                             <PlayerAvatar user_id={left_id} />
                         </div>
-                        <Score score={left_score} svg_url={left_svg} />
+                        <Score score={left_score} other={right_score} svg_url={left_svg} />
+                        <div className="result-text">{left_winner}</div>
                     </div>
 
                     <div className="white">
-                        <div className="result-text">{right_winner}</div>
                         <div className="stone-avatar-container">
                             <PlayerAvatar user_id={right_id} />
                         </div>
-                        <Score score={right_score} svg_url={right_svg} />
+                        <Score score={right_score} other={left_score} svg_url={right_svg} />
+                        <div className="result-text">{right_winner}</div>
                     </div>
                 </div>
+                {/*
+                <div className="ResultsDialog-outcome">
+                    <div>
+                        <img className="stone-svg" src={winner_svg_url} />
+                        {outcome}
+                    </div>
+                </div>
+                */}
                 <div className="ResultsDialog-buttons">
                     <button className="primary-button" onClick={props.onPlayAgain}>
                         Play again
@@ -111,7 +123,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     );
 }
 
-interface ScoreProps {
+interface ScoreObject {
     handicap: number;
     komi: number;
     prisoners: number;
@@ -121,24 +133,37 @@ interface ScoreProps {
     total: number;
 }
 
-export function Score({ score, svg_url }: { score: ScoreProps; svg_url: string }) {
-    const total = score.komi + score.prisoners + score.territory;
+interface ScoreProps {
+    score: ScoreObject;
+    other: ScoreObject;
+    svg_url: string;
+}
+
+export function Score({ score, other, svg_url }: ScoreProps) {
+    //const total = score.komi + score.prisoners + score.territory;
+    const total = score.komi - other.prisoners + score.territory;
+    const stones = score.stones + other.prisoners;
 
     return (
         <div className="score">
+            <div className="score-stones">
+                <img className="stone-svg" src={svg_url} />
+                <span className="label">Stones Played:</span>{" "}
+                <span className="value">{stones}</span>
+            </div>
             <div className="score-territory">
                 <img className="stone-svg" src={svg_url} />
                 <span className="label">Territory:</span>{" "}
                 <span className="value">{score.territory}</span>
             </div>
-            <div className="score-prisoners">
-                <img className="stone-svg" src={svg_url} />
-                <span className="label">Captures:</span>{" "}
-                <span className="value">{score.prisoners}</span>
-            </div>
             <div className="score-komi">
                 <img className="stone-svg" src={svg_url} />
                 <span className="label">Komi:</span> <span className="value">{score.komi}</span>
+            </div>
+            <div className="score-prisoners">
+                <img className="stone-svg" src={svg_url} />
+                <span className="label">Captured:</span>{" "}
+                <span className="value">- {other.prisoners}</span>
             </div>
 
             <div className="score-total">
