@@ -59,9 +59,9 @@ export function ChapterButton({ chapter }: { chapter: number }): JSX.Element {
 
     return (
         <span
-            className={"ChapterButton" + (chapter > 2 ? " disabled" : "") + ` chapter-${chapter}`}
+            className={"ChapterButton" + (chapter > 5 ? " disabled" : "") + ` chapter-${chapter}`}
             onClick={() => {
-                if (chapter > 2) {
+                if (chapter > 5) {
                     return;
                 }
                 navigate(`/learn-to-play/${chapter}`);
@@ -71,29 +71,3 @@ export function ChapterButton({ chapter }: { chapter: number }): JSX.Element {
         </span>
     );
 }
-/*
-                <div>
-                    <Link to="/learn-to-play/1">Lesson 1</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/2">Lesson 2</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/3">Lesson 3</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/4">Lesson 4</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/5">Lesson 5</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/6">Lesson 6</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/7">Lesson 7</Link>
-                </div>
-                <div>
-                    <Link to="/learn-to-play/8">Lesson 8</Link>
-                </div>
-                */
