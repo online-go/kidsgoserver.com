@@ -21,6 +21,7 @@ import { KBShortcut } from "KBShortcut";
 
 interface PopupDialogProps {
     text: string | React.ReactNode;
+    className?: string;
     onAccept?: () => void;
     onCancel?: () => void;
 }
@@ -29,7 +30,7 @@ export function PopupDialog(props: PopupDialogProps): JSX.Element {
     return (
         <div className="PopupDialog-container">
             <KBShortcut shortcut="esc" action={props.onCancel || props.onAccept || (() => 0)} />
-            <div className="PopupDialog">
+            <div className={`PopupDialog ${props.className || ""}`}>
                 <div className="PopupDialog-text">{props.text}</div>
                 <div className="PopupDialog-buttons">
                     {(props.onAccept || null) && (
@@ -46,6 +47,7 @@ export function PopupDialog(props: PopupDialogProps): JSX.Element {
 
 interface OpenPopupProps {
     text: string | React.ReactNode;
+    className?: string;
     no_accept?: boolean;
     no_cancel?: boolean;
     timeout?: number;
@@ -92,6 +94,7 @@ export function openPopup(props: OpenPopupProps): Promise<void> {
         <React.StrictMode>
             <PopupDialog
                 text={props.text}
+                className={props.className}
                 onAccept={props.no_accept ? undefined : onaccept}
                 onCancel={props.no_cancel ? undefined : oncancel}
             />

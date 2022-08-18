@@ -20,7 +20,7 @@ import * as data from "data";
 import cached from "cached";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "hooks";
-import { post } from "requests";
+import { post, get } from "requests";
 import { BackButton } from "BackButton";
 import { Button } from "Button";
 import { _ } from "translate";
@@ -32,6 +32,7 @@ import {
     uiClassToRaceIdx,
     avatar_background_class,
 } from "Avatar";
+import { openPopup } from "PopupDialog";
 
 export function CharacterSelection(): JSX.Element {
     useEnsureUserIsCreated();
@@ -79,9 +80,50 @@ export function CharacterSelection(): JSX.Element {
         data.set("user", JSON.parse(JSON.stringify(config.user)));
     };
 
+    const openSignin = (): void => {
+        openPopup({
+            text: <SignIn />,
+            className: "SignInPopup",
+            no_cancel: true,
+        })
+            .then(() => {
+                //
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
+
+    const signout = (): void => {
+        openPopup({
+            text: "Are you sure you want to sign out?",
+        })
+            .then(() => {
+                get("/api/v0/logout")
+                    .then(() => {
+                        window.location.pathname = "/";
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
+
     return (
         <div id="CharacterSelection" className={avatar_background_class(race)}>
             <BackButton onClick={() => navigate("/play")} />
+            <span className="signin-out-buttons">
+                <button className="sign-in" onClick={openSignin}>
+                    Sign In
+                </button>
+
+                <button className="sign-out" onClick={signout}>
+                    Sign out
+                </button>
+            </span>
 
             <NameSelection />
 
@@ -126,6 +168,43 @@ function NameSelection(): JSX.Element {
             <button className="refresh" onClick={refresh}>
                 Generate New Name
             </button>
+        </div>
+    );
+}
+
+function SignIn(): JSX.Element {
+    const user = useUser();
+    const [code, setCode] = React.useState("");
+
+    return (
+        <div id="SignIn">
+            Your sign in code: <b>{(user as any).kidsgo_signin_code}</b>
+            <div className="small">Use this code to sign in on another device</div>
+            <hr />
+            <input
+                type="text"
+                placeholder="Sign in code"
+                value={code}
+                onChange={(ev) => setCode(ev.target.value)}
+            />
+            <button
+                onClick={() => {
+                    post("/api/v0/kidsgo/signin", { code })
+                        .then((config) => {
+                            data.set(cached.config, config);
+                            console.log("should be ", config.user);
+                            window.location.reload();
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                }}
+            >
+                Sign In
+            </button>
+            <div className="small">
+                If you have a code from another device, you can enter it here
+            </div>
         </div>
     );
 }
