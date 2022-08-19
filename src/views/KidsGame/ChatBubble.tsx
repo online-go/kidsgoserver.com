@@ -19,6 +19,8 @@ import * as React from "react";
 import { Goban } from "goban";
 import { ChatPhrases } from "ChatDialog";
 
+const CHAT_AUTOHIDE_TIMEOUT = 5000;
+
 interface ChatBubbleProps {
     user_id?: number;
     side: "opponent" | "player";
@@ -32,7 +34,7 @@ export function ChatBubble({ user_id, side, goban }: ChatBubbleProps): JSX.Eleme
         setLine(line);
         setTimeout(() => {
             setLine(null);
-        }, 30000);
+        }, CHAT_AUTOHIDE_TIMEOUT);
     };
 
     React.useEffect(() => {
