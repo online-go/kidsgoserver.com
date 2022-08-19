@@ -153,6 +153,10 @@ export function initialize_kidsgo_themes() {
             if (goban.engine.board[y][x] === 0) {
                 return "plain";
             }
+            const marks = goban.getMarks(x, y);
+            if (marks && Object.keys(marks).length > 0) {
+                return "plain";
+            }
 
             const liberties = getCachedLiberties(goban);
             const rng = (x + 1) * 53 * ((y + 1) * 97);
