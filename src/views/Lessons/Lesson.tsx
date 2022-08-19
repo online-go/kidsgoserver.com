@@ -27,6 +27,7 @@ import { chapters } from "./chapters";
 import { PersistentElement } from "PersistentElement";
 import { useNavigate } from "react-router-dom";
 import { animateCaptures } from "animateCaptures";
+import { sfx } from "sfx";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
     setContentNavigate(useNavigate());
@@ -119,6 +120,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             setShowAxotol(false);
         }
 
+        const content_config = content.config();
         const opts: GobanConfig = Object.assign(
             {
                 board_div: container || undefined,
@@ -142,7 +144,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                     return { mode: "play" };
                 },
             },
-            content.config(),
+            content_config,
         ) as GobanConfig;
 
         goban_opts_ref.current = opts;
@@ -155,8 +157,21 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         console.log("Listening for capturing");
         goban.on("captured-stones", ({ removed_stones }) => {
             console.log("Animating captures", removed_stones);
-            animateCaptures(removed_stones, goban, goban.engine.colorNotToMove());
+            // I'm not really sure why we need this flip_animated_capture_color
+            // thing to begin with, but at this point I just want things to
+            // work.
+            animateCaptures(
+                removed_stones,
+                goban,
+                (content_config as any).flip_animated_capture_color
+                    ? goban.engine.colorToMove()
+                    : goban.engine.colorNotToMove(),
+            );
         });
+
+        goban.on("audio-stone", (stone) =>
+            sfx.playStonePlacementSound(stone.x, stone.y, stone.width, stone.height, stone.color),
+        );
 
         goban.on("puzzle-correct-answer", () => {
             console.log("CORRECT!");

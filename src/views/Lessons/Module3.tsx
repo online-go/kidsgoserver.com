@@ -171,19 +171,23 @@ class Page7 extends Module3 {
     }
     config(): PuzzleConfig {
         return {
-            puzzle_player_move_mode: "fixed",
+            puzzle_player_move_mode: "free",
             initial_player: "white",
             initial_state: {
                 black: "e7e6f6f5g5g6",
                 white: "d7d6e5f4g4d4g7",
             },
-        };
+            flip_animated_capture_color: true,
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
         //goban.setMarkByPrettyCoord("f7g6", "triangle");
         //this.delay(() => goban.placeByPrettyCoord("f5"));
         //goban.engine.place(-1, -1);
-        goban.engine.place(5, 0);
+        this.delay(() => {
+            goban.placeByPrettyCoord("f7");
+        });
+        /*
         goban.on("update", () => {
             if (goban.engine.board[0][5] === 2) {
                 this.captureDelay(() => {
@@ -198,6 +202,7 @@ class Page7 extends Module3 {
                 });
             }
         });
+        */
 
         //goban.setMarkByPrettyCoord("g7g6", "1");
         //goban.setMarkByPrettyCoord("g6", "2");

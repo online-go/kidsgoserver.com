@@ -216,11 +216,12 @@ class Page8 extends Module1 {
     config(): PuzzleConfig {
         return {
             puzzle_player_move_mode: "fixed",
+            flip_animated_capture_color: true,
             initial_state: {
                 black: "D4",
                 white: "C4D3E4",
             },
-        };
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
         this.delay(() => goban.placeByPrettyCoord("f5"));
