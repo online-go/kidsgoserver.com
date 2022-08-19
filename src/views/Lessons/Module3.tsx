@@ -286,15 +286,20 @@ class Page11 extends Module3 {
     }
     config(): PuzzleConfig {
         return {
-            puzzle_player_move_mode: "fixed",
+            puzzle_player_move_mode: "free",
+            flip_animated_capture_color: true,
             initial_state: {
-                black: "e7e6f6f5g5f7",
-                white: "d7d6e5f4g4d4",
+                black: "e7e6f6f5g5",
+                white: "d7d6e5f4g4d4g7g6",
             },
-        };
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
         goban.setMarkByPrettyCoord("f7", "1");
+        this.delay(() => {
+            goban.placeByPrettyCoord("f7");
+            goban.setMarkByPrettyCoord("f7", "1");
+        });
     }
 }
 
@@ -310,15 +315,27 @@ class Page12 extends Module3 {
     config(): PuzzleConfig {
         return {
             puzzle_player_move_mode: "fixed",
+            flip_animated_capture_color: true,
+            initial_player: "white",
             initial_state: {
                 black: "e7e6f6f5g5f7",
-                white: "d7d6e5f4g4d4g7",
+                white: "d7d6e5f4g4d4",
             },
-        };
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
         goban.setMarkByPrettyCoord("f7", "1");
-        goban.setMarkByPrettyCoord("g7", "2");
+        this.delay(() => {
+            goban.placeByPrettyCoord("g7");
+            goban.setMarkByPrettyCoord("f7", "1");
+            goban.setMarkByPrettyCoord("g7", "2");
+        });
+        this.delay(() => {
+            goban.placeByPrettyCoord("g6");
+            goban.setMarkByPrettyCoord("f7", "1");
+            goban.setMarkByPrettyCoord("g7", "2");
+            goban.setMarkByPrettyCoord("g6", "3");
+        });
     }
 }
 
@@ -334,13 +351,19 @@ class Page13 extends Module3 {
     config(): PuzzleConfig {
         return {
             puzzle_player_move_mode: "fixed",
+            flip_animated_capture_color: true,
+            initial_player: "white",
             initial_state: {
                 black: "e7e6f6f5g5f7g6",
                 white: "d7d6e5f4g4d4",
             },
-        };
+        } as PuzzleConfig;
     }
-    onSetGoban(goban: Goban): void {}
+    onSetGoban(goban: Goban): void {
+        this.delay(() => {
+            goban.placeByPrettyCoord("g7");
+        }, 3000);
+    }
 }
 
 class Page14 extends Module3 {

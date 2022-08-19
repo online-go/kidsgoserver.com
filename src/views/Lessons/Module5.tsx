@@ -317,15 +317,24 @@ class Page12 extends Module5 {
             puzzle_player_move_mode: "fixed",
             width: 9,
             height: 9,
+            initial_player: "white",
+            flip_animated_capture_color: true,
             initial_state: {
-                black: "d7c8",
-                white: "e7f6g5g7h6g8d8e6d9f9",
+                //black: "d7c8",
+                black: "f7f8e8d7c8e9",
+                white: "e7f6g5g7h6g8d8e6d9",
             },
-        };
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
         goban.setMarkByPrettyCoord("f9", "C");
-        goban.setMarkByPrettyCoord("e9e8f8f7", "square");
+        //goban.setMarkByPrettyCoord("e9e8f8f7", "square");
+
+        this.delay(() => {
+            goban.placeByPrettyCoord("f9");
+            goban.setMarkByPrettyCoord("f9", "C");
+            goban.setMarkByPrettyCoord("e9e8f8f7", "square");
+        }, 3000);
     }
 }
 
@@ -378,21 +387,26 @@ class Page14 extends Module5 {
 
 class Page15 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>It is now black's turn, and playing at A captures all three white stones.</p>];
+        return [<p>It is now black's turn, and playing at D captures all three white stones.</p>];
     }
     config(): PuzzleConfig {
         return {
             puzzle_player_move_mode: "fixed",
             width: 9,
             height: 9,
+            flip_animated_capture_color: true,
             initial_state: {
-                black: "f7f8e8d7c8c9f9",
-                white: "e7f6g5g7h6g8e6",
+                black: "f7f8e8d7c8c9",
+                white: "e7f6g5g7h6g8d8e6d9e9",
             },
-        };
+        } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
-        goban.setMarkByPrettyCoord("f9", "A");
+        goban.setMarkByPrettyCoord("f9", "D");
+        this.delay(() => {
+            goban.placeByPrettyCoord("f9");
+            goban.setMarkByPrettyCoord("f9", "D");
+        }, 3000);
     }
 }
 
