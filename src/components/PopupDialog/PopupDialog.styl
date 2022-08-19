@@ -45,11 +45,12 @@ popup-height=20rem;
     opacity: 0.93;
     color: #32529a;
     text-shadow: 0 0 2px #fff;
-    font-size: 3rem;
-    line-height: 3.5rem;
+    font-size: 2.5rem;
+    line-height: 2.8rem;
 
     +portrait() {
         font-size: 2rem;
+        line-height: 2.3rem;
     }
 
     flex-direction: column;
@@ -60,6 +61,11 @@ popup-height=20rem;
         padding-left: 3rem;
         padding-right: 3rem;
         text-align: center;
+
+        +portrait() {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
     }
 
     .PopupDialog-buttons {
