@@ -17,6 +17,7 @@
 
 import * as React from "react";
 import * as data from "data";
+import { sfx } from "sfx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -213,6 +214,10 @@ export function KidsGame(): JSX.Element {
             closePopup();
             //console.log("clear message");
         });
+
+        goban.on("audio-stone", (stone) =>
+            sfx.playStonePlacementSound(stone.x, stone.y, stone.width, stone.height, stone.color),
+        );
 
         goban.on("update", onUpdate);
         goban.on("update", sayYourMoveChecker);

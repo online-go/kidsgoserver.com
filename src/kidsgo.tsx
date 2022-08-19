@@ -23,6 +23,9 @@
 /// <reference path="../online-go.com/src/models/user.d.ts" />
 import * as _hacks from "./hacks";
 import * as Sentry from "@sentry/browser";
+import * as data from "data";
+import * as preferences from "preferences";
+import * as requests from "requests";
 import { configure_goban } from "configure-goban";
 import { initialize_kidsgo_themes } from "goban_themes";
 import {
@@ -35,9 +38,8 @@ import {
 import { sfx } from "sfx";
 import { post } from "requests";
 import { ai_host } from "sockets";
-import * as requests from "requests";
 
-sfx.setVolume("master", 0.0); // disable sound for the time being, pending on AGF guidance
+sfx.setVolume("master", 1.0);
 sfx.sync();
 
 (window as any)["requests"] = requests;
@@ -93,9 +95,6 @@ try {
 } catch (e) {
     console.log(e);
 }
-
-import * as data from "data";
-import * as preferences from "preferences";
 
 // Disable the desktop notifications preemptiely so we don't get the OGS
 // desktop notification toast prompt
