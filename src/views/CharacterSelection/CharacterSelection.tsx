@@ -102,7 +102,6 @@ export function CharacterSelection(): JSX.Element {
         <div id="CharacterSelection" className={avatar_background_class(race)}>
             <BackButton onClick={() => navigate("/play")} />
             <span className="signin-out-buttons">
-
                 <button className="sign-out" onClick={signout}>
                     Sign out
                 </button>
