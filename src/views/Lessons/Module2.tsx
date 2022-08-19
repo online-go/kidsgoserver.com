@@ -281,6 +281,16 @@ class Page12 extends Module2 {
                 then you can either play or pass. Two passes in a row ends the game. However, as
                 Black played first, White must play (or pass) last.
             </p>,
+        ];
+    }
+    axolotlFace() {
+        return true;
+    }
+}
+
+class Page13 extends Module2 {
+    text(): JSX.Element | Array<JSX.Element> {
+        return [
             <p>
                 You now know enough to play your first game of Go! There are actually two more
                 rules, but it can be confusing at first. Play a couple games against the Easy Bot +4
@@ -306,4 +316,5 @@ export const module2: Array<typeof Content> = [
     Page10,
     Page11,
     Page12,
+    Page13,
 ];
