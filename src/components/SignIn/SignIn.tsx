@@ -28,7 +28,7 @@ export function SignIn(): JSX.Element {
     return (
         <div id="SignIn">
             Your sign in code: <b>{(user as any).kidsgo_signin_code}</b>
-            <div className="small">Use this code to sign in on another device</div>
+            <div className="small">This code will save your current avatar</div>
             <hr />
             <input
                 type="text"
@@ -52,7 +52,7 @@ export function SignIn(): JSX.Element {
                 Sign In
             </button>
             <div className="small">
-                If you have a code from another device, you can enter it here
+                If you saved an avatar before, enter your code to pull it up
             </div>
         </div>
     );
