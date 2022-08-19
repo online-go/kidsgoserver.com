@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "hooks";
 import { post, get } from "requests";
 import { BackButton } from "BackButton";
-import { Button } from "Button";
 import { _ } from "translate";
 import { useEnsureUserIsCreated } from "Matchmaking";
 import {
@@ -33,6 +32,7 @@ import {
     avatar_background_class,
 } from "Avatar";
 import { openPopup } from "PopupDialog";
+import { SignIn } from "SignIn";
 
 export function CharacterSelection(): JSX.Element {
     useEnsureUserIsCreated();
@@ -80,20 +80,6 @@ export function CharacterSelection(): JSX.Element {
         data.set("user", JSON.parse(JSON.stringify(config.user)));
     };
 
-    const openSignin = (): void => {
-        openPopup({
-            text: <SignIn />,
-            className: "SignInPopup",
-            no_cancel: true,
-        })
-            .then(() => {
-                //
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    };
-
     const signout = (): void => {
         openPopup({
             text: "Are you sure you want to sign out?",
@@ -116,9 +102,6 @@ export function CharacterSelection(): JSX.Element {
         <div id="CharacterSelection" className={avatar_background_class(race)}>
             <BackButton onClick={() => navigate("/play")} />
             <span className="signin-out-buttons">
-                <button className="sign-in" onClick={openSignin}>
-                    Sign In
-                </button>
 
                 <button className="sign-out" onClick={signout}>
                     Sign out
@@ -168,43 +151,6 @@ function NameSelection(): JSX.Element {
             <button className="refresh" onClick={refresh}>
                 Generate New Name
             </button>
-        </div>
-    );
-}
-
-function SignIn(): JSX.Element {
-    const user = useUser();
-    const [code, setCode] = React.useState("");
-
-    return (
-        <div id="SignIn">
-            Your sign in code: <b>{(user as any).kidsgo_signin_code}</b>
-            <div className="small">Use this code to sign in on another device</div>
-            <hr />
-            <input
-                type="text"
-                placeholder="Sign in code"
-                value={code}
-                onChange={(ev) => setCode(ev.target.value)}
-            />
-            <button
-                onClick={() => {
-                    post("/api/v0/kidsgo/signin", { code })
-                        .then((config) => {
-                            data.set(cached.config, config);
-                            console.log("should be ", config.user);
-                            window.location.reload();
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                }}
-            >
-                Sign In
-            </button>
-            <div className="small">
-                If you have a code from another device, you can enter it here
-            </div>
         </div>
     );
 }

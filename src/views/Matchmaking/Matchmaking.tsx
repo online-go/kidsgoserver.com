@@ -40,6 +40,7 @@ import { Avatar } from "Avatar";
 import { ActiveGamesList } from "./ActiveGamesList";
 import { bots } from "bots";
 import { image_url } from "goban_themes";
+import { SignIn } from "SignIn";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
@@ -228,6 +229,20 @@ export function Matchmaking(): JSX.Element {
     const canView = !!game_to_view;
     //const showGameSettings = canPlay && isBot(opponent);
 
+    const openSignin = (): void => {
+        openPopup({
+            text: <SignIn />,
+            className: "SignInPopup",
+            no_cancel: true,
+        })
+            .then(() => {
+                //
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
+
     return (
         <div id="Matchmaking" className={avatar_background_class(race)}>
             <BackButton onClick={back} />
@@ -238,6 +253,10 @@ export function Matchmaking(): JSX.Element {
                     <div className="current-user-race-name">{user.username}</div>
                     <div>
                         <button onClick={() => navigate("/character-selection")}>Change</button>
+
+                        <button className="sign-in" onClick={openSignin}>
+                            Sign In
+                        </button>
                     </div>
                 </div>
             </div>
