@@ -249,16 +249,18 @@ export function Matchmaking(): JSX.Element {
             <CheckForChallengeReceived />
             <div className="current-user-container">
                 <Avatar race={race} idx={idx} />
-                <div>
-                    <div className="current-user-race-name">{user.username}</div>
+                {(!user.anonymous || null) && (
                     <div>
-                        <button onClick={() => navigate("/character-selection")}>Change</button>
+                        <div className="current-user-race-name">{user.username}</div>
+                        <div>
+                            <button onClick={() => navigate("/character-selection")}>Change</button>
 
-                        <button className="sign-in" onClick={openSignin}>
-                            Sign In
-                        </button>
+                            <button className="sign-in" onClick={openSignin}>
+                                Sign In
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <div className="outer-container">
