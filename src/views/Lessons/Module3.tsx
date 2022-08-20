@@ -343,8 +343,8 @@ class Page13 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                But now the Black group only has a single liberty, which means White can capture the
-                whole thing!
+                But now the Black group only has a single liberty, which means White can capture
+                seven stones at once. Ouch!
             </p>,
         ];
     }
@@ -368,24 +368,6 @@ class Page13 extends Module3 {
 
 class Page14 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>White plays at 1 and captures seven Black stones. Ouch.</p>];
-    }
-    config(): PuzzleConfig {
-        return {
-            puzzle_player_move_mode: "fixed",
-            initial_state: {
-                black: "",
-                white: "d7d6e5f4g4d4g7",
-            },
-        };
-    }
-    onSetGoban(goban: Goban): void {
-        goban.setMarkByPrettyCoord("g7", "1");
-    }
-}
-
-class Page15 extends Module3 {
-    text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
                 Looking again, we see that the placement of a single stone can make all the
@@ -407,7 +389,7 @@ class Page15 extends Module3 {
     }
 }
 
-class Page16 extends Module3 {
+class Page15 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [<p>Good job learning about eyes so far, this is tricky stuff!</p>];
     }
@@ -432,5 +414,4 @@ export const module3: Array<typeof Content> = [
     Page13,
     Page14,
     Page15,
-    Page16,
 ];
