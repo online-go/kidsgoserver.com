@@ -36,11 +36,9 @@ import {
     ScoreEstimateResponse,
 } from "goban";
 import { sfx } from "sfx";
+import { init_kidsgo_sfx } from "kidsgo-sfx";
 import { post } from "requests";
 import { ai_host } from "sockets";
-
-sfx.setVolume("master", 1.0);
-sfx.sync();
 
 (window as any)["requests"] = requests;
 
@@ -133,8 +131,11 @@ data.setDefault(
 data.setDefault("config.cdn_release", window["cdn_service"] + "/" + window["kidsgo_release"]);
 data.setDefault("config.release", window["kidsgo_release"]);
 
-initialize_kidsgo_themes();
+initialize_kidsgo_themes(); // has to be after config.cdn_release is set
 configure_goban();
+init_kidsgo_sfx();
+sfx.setVolume("master", 1.0);
+sfx.sync();
 
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";

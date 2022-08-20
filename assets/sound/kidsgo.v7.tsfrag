@@ -1,0 +1,18 @@
+
+sprite_packs["kidsgo"] = {
+    pack_id: "kidsgo",
+    language: "zz",
+    country: "un",
+    name: "KidsgoEffects",
+    filename_prefix: "kidsgo.v7",
+    definitions: {
+    "silence": [
+        0,
+        50
+    ],
+    "rocket": [
+        1000.0,
+        2278.625
+    ]
+}
+};

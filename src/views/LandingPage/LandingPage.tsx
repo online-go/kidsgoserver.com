@@ -18,6 +18,7 @@
 import * as React from "react";
 import { _ } from "translate";
 import { useNavigate } from "react-router-dom";
+import { kidsgo_sfx } from "kidsgo-sfx";
 
 const ROCKET_LAUNCH_DURATION = 1.25; // seconds. This should match the time in LandingPage.styl to sync animation and navigation
 let navigate_timeout;
@@ -40,7 +41,10 @@ export function LandingPage(): JSX.Element {
                 clearTimeout(navigate_timeout);
             }
         }
+
+        kidsgo_sfx.play("rocket");
         set_learn_to_play_launching(true);
+
         navigate_timeout = setTimeout(() => {
             navigate("/learn-to-play");
         }, ROCKET_LAUNCH_DURATION * 1000);
@@ -56,7 +60,9 @@ export function LandingPage(): JSX.Element {
                 clearTimeout(navigate_timeout);
             }
         }
+        kidsgo_sfx.play("rocket");
         set_play_launching(true);
+
         setTimeout(() => set_play_launching(false), 3000);
         navigate_timeout = setTimeout(() => {
             navigate("/play");
