@@ -34,7 +34,7 @@ export function init_kidsgo_sfx() {
             rocket: [1000.0, 2278.625],
         },
     };
-    const release_base: string = window["cdn_service"];
+    const release_base: string = window["cdn_service"] + "/" + window["kidsgo_release"];
 
     window["kidsgo_sfx"] = kidsgo_sfx = new Howl({
         src:
