@@ -27,6 +27,7 @@ import { chapters } from "./chapters";
 import { PersistentElement } from "PersistentElement";
 import { useNavigate } from "react-router-dom";
 import { animateCaptures } from "animateCaptures";
+import { BackButton } from "BackButton";
 import { sfx } from "sfx";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
@@ -337,11 +338,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                 </div>
             </div>
 
-            <div id="quit">
-                <Link to="/learn-to-play">
-                    <span className="stone-button-x" />
-                </Link>
-            </div>
+            <BackButton onClick={() => navigate("/learn-to-play")} />
 
             <div id="portrait-replay">
                 <span className="stone-button-refresh" onClick={() => setReplay(Math.random())} />
