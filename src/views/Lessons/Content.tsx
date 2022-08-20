@@ -239,6 +239,11 @@ export class Content extends TypedEventEmitter<Events> {
     axolotlFace() {
         return false;
     }
+
+    // set to true if we should *not* show the play button on the axol page
+    hidePlayButton() {
+        return false;
+    }
 }
 
 let content_navigate = (_path: string) => {

@@ -286,6 +286,9 @@ class Page12 extends Module2 {
     axolotlFace() {
         return true;
     }
+    hidePlayButton() {
+        return true;
+    }
 }
 
 class Page13 extends Module2 {

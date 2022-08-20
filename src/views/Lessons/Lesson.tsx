@@ -30,6 +30,7 @@ import { animateCaptures } from "animateCaptures";
 import { sfx } from "sfx";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
+    const navigate = useNavigate();
     setContentNavigate(useNavigate());
     //const id:number = parseInt(this.props.match?.params?.id);
     let next = "/learn-to-play/";
@@ -72,6 +73,8 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const [replay, setReplay]: [number, (x: number) => void] = useState<number>(Math.random());
     const [showAxotol, setShowAxotol]: [boolean, (x: boolean) => void] = useState<boolean>(false);
+    const [hidePlayButton, setHidePlayButton]: [boolean, (x: boolean) => void] =
+        useState<boolean>(false);
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
@@ -112,6 +115,12 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             animation.cancel();
             setText(target_text);
         };
+
+        if (content.hidePlayButton()) {
+            setHidePlayButton(true);
+        } else {
+            setHidePlayButton(false);
+        }
 
         if (content.axolotlFace()) {
             setShowAxotol(true);
@@ -251,12 +260,6 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         };
     }, [chapter, page, replay]);
 
-    /*
-    useEffect(() => {
-        console.log(board_container_resizer.width, board_container_resizer.height);
-    }, [board_container_resizer.width, board_container_resizer.height]);
-    */
-
     return (
         <>
             <div id="Lesson" className="bg-blue">
@@ -277,7 +280,12 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
                     <div id="board-container" ref={board_container_resizer.ref}>
                         {showAxotol ? (
-                            <div id="axolotl" />
+                            <div className="big-axol-container">
+                                <div className="Axol" />
+                                {hidePlayButton ? null : (
+                                    <button onClick={() => navigate("/play")}>Play</button>
+                                )}
+                            </div>
                         ) : (
                             <div className="Goban-container">
                                 <div className="Goban">
