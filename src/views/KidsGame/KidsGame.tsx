@@ -391,6 +391,16 @@ export function KidsGame(): JSX.Element {
                         }}
                     />
                 )}
+                {phase === "finished" && gameFinishedClosed && (
+                    <button
+                        className="results-button"
+                        onClick={() => {
+                            setGameFinishedClosed(false);
+                        }}
+                    >
+                        Open results
+                    </button>
+                )}
 
                 <div className="portrait-top-spacer" />
 
