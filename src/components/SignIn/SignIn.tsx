@@ -29,6 +29,9 @@ export function SignIn(): JSX.Element {
         <div id="SignIn">
             Your sign in code: <b>{(user as any).kidsgo_signin_code}</b>
             <div className="small">This code will save your current avatar</div>
+            <div className="small">
+                Don’t forget this code, or you will have to make a new avatar
+            </div>
             <hr />
             <input
                 type="text"
