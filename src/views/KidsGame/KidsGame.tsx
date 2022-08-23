@@ -398,7 +398,7 @@ export function KidsGame(): JSX.Element {
                             setGameFinishedClosed(false);
                         }}
                     >
-                        Open results
+                        Show Score
                     </button>
                 )}
 
