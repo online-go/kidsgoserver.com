@@ -282,7 +282,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                     <div id="board-container" ref={board_container_resizer.ref}>
                         {showAxotol ? (
                             <div className="big-axol-container">
-                                <div className="Axol" />
+                                <div className={`Axol ${hidePlayButton ? "center" : ""}`} />
                                 {hidePlayButton ? null : (
                                     <button onClick={() => navigate("/play")}>Play</button>
                                 )}

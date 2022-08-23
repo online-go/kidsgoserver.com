@@ -422,6 +422,9 @@ class Page16 extends Module5 {
     axolotlFace() {
         return true;
     }
+    hidePlayButton() {
+        return true;
+    }
 }
 
 export const module5: Array<typeof Content> = [

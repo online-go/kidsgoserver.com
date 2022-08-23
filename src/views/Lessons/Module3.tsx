@@ -396,6 +396,9 @@ class Page15 extends Module3 {
     axolotlFace() {
         return true;
     }
+    hidePlayButton() {
+        return true;
+    }
 }
 
 export const module3: Array<typeof Content> = [
