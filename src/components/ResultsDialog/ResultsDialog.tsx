@@ -142,15 +142,9 @@ interface ScoreProps {
 export function Score({ score, other, svg_url }: ScoreProps) {
     //const total = score.komi + score.prisoners + score.territory;
     const total = score.komi - other.prisoners + score.territory;
-    const stones = score.stones + other.prisoners;
 
     return (
         <div className="score">
-            <div className="score-stones">
-                <img className="stone-svg" src={svg_url} />
-                <span className="label">Stones Played:</span>{" "}
-                <span className="value">{stones}</span>
-            </div>
             <div className="score-territory">
                 <img className="stone-svg" src={svg_url} />
                 <span className="label">Territory:</span>{" "}
