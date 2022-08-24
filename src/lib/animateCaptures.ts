@@ -86,7 +86,6 @@ export function animateCaptures(
 
         const frame = () => {
             if (performance.now() - start > duration) {
-                console.log("done");
                 stone_element.remove();
                 return;
             }
@@ -103,13 +102,10 @@ export function animateCaptures(
             stone_element.style.width = src.width + (dst.width - src.width) * a + "px";
             stone_element.style.height = src.height + (dst.height - src.height) * a + "px";
 
-            console.log("request next frame");
             requestAnimationFrame(frame);
         };
 
-        console.log("waiting 250ms");
         setTimeout(() => {
-            console.log("starting frame");
             frame();
         }, 250);
     });
