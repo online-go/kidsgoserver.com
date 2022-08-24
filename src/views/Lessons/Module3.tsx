@@ -171,7 +171,7 @@ class Page7 extends Module3 {
     }
     config(): PuzzleConfig {
         return {
-            puzzle_player_move_mode: "free",
+            puzzle_player_move_mode: "fixed",
             initial_player: "white",
             initial_state: {
                 black: "e7e6f6f5g5g6",
@@ -181,32 +181,9 @@ class Page7 extends Module3 {
         } as PuzzleConfig;
     }
     onSetGoban(goban: Goban): void {
-        //goban.setMarkByPrettyCoord("f7g6", "triangle");
-        //this.delay(() => goban.placeByPrettyCoord("f5"));
-        //goban.engine.place(-1, -1);
         this.delay(() => {
             goban.placeByPrettyCoord("f7");
         });
-        /*
-        goban.on("update", () => {
-            if (goban.engine.board[0][5] === 2) {
-                this.captureDelay(() => {
-                    openPopup({
-                        text: <Axol>Good job!</Axol>,
-                        no_cancel: true,
-                    })
-                        .then(() => {
-                            this.gotoNext();
-                        })
-                        .catch(() => 0);
-                });
-            }
-        });
-        */
-
-        //goban.setMarkByPrettyCoord("g7g6", "1");
-        //goban.setMarkByPrettyCoord("g6", "2");
-        //goban.setMarkByPrettyCoord("f7", "A");
     }
 }
 
