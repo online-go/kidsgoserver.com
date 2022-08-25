@@ -150,6 +150,7 @@
 
     .right, .left {
         display: flex;
+        flex-shrink: 0;
         justify-content: stretch;
         align-items: stretch;
         flex-direction: column;
@@ -157,6 +158,12 @@
         min-height: 22rem;
         max-height: 22rem;
         overflow: auto;
+
+        +portrait() {
+            height: auto;
+            min-height: auto;
+            max-height: auto;
+        }
     }
 
     h4 {
@@ -169,7 +176,7 @@
 
 
     .current-user-container {
-        margin-top: 1rem;
+        margin-top: 5rem;
         margin-bottom: 1rem;
         border-radius: 0.5rem;
         background-color: rgba(255,255,255,0.8);
@@ -276,5 +283,14 @@
     img {
         width: 1.5rem;
         height: 1.5rem;
+    }
+}
+
+#Lessons-button {
+    position: absolute;
+    top: 2.0rem;
+    left: 5rem;
+    +portrait() {
+    top: 1.6rem;
     }
 }

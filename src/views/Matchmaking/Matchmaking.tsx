@@ -246,6 +246,9 @@ export function Matchmaking(): JSX.Element {
     return (
         <div id="Matchmaking" className={avatar_background_class(race)}>
             <BackButton onClick={back} />
+            <button id="Lessons-button" onClick={() => navigate("/learn-to-play")}>
+                Lessons
+            </button>
             <CheckForChallengeReceived />
             <div className="current-user-container">
                 <Avatar race={race} idx={idx} />
