@@ -96,6 +96,7 @@ function reset_game_when_changed(goban: GobanCore) {
 export function initialize_kidsgo_themes() {
     abstract class Common extends GoTheme {
         public abstract getSadStoneSvgUrl(): string;
+        public abstract getNeutralStoneSvgUrl(): string;
         stoneCastsShadow(radius: number): boolean {
             return stoneCastsShadow(radius * deviceCanvasScalingRatio());
         }
@@ -223,6 +224,9 @@ export function initialize_kidsgo_themes() {
         getSadStoneSvgUrl(): string {
             return image_url("dark_blue", "sad");
         }
+        getNeutralStoneSvgUrl(): string {
+            return image_url("dark_blue", "neutral");
+        }
     }
 
     GoThemes["black"]["DarkBlue"] = DarkBlue;
@@ -253,6 +257,9 @@ export function initialize_kidsgo_themes() {
         getSadStoneSvgUrl(): string {
             return image_url("pink", "sad");
         }
+        getNeutralStoneSvgUrl(): string {
+            return image_url("pink", "neutral");
+        }
     }
 
     GoThemes["black"]["Pink"] = Pink;
@@ -281,6 +288,9 @@ export function initialize_kidsgo_themes() {
         getSadStoneSvgUrl(): string {
             return image_url("light_blue", "sad");
         }
+        getNeutralStoneSvgUrl(): string {
+            return image_url("light_blue", "neutral");
+        }
     }
 
     GoThemes["white"]["LightBlue"] = LightBlue;
@@ -305,6 +315,9 @@ export function initialize_kidsgo_themes() {
         }
         getSadStoneSvgUrl(): string {
             return image_url("white", "sad");
+        }
+        getNeutralStoneSvgUrl(): string {
+            return image_url("whit", "neutral");
         }
     }
 

@@ -55,9 +55,15 @@ export function animateCaptures(
         stone_element.style.top = screen_y + "px";
         stone_element.style.width = ss + "px";
         stone_element.style.height = ss + "px";
-        stone_element.src = (
-            color === "black" ? (goban as any).theme_black : (goban as any).theme_white
-        ).getSadStoneSvgUrl();
+        if (x === -1) {
+            stone_element.src = (
+                color === "black" ? (goban as any).theme_black : (goban as any).theme_white
+            ).getNeutralStoneSvgUrl();
+        } else {
+            stone_element.src = (
+                color === "black" ? (goban as any).theme_black : (goban as any).theme_white
+            ).getSadStoneSvgUrl();
+        }
         document.body.appendChild(stone_element);
 
         const other_color = color === "black" ? "white" : "black";
