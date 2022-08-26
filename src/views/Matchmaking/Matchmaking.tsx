@@ -136,10 +136,10 @@ export function Matchmaking(): JSX.Element {
                     no_accept: true,
                 })
                     .then(() => {
-                        off();
+                        off(false);
                     })
                     .catch(() => {
-                        off();
+                        off(true);
                         del("me/challenges/%%", challenge_id).then(ignore).catch(ignore);
                     });
                 active_check();
@@ -156,14 +156,13 @@ export function Matchmaking(): JSX.Element {
                 }
 
                 function onGamedata() {
-                    off();
+                    off(false);
                     closePopup();
-                    //sfx.play("game_started", 3000);
                     navigate(`/game/${game_id}`);
                 }
 
                 function onRejected(message?: string) {
-                    off();
+                    off(true);
                     closePopup();
                     openPopup({
                         text: message || "Your challenge was declined",
@@ -173,9 +172,11 @@ export function Matchmaking(): JSX.Element {
                         .catch(() => 0);
                 }
 
-                function off() {
+                function off(disconnect: boolean) {
                     clearTimeout(keepalive_interval);
-                    socket.send("game/disconnect", { game_id: game_id });
+                    if (disconnect) {
+                        socket.send("game/disconnect", { game_id: game_id });
+                    }
                     socket.off(`game/${game_id}/gamedata`, onGamedata);
                     socket.off(`game/${game_id}/rejected`, onRejected);
                     notification_manager.event_emitter.off("notification", checkForReject);
