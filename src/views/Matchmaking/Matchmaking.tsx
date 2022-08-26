@@ -44,7 +44,7 @@ import { SignIn } from "SignIn";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
-const black_svg_url = image_url("pink", "plain");
+const black_svg_url = image_url("dark_blue", "plain");
 const white_svg_url = image_url("white", "plain");
 
 export function Matchmaking(): JSX.Element {

@@ -118,17 +118,17 @@ export function configure_goban() {
 
 export function getSelectedThemes(): { board: string; black: string; white: string } {
     let board = preferences.get("goban-theme-board") || "Plain";
-    let white = preferences.get("goban-theme-white") || "LightBlue";
-    let black = preferences.get("goban-theme-black") || "Pink";
+    let white = preferences.get("goban-theme-white") || "White";
+    let black = preferences.get("goban-theme-black") || "DarkBlue";
 
     if (!(board in GoThemes["board"])) {
         board = "Plain";
     }
     if (!(white in GoThemes["white"])) {
-        white = "LightBlue";
+        white = "White";
     }
     if (!(black in GoThemes["black"])) {
-        black = "Pink";
+        black = "DarkBlue";
     }
 
     return {
