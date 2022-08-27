@@ -16,7 +16,7 @@
  */
 
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "hooks";
 import { post, del } from "requests";
 import { socket } from "sockets";
@@ -58,6 +58,12 @@ export function Matchmaking(): JSX.Element {
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
 
     useEnsureUserIsCreated();
+
+    React.useEffect(() => {
+        return () => {
+            closePopup();
+        };
+    }, []);
 
     const setOpponent = (o: string) => {
         _setOpponent(o);
@@ -124,6 +130,14 @@ export function Matchmaking(): JSX.Element {
             .catch(() => {});
         post(`players/${opponent}/challenge`, challenge)
             .then((res) => {
+                // we can actually be redirected before this returns if we receive the notification
+                // before the post result, so in this case, just close things down and enjoy the game,
+                // nothing else to do.
+                if (window.location.pathname.startsWith("/game")) {
+                    closePopup();
+                    return;
+                }
+
                 const challenge_id = res.challenge;
                 const game_id = typeof res.game === "object" ? res.game.id : res.game;
                 let keepalive_interval;
@@ -139,8 +153,10 @@ export function Matchmaking(): JSX.Element {
                         off(false);
                     })
                     .catch(() => {
-                        off(true);
-                        del("me/challenges/%%", challenge_id).then(ignore).catch(ignore);
+                        console.log("going to cancel");
+                        del("me/challenges/%%", challenge_id)
+                            .then(() => off(true)) // we cancelled successfully, so fully disconnect from that game
+                            .catch(() => off(false)); // we didn't cancel in time, game on!
                     });
                 active_check();
 
