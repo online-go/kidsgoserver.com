@@ -167,15 +167,19 @@ export function Matchmaking(): JSX.Element {
                             game_id: game_id,
                         });
                     }, 1000);
+                    /*
                     socket.send("game/connect", { game_id: game_id });
                     socket.on(`game/${game_id}/gamedata`, onGamedata);
+                    */
                 }
 
+                /*
                 function onGamedata() {
                     off(false);
                     closePopup();
                     navigate(`/game/${game_id}`);
                 }
+                */
 
                 function onRejected(message?: string) {
                     off(true);
@@ -193,7 +197,7 @@ export function Matchmaking(): JSX.Element {
                     if (disconnect) {
                         socket.send("game/disconnect", { game_id: game_id });
                     }
-                    socket.off(`game/${game_id}/gamedata`, onGamedata);
+                    //socket.off(`game/${game_id}/gamedata`, onGamedata);
                     socket.off(`game/${game_id}/rejected`, onRejected);
                     notification_manager.event_emitter.off("notification", checkForReject);
                     closePopup();
