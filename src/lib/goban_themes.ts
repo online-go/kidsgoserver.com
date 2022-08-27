@@ -317,7 +317,7 @@ export function initialize_kidsgo_themes() {
             return image_url("white", "sad");
         }
         getNeutralStoneSvgUrl(): string {
-            return image_url("whit", "neutral");
+            return image_url("white", "neutral");
         }
     }
 
