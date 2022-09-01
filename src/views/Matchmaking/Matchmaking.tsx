@@ -344,6 +344,8 @@ export function Matchmaking(): JSX.Element {
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
                     </select>
                     {handicap === 1 ? " starting stone and no komi " : " extra stones. "}
                 </div>
