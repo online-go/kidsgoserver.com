@@ -34,11 +34,9 @@ class Page1 extends Module1 {
         return [
             <span>In Go we place stones on the lines, not in the squares!</span>,
             <span>
-                On Earth the stones are Black and White, but in Interstellar Go we play with Pulsar
-                Pink and Whammo White.{" "}
+                The darker color, Blast Off Blue in this case, always goes first, followed by the
+                lighter color, Whammo White here.
             </span>,
-            <span>For the Earthlings we will call them Black and White in these lessons. </span>,
-            <span>Black always goes first.</span>,
         ];
     }
     config(): PuzzleConfig {
@@ -208,7 +206,7 @@ class Page8 extends Module1 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                If Black goes somewhere else though, then White can capture the stone and remove it
+                If Blue goes somewhere else though, then White can capture the stone and remove it
                 from the board
             </p>
         );

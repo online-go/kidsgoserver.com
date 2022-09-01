@@ -51,7 +51,7 @@ class Page2 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                If it is Black's turn, a play in the middle will create a group with two separate
+                If it is Blue's turn, a play in the middle will create a group with two separate
                 liberties inside. These are called eyes, and this group has two of them.
             </p>,
         ];
@@ -95,7 +95,7 @@ class Page4 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                White cannot play at either of the triangled points here, so Black can never come
+                White cannot play at either of the triangled points here, so Blue can never come
                 into atari. A group like this is said to be "alive," because it has two eyes.
             </p>,
         ];
@@ -137,7 +137,7 @@ class Page6 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                If Black tries to capture the stone by playing at 2, notice that Black is now in
+                If Blue tries to capture the stone by playing at 2, notice that Blue is now in
                 atari at A.
             </p>,
         ];
@@ -164,7 +164,7 @@ class Page7 extends Module3 {
         return [
             <p>
                 It looks like White can't play at A because there would be no liberties. However,
-                because the Black group is in atari, White can play there. Playing at A captures six
+                because the Blue group is in atari, White can play there. Playing at A captures six
                 stones.
             </p>,
         ];
@@ -191,8 +191,8 @@ class Page8 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                So a Black play at A is obviously not a good move, and playing at B would also put
-                Black's group into atari.
+                So a Blue play at A is obviously not a good move, and playing at B would also put
+                Blue's group into atari.
             </p>,
         ];
     }
@@ -215,7 +215,7 @@ class Page9 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                So perhaps Black decides not to play at either point. The group is not in atari, so
+                So perhaps Blue decides not to play at either point. The group is not in atari, so
                 what can White do anyway? Well, White can play at 1...
             </p>,
         ];
@@ -238,7 +238,7 @@ class Page10 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Now Black is again in atari, and White could capture by playing at A. But wait,
+                Now Blue is again in atari, and White could capture by playing at A. But wait,
                 White is in atari too...
             </p>,
         ];
@@ -259,7 +259,7 @@ class Page10 extends Module3 {
 
 class Page11 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>So Black can capture two stones with 1. Surely the group is okay now.</p>];
+        return [<p>So Blue can capture two stones with 1. Surely the group is okay now.</p>];
     }
     config(): PuzzleConfig {
         return {
@@ -284,7 +284,7 @@ class Page12 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                What happens if White plays at 2? It's true, White is also in atari, so Black can
+                What happens if White plays at 2? It's true, White is also in atari, so Blue can
                 capture again...
             </p>,
         ];
@@ -320,7 +320,7 @@ class Page13 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                But now the Black group only has a single liberty, which means White can capture
+                But now the Blue group only has a single liberty, which means White can capture
                 seven stones at once. Ouch!
             </p>,
         ];

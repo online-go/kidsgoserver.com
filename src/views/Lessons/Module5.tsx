@@ -54,7 +54,7 @@ class Page2 extends Module5 {
         return [
             <p>
                 With enough moves, both stones could be captured. The white stone at 1 places both
-                black stones into atari at once, or double atari.
+                Blue stones into atari at once, or double atari.
             </p>,
         ];
     }
@@ -76,7 +76,7 @@ class Page2 extends Module5 {
 
 class Page3 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>Black could add a stone at 2 to make a group with three liberties</p>];
+        return [<p>Blue could add a stone at 2 to make a group with three liberties</p>];
     }
     config(): PuzzleConfig {
         return {
@@ -100,7 +100,7 @@ class Page4 extends Module5 {
         return [
             <p>
                 White can still capture the other stone at 3 though, because it is not connected to
-                the black group.
+                the Blue group.
             </p>,
         ];
     }
@@ -126,7 +126,7 @@ class Page5 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                White might try to capture the black group by adding a stone at 1. Black might try
+                White might try to capture the Blue group by adding a stone at 1. Blue might try
                 playing at 2 to save the stones.
             </p>,
         ];
@@ -152,7 +152,7 @@ class Page6 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Now maybe White gets impatient and tries to surround Black's group with 3. Black
+                Now maybe White gets impatient and tries to surround Blue's group with 3. Blue
                 responds with 4, which puts White's stone at A into atari.
             </p>,
         ];
@@ -181,7 +181,7 @@ class Page7 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                White will lose the stone at A if black plays at B, so Black adds a stone there to
+                White will lose the stone at A if Blue plays at B, so Blue adds a stone there to
                 form a new group.
             </p>,
         ];
@@ -206,7 +206,7 @@ class Page7 extends Module5 {
 class Page8 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
-            <p>Now black has turned the tables on white! Playing at 1 puts white C into atari.</p>,
+            <p>Now Blue has turned the tables on white! Playing at 1 puts white C into atari.</p>,
         ];
     }
     config(): PuzzleConfig {
@@ -256,7 +256,7 @@ class Page10 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                This means that a move by black at either A or B will put white into atari. Which
+                This means that a move by Blue at either A or B will put white into atari. Which
                 one do you think is best?
             </p>,
         ];
@@ -282,7 +282,7 @@ class Page11 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Let's look at B first. This move looks good because on the next turn black could
+                Let's look at B first. This move looks good because on the next turn Blue could
                 capture the two white stones at A.
             </p>,
         ];
@@ -307,8 +307,8 @@ class Page12 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Unfortunately, it is not black's turn. While it is true that white is in atari,
-                black is also now in atari, so white can capture at C and remove four black stones.
+                Unfortunately, it is not Blue's turn. While it is true that white is in atari,
+                Blue is also now in atari, so white can capture at C and remove four Blue stones.
             </p>,
         ];
     }
@@ -342,7 +342,7 @@ class Page13 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Let's try going the other way this time. A black play at A also puts the two white
+                Let's try going the other way this time. A Blue play at A also puts the two white
                 stones in atari.
             </p>,
         ];
@@ -365,7 +365,7 @@ class Page13 extends Module5 {
 
 class Page14 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>Now even if white adds a stone at 2, which puts black into atari at D...</p>];
+        return [<p>Now even if white adds a stone at 2, which puts Blue into atari at D...</p>];
     }
     config(): PuzzleConfig {
         return {
@@ -387,7 +387,7 @@ class Page14 extends Module5 {
 
 class Page15 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
-        return [<p>It is now black's turn, and playing at D captures all three white stones.</p>];
+        return [<p>It is now Blue's turn, and playing at D captures all three white stones.</p>];
     }
     config(): PuzzleConfig {
         return {

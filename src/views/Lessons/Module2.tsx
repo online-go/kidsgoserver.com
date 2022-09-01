@@ -78,7 +78,7 @@ class Page3 extends Module2 {
         return (
             <p>
                 Here is another kind of territory, made by surrounding space in the middle. How many
-                points of territory does Black have here?
+                points of territory does Blue have here?
             </p>
         );
     }
@@ -116,7 +116,7 @@ class Page4 extends Module2 {
 
 class Page5 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>How many points does Black have here?</p>;
+        return <p>How many points does Blue have here?</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -133,7 +133,7 @@ class Page5 extends Module2 {
 
 class Page6 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>The answer is 9 points for Black.</p>;
+        return <p>The answer is 9 points for Blue.</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -166,8 +166,8 @@ class Page7 extends Module2 {
                 In Go, we play until the two colors are touching each other, and the empty space
                 each surrounds is their territory.{" "}
             </p>,
-            <p>Black has territory on the left, and White has it on the right. </p>,
-            <p>Black also captured three stones, which went in the prisoner bowl.</p>,
+            <p>Blue has territory on the left, and White has it on the right. </p>,
+            <p>Blue also captured three stones, which went in the prisoner bowl.</p>,
         ];
     }
     config(): PuzzleConfig {
@@ -185,7 +185,7 @@ class Page7 extends Module2 {
 
 class Page8 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>We can see Black has 23 points.</p>;
+        return <p>We can see Blue has 23 points.</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -227,8 +227,8 @@ class Page10 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                But, those three stones that Black captured are subtracted from White's territory.
-                Now the score is Black 23 and White 21, so Black wins by two.
+                But, those three stones that Blue captured are subtracted from White's territory.
+                Now the score is Blue 23 and White 21, so Blue wins by two.
             </p>
         );
     }
@@ -253,8 +253,8 @@ class Page11 extends Module2 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                The game ends when both players pass. Can White play on Black's side? Yes, but they
-                will likely be captured. Black could also play on White's side, but again they would
+                The game ends when both players pass. Can White play on Blue's side? Yes, but they
+                will likely be captured. Blue could also play on White's side, but again they would
                 likely be captured. But either side is free to try if they think they can make a
                 group that won't be captured.
             </p>
@@ -279,7 +279,7 @@ class Page12 extends Module2 {
             <p>
                 If you think the game is over, just pass a stone. If your opponent plays a stone
                 then you can either play or pass. Two passes in a row ends the game. However, as
-                Black played first, White must play (or pass) last.
+                Blue played first, White must play (or pass) last.
             </p>,
         ];
     }

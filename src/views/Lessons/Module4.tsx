@@ -53,7 +53,7 @@ class Page2 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Since Black is capturing a stone, playing at B is allowed. But now Black is in
+                Since Blue is capturing a stone, playing at B is allowed. But now Blue is in
                 atari..
             </p>,
         ];
@@ -94,7 +94,7 @@ class Page4 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                So Black could capture, but then would be in atari again... This could go on
+                So Blue could capture, but then would be in atari again... This could go on
                 forever, so there is a special rule to cover it.
             </p>,
         ];
@@ -118,7 +118,7 @@ class Page5 extends Module4 {
         return [
             <p>
                 The first player to capture a stone in a position like this starts what is called a
-                ko. On this board, Black would start a ko by capturing at 1.
+                ko. On this board, Blue would start a ko by capturing at 1.
             </p>,
         ];
     }
@@ -166,7 +166,7 @@ class Page7 extends Module4 {
         return [
             <p>
                 Basically, White can play anywhere on the board except at the triangled point. So
-                perhaps White will play at 2, and then Black might play at 3.
+                perhaps White will play at 2, and then Blue might play at 3.
             </p>,
         ];
     }
@@ -203,7 +203,7 @@ class Page8 extends Module4 {
         return (
             <p>
                 Since White played at 2 on the last turn, a play at A is now allowed. Now it is
-                Black's turn to be caught by the rule of ko. Black can play anywhere except the
+                Blue's turn to be caught by the rule of ko. Blue can play anywhere except the
                 triangled point.
             </p>
         );
@@ -227,7 +227,7 @@ class Page8 extends Module4 {
 
 class Page9 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>So perhaps Black will play at 1 to prevent a cut by White.</p>;
+        return <p>So perhaps Blue will play at 1 to prevent a cut by White.</p>;
     }
     config(): PuzzleConfig {
         return {
@@ -249,7 +249,7 @@ class Page10 extends Module4 {
         return (
             <p>
                 If White feels the ko is more important, it can be filled in with 2. In this case,
-                Black actually gets a solid position by playing at 3. So each side got something.
+                Blue actually gets a solid position by playing at 3. So each side got something.
             </p>
         );
     }
@@ -273,9 +273,9 @@ class Page11 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
         return (
             <p>
-                Sometimes winning the ko can affect the life of a whole group. If Black can capture
+                Sometimes winning the ko can affect the life of a whole group. If Blue can capture
                 and then fill the ko at A, the group will make two safe eyes. If White wins, all the
-                Black stones will be prisoners!
+                Blue stones will be prisoners!
             </p>
         );
     }
