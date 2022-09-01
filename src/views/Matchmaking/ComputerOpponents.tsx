@@ -63,7 +63,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
                         .map((bot: any) => {
                             const [race, idx] = uiClassToRaceIdx(bot.ui_class);
                             const handicaps =
-                                bot.kidsgo_bot_name?.toLowerCase()?.indexOf("easy") > 0
+                                bot.kidsgo_bot_name?.toLowerCase()?.indexOf("easy") >= 0
                                     ? [6, 4, 2, 0]
                                     : [0];
 
