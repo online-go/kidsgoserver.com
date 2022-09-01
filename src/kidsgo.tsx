@@ -134,7 +134,7 @@ data.setDefault("config.release", window["kidsgo_release"]);
 initialize_kidsgo_themes(); // has to be after config.cdn_release is set
 configure_goban();
 init_kidsgo_sfx();
-sfx.setVolume("master", 1.0);
+sfx.setVolume("master", 0.7);
 sfx.sync();
 
 import * as React from "react";
