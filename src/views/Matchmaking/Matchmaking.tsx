@@ -59,6 +59,16 @@ export function Matchmaking(): JSX.Element {
 
     useEnsureUserIsCreated();
 
+    // setup redirect back to home after an hour of inactivity
+    React.useEffect(() => {
+        const t = setTimeout(() => {
+            navigate("/");
+        }, 60 * 60 * 1000);
+        return () => {
+            clearTimeout(t);
+        };
+    }, []);
+
     React.useEffect(() => {
         return () => {
             closePopup();
