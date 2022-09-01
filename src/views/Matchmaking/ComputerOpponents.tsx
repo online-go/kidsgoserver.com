@@ -62,16 +62,23 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
                         .filter((bot) => !!bot.kidsgo_bot_name)
                         .map((bot: any) => {
                             const [race, idx] = uiClassToRaceIdx(bot.ui_class);
+                            const handicaps =
+                                bot.kidsgo_bot_name?.toLowerCase()?.indexOf("easy") > 0
+                                    ? [6, 4, 2, 0]
+                                    : [0];
 
                             return (
                                 <React.Fragment key={bot.id}>
-                                    {[4, 2, 0].map((handicap) => (
+                                    {handicaps.map((handicap) => (
                                         <span
                                             key={bot.id + "-" + handicap}
                                             className={
                                                 "bot" +
                                                 (props.value === bot.id &&
-                                                props.handicap === handicap
+                                                (handicaps.length === 1 ||
+                                                    props.handicap === handicap ||
+                                                    (handicap === 0 &&
+                                                        handicaps.indexOf(props.handicap) < 0))
                                                     ? " active"
                                                     : "")
                                             }
