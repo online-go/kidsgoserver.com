@@ -41,6 +41,15 @@ dev-del:
 beta-put: push-cdn audit-translations
 	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
 
+beta-maintenance:
+	cat src/maintenance.html | curl -X PUT $(INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
+
+live-put: push-cdn audit-translations
+	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
+
+live-maintenance:
+	cat src/maintenance.html | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
+
 #live-put: confirm-go-live push-cdn
 #	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
 #
