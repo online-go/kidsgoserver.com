@@ -137,8 +137,8 @@ class Page6 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                If Blue tries to capture the stone by playing at 2, notice that Blue is now in
-                atari at A.
+                If Blue tries to capture the stone by playing at 2, notice that Blue is now in atari
+                at A.
             </p>,
         ];
     }
@@ -238,8 +238,8 @@ class Page10 extends Module3 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Now Blue is again in atari, and White could capture by playing at A. But wait,
-                White is in atari too...
+                Now Blue is again in atari, and White could capture by playing at A. But wait, White
+                is in atari too...
             </p>,
         ];
     }

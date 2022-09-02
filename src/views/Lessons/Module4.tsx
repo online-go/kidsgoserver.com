@@ -53,8 +53,7 @@ class Page2 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Since Blue is capturing a stone, playing at B is allowed. But now Blue is in
-                atari..
+                Since Blue is capturing a stone, playing at B is allowed. But now Blue is in atari..
             </p>,
         ];
     }
@@ -94,8 +93,8 @@ class Page4 extends Module4 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                So Blue could capture, but then would be in atari again... This could go on
-                forever, so there is a special rule to cover it.
+                So Blue could capture, but then would be in atari again... This could go on forever,
+                so there is a special rule to cover it.
             </p>,
         ];
     }

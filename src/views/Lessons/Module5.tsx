@@ -256,8 +256,8 @@ class Page10 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                This means that a move by Blue at either A or B will put white into atari. Which
-                one do you think is best?
+                This means that a move by Blue at either A or B will put white into atari. Which one
+                do you think is best?
             </p>,
         ];
     }
@@ -307,8 +307,8 @@ class Page12 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                Unfortunately, it is not Blue's turn. While it is true that white is in atari,
-                Blue is also now in atari, so white can capture at C and remove four Blue stones.
+                Unfortunately, it is not Blue's turn. While it is true that white is in atari, Blue
+                is also now in atari, so white can capture at C and remove four Blue stones.
             </p>,
         ];
     }
