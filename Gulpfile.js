@@ -303,7 +303,7 @@ function dev_server(done) {
                     return "";
                 case "LANGUAGE_VERSION":
                     return "";
-                case "VENDOR_HASH_DOTJS":
+                case "KIDSGO_VENDOR_HASH_DOTJS":
                     return "js";
                 case "VERSION_DOTJS":
                     return "js";
