@@ -148,7 +148,7 @@ function NameSelection(): JSX.Element {
             <div className="title">CHARACTER SELECTION</div>
             <div className="username">{user.username}</div>
             <button className="refresh" onClick={refresh}>
-                Generate New Name
+                Pick New Name
             </button>
         </div>
     );
