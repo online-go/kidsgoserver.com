@@ -55,7 +55,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
 
     return (
         <div className="OpponentList-container">
-            <div className="OpponentList">
+            <div className="OpponentList ComputerOpponents">
                 <h4>Computer Opponents</h4>
                 {(bots.length >= 1 || null) &&
                     bots
