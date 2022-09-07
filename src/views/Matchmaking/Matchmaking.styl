@@ -117,6 +117,11 @@
         height: 5rem;
         width: 30rem;
         max-width: 90vw;
+
+        +portrait() {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
     }
 
     .vs {
@@ -203,6 +208,12 @@
         }
         .current-user-race-name {
 
+        }
+
+        +portrait() {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-bottom: 0;
         }
     }
 
@@ -294,3 +305,15 @@
     top: 1.6rem;
     }
 }
+
++portrait() {
+    .landscape {
+        display: none;
+    }
+}
++landscape() {
+    .portrait {
+        display: none;
+    }
+}
+

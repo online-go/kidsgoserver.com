@@ -298,6 +298,14 @@ export function Matchmaking(): JSX.Element {
             </div>
 
             <div className="outer-container">
+                <button
+                    className="play primary-button portrait"
+                    disabled={!canPlay && !canView}
+                    onClick={playOrView}
+                >
+                    {canPlay ? "Play!" : canView ? "View game" : "Choose your opponent"}
+                </button>
+
                 <div className="inner-container">
                     <div className="left">
                         <ComputerOpponents
@@ -361,7 +369,7 @@ export function Matchmaking(): JSX.Element {
                 </div>
 
                 <button
-                    className="play primary-button"
+                    className="play primary-button landscape"
                     disabled={!canPlay && !canView}
                     onClick={playOrView}
                 >
