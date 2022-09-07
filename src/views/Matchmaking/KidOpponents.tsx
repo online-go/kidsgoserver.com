@@ -48,11 +48,6 @@ export function KidOpponents(props: OpponentListProperties): JSX.Element {
     }, [props.channel, user.username, user.ui_class]);
 
     const sorted_users: Array<any> = proxy.current?.channel.users_by_name || [];
-    if (sorted_users.length > 0) {
-        while (sorted_users.length < 10) {
-            sorted_users.push(sorted_users[0]);
-        }
-    }
 
     return (
         <div className="OpponentList-container">
