@@ -49,6 +49,14 @@ export function KidOpponents(props: OpponentListProperties): JSX.Element {
 
     const sorted_users: Array<any> = proxy.current?.channel.users_by_name || [];
 
+    /* to quickly test scrolling we can use this:
+    if (sorted_users.length > 0) {
+        while (sorted_users.length < 30) {
+            sorted_users.push(sorted_users[0]);
+        }
+    }
+    */
+
     return (
         <div className="OpponentList-container">
             <div className="OpponentList">
