@@ -56,6 +56,7 @@ export function Matchmaking(): JSX.Element {
     const [handicap, setHandicap] = React.useState(0);
     const [race, idx] = uiClassToRaceIdx(user.ui_class);
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
+    const [board_size, setBoardSize] = React.useState(9);
 
     useEnsureUserIsCreated();
 
@@ -114,8 +115,8 @@ export function Matchmaking(): JSX.Element {
                 name: "Kidsgo Match",
                 rules: "aga",
                 ranked: false,
-                width: 9,
-                height: 9,
+                width: board_size,
+                height: board_size,
                 handicap: hc,
                 komi_auto: hc ? "custom" : "automatic",
                 komi: hc ? 0.5 : null,
@@ -366,6 +367,25 @@ export function Matchmaking(): JSX.Element {
                         <option value="6">6</option>
                     </select>
                     {handicap === 1 ? " starting stone and no komi " : " extra stones. "}
+                </div>
+                <div className="settings">
+                    Board size:
+                    <input
+                        type="radio"
+                        id="board-size-9"
+                        name="board-size"
+                        checked={board_size === 9}
+                        onChange={() => setBoardSize(9)}
+                    />
+                    <label htmlFor="board-size-9">9x9</label>
+                    <input
+                        type="radio"
+                        id="board-size-13"
+                        name="board-size"
+                        checked={board_size === 13}
+                        onChange={() => setBoardSize(13)}
+                    />
+                    <label htmlFor="board-size-13">13x13</label>
                 </div>
 
                 <button
