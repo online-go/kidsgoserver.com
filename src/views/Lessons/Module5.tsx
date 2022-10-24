@@ -181,7 +181,7 @@ class Page7 extends Module5 {
     text(): JSX.Element | Array<JSX.Element> {
         return [
             <p>
-                White will lose the stone at A if Blue plays at B, so Blue adds a stone there to
+                White will lose the stone at A if Blue plays at B, so White adds a stone there to
                 form a new group.
             </p>,
         ];
