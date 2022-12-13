@@ -29,12 +29,13 @@ import * as requests from "requests";
 import { configure_goban } from "configure-goban";
 import { initialize_kidsgo_themes } from "goban_themes";
 import {
-    GoMath,
     init_score_estimator,
     set_remote_scorer,
     ScoreEstimateRequest,
     ScoreEstimateResponse,
 } from "goban";
+import * as GoMath from "goban/src/GoMath";
+
 import { sfx } from "sfx";
 import { init_kidsgo_sfx } from "kidsgo-sfx";
 import { post } from "requests";

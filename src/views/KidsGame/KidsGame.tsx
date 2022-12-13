@@ -22,7 +22,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "translate";
-import { Goban, GoMath, GobanConfig } from "goban";
+import { Goban, GobanConfig } from "goban";
+import * as GoMath from "goban/src/GoMath";
+
 import {
     PlayerAvatar,
     //uiClassToRaceIdx,

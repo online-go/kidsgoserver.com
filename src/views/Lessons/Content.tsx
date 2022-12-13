@@ -17,7 +17,8 @@
 
 import * as React from "react";
 import * as data from "data";
-import { PuzzleConfig, Goban, GoMath } from "goban";
+import { PuzzleConfig, Goban } from "goban";
+import * as GoMath from "goban/src/GoMath";
 import { Timeout } from "misc";
 import { TypedEventEmitter } from "TypedEventEmitter";
 

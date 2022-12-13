@@ -18,12 +18,13 @@
 import {
     GoTheme,
     GoThemes,
-    GoMath,
     GobanCore,
     deviceCanvasScalingRatio,
     placeRenderedImageStone,
     preRenderImageStone,
 } from "goban";
+
+import * as GoMath from "goban/src/GoMath";
 
 type StoneType = { stone: HTMLCanvasElement; shadow: HTMLCanvasElement };
 type StoneTypeArray = Array<StoneType>;
