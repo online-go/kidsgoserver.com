@@ -46,6 +46,7 @@ export function init_kidsgo_sfx() {
                   ],
         autoplay: false,
         sprite: sprite_pack.definitions as any,
+        rate: 0.2,
         volume: 0.15,
     });
 }
