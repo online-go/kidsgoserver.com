@@ -156,7 +156,7 @@ function background_webpack(done) {
 }
 
 function dev_server(done) {
-    let port = 8888;
+    let port = 18888;
     let express = require("express");
     let body_parser = require("body-parser");
     let http = require("http");
