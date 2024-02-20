@@ -25,36 +25,33 @@ LANGUAGE_VERSION=`md5sum i18n/locale/*.js | sort | md5sum | awk '{print $$1}'`
 SUPPORTED_LANGUAGES=`python -c 'import json; print(json.dumps(json.loads(open("i18n/languages.json", "r").read())))'`
 GOBAN_VERSION=`python -c 'import json; print(json.loads(open("package.json", "r").read())["devDependencies"]["goban"][1:])'`
 
-INDEX_HEADERS=-H "Content-Type: text/plain" \
-	-H "X-OGS-Index-Auth: $(SUPER_SECURE_INDEX_AUTH)" \
+BASE_INDEX_HEADERS=-H "Content-Type: text/plain" \
 	-H "X-KIDSGO-Index-Release: $(RELEASE)"  \
 	-H "X-KIDSGO-Index-Version: $(VERSION)"  \
 	-H "X-KIDSGO-Supported-Languages: $(SUPPORTED_LANGUAGES)"  \
 	-H "X-KIDSGO-Goban-Js: https://cdn.online-go.com/goban/$(GOBAN_VERSION)/goban.min.js"  \
 	-H "X-KIDSGO-Language-Version: $(LANGUAGE_VERSION)"  \
 
+DEV_INDEX_HEADERS=$(BASE_INDEX_HEADERS) -H "X-KIDSGO-Index-Auth: $(DEV_INDEX_AUTH)"
+BETA_INDEX_HEADERS=$(BASE_INDEX_HEADERS) -H "X-KIDSGO-Index-Auth: $(BETA_INDEX_AUTH)"
+PROD_INDEX_HEADERS=$(BASE_INDEX_HEADERS) -H "X-KIDSGO-Index-Auth: $(PROD_INDEX_AUTH)"
+
 dev-put: push-cdn
-	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- http://kidsgo.codebits.org:1080/_index
+	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(DEV_INDEX_HEADERS) -d @- http://kidsgo.codebits.org:1080/_index
 dev-del:
-	curl -X DELETE $(INDEX_HEADERS)  http://kidsgo.codebits.org:1080/_index
+	curl -X DELETE $(DEV_INDEX_HEADERS)  http://kidsgo.codebits.org:1080/_index
 
 beta-put: push-cdn audit-translations
-	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
+	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(BETA_INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
 
 beta-maintenance:
-	cat src/maintenance.html | curl -X PUT $(INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
+	cat src/maintenance.html | curl -X PUT $(BETA_INDEX_HEADERS) -d @- https://beta.kidsgoserver.com/_index
 
 live-put: push-cdn audit-translations
-	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
+	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(PROD_INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
 
 live-maintenance:
-	cat src/maintenance.html | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
-
-#live-put: confirm-go-live push-cdn
-#	KIDSGO_VERSION_HASH=$(KIDSGO_VERSION_HASH) KIDSGO_VENDOR_HASH=$(KIDSGO_VENDOR_HASH) npm run minify-index --silent | curl -X PUT $(INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
-#
-#live-maint: confirm-go-live 
-#	curl -X PUT $(INDEX_HEADERS) -T src/maint.html  https://kidsgoserver.com/_index
+	cat src/maintenance.html | curl -X PUT $(PROD_INDEX_HEADERS) -d @- https://kidsgoserver.com/_index
 
 confirm-go-live:
 	@read -p "Go live? " yesno; \
@@ -68,7 +65,7 @@ push-cdn: prepare-cdn-files
 	#gsutil -m setmeta -h "Content-Type:audio/webm" 'gs://kidsgo-site-files/$(RELEASE)/sound/*.webm'
 
 sync-translations:
-	cd i18n/locale/; ssh pootle@45.76.254.197 "bash -c 'cd kidsgoserver.com/i18n/locale; tar jcf - *'" | tar jxf -
+	#cd i18n/locale/; ssh pootle@45.76.254.197 "bash -c 'cd kidsgoserver.com/i18n/locale; tar jcf - *'" | tar jxf -
 
 audit-translations:
 	#cd i18n; node audit-translations.js
