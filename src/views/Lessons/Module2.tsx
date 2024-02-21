@@ -17,7 +17,7 @@
 
 import * as React from "react";
 import { Content } from "./Content";
-import { PuzzleConfig, Goban } from "goban";
+import { PuzzleConfig, Goban, JGOFNumericPlayerColor } from "goban";
 
 class Module2 extends Content {
     audioRef: React.RefObject<HTMLAudioElement>;
@@ -49,7 +49,7 @@ class Module2 extends Content {
 class Page1 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852232/kids-go-server-audio-slices/slice_20_reqwv4.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708550145/audio-slices-less-pauses/slice20_less_pauses_revised_wlyinf.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -84,7 +84,7 @@ class Page1 extends Module2 {
 class Page2 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852227/kids-go-server-audio-slices/slice_21_vwvl5j.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708550225/audio-slices-less-pauses/slice21_less_pauses_revised_vjtr4g.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -127,7 +127,7 @@ class Page2 extends Module2 {
 class Page3 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852198/kids-go-server-audio-slices/slice_22_h86mpc.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708550312/audio-slices-less-pauses/slice22_less_pauses_revised_ksy8ir.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -162,7 +162,7 @@ class Page3 extends Module2 {
 class Page4 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852121/kids-go-server-audio-slices/slice_23_m0ael8.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472337/audio-slices-less-pauses/slice23_less_pauses_sr0s2s.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -200,7 +200,7 @@ class Page4 extends Module2 {
 class Page5 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852123/kids-go-server-audio-slices/slice_24_yz7ec2.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472339/audio-slices-less-pauses/slice24_less_pauses_woik4b.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -234,7 +234,7 @@ class Page5 extends Module2 {
 class Page6 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854699/kids-go-server-COMBINED-audio-slices/slice_audio16_obgny8.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708550675/audio-slice-less-pauses-COMBINED/slice25_and_26_combined_xjrc9k.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -251,7 +251,7 @@ class Page6 extends Module2 {
             ></audio>,
             <p>The answer is 9 points for Blue.</p>,
             // This wasn't an array originally, but we need this following paragraph added.
-            <p>Remember you only need to build your fence up to the edge of the board. </p>,
+            <p>Remember, you only need to build your fence up to the edge of the board. </p>,
         ];
     }
     config(): PuzzleConfig {
@@ -278,14 +278,10 @@ class Page6 extends Module2 {
     }
 }
 
-// This is too long for the page I think, also a bit confusing,
-// I never liked explaining the pass rule, especially to kids, just say if both players say pass one after another,
-// the game ends and we score the game or something. Or something like "when you think the game is over, say "pass", if your opponent also thinks the game is over, they can say
-// "pass" too, then we can score the game!
 class Page7 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854861/kids-go-server-COMBINED-audio-slices/slice_audio17_ssdn57.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472343/audio-slices-less-pauses/slice27_less_pauses_mkkli5.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -304,20 +300,6 @@ class Page7 extends Module2 {
                 In Go, we play until the two colors are touching each other, and the empty space
                 each blocks off and surrounds is their territory.{" "}
             </p>,
-            <p>Can White play on Blue's side? Yes.</p>,
-            <p>Can Blue play on White's side? Yes.</p>,
-            <p>
-                Each side is free to try if they think they can make a group that can’t be captured.
-            </p>,
-            <p>
-                If you think the game is over, just pass a stone to your opponent. If your opponent
-                plays a stone then you can either play or pass.
-            </p>,
-            <p>
-                Two passed stones in a row end the game. However, since Blue played first, White
-                must pass last.
-            </p>,
-            <p>Blue has territory on the left, and White has it on the right.</p>,
         ];
     }
     config(): PuzzleConfig {
@@ -336,7 +318,7 @@ class Page7 extends Module2 {
 class Page8 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852130/kids-go-server-audio-slices/slice_34_prpbdr.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708552000/audio-slice-less-pauses-COMBINED/slice28_29_and_30_combined_go49dz.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -351,6 +333,97 @@ class Page8 extends Module2 {
                 autoPlay={true}
                 src={this.audioUrl}
             ></audio>,
+            <p>Can White play on Blue's side? Yes.</p>,
+            <p>Can Blue play on White's side? Yes.</p>,
+            <p>
+                Each side is free to try if they think they can make a group that can’t be captured.
+            </p>,
+        ];
+    }
+    config(): PuzzleConfig {
+        return {
+            puzzle_player_move_mode: "fixed",
+            width: 9,
+            height: 9,
+            initial_state: {
+                black: "b9b8c7c6c5c3d8d4d2d1e9e8e7e1e3e4e5f4",
+                white: "d7d6d5e6f9f8f7f6f5f3f2f1g3g4g6e2",
+            },
+        };
+    }
+    onSetGoban(goban: Goban): void {
+        this.delay(() => goban.editPlaceByPrettyCoord("b5", JGOFNumericPlayerColor.WHITE));
+        this.delay(() => goban.editPlaceByPrettyCoord("b6", JGOFNumericPlayerColor.WHITE));
+        this.delay(() => goban.editPlaceByPrettyCoord("b2", JGOFNumericPlayerColor.WHITE));
+        this.delay(() => goban.editPlaceByPrettyCoord("h5", JGOFNumericPlayerColor.BLACK));
+        this.delay(() => goban.editPlaceByPrettyCoord("h3", JGOFNumericPlayerColor.BLACK));
+        this.delay(() => goban.editPlaceByPrettyCoord("g8", JGOFNumericPlayerColor.BLACK));
+    }
+}
+
+// I never liked explaining the pass rule, especially to kids, just say if both players say pass one after another,
+// the game ends and we score the game or something. Or something like "when you think the game is over, say "pass", if your opponent also thinks the game is over, they can say
+// "pass" too, then we can score the game!
+class Page9 extends Module2 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708552553/audio-slice-less-pauses-COMBINED/slice31_and_32_combined_jcmxoh.mp3",
+        );
+    }
+    text(): JSX.Element | Array<JSX.Element> {
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>
+                If you think the game is over, just pass a stone to your opponent. If your opponent
+                plays a stone then you can either play or pass.
+            </p>,
+            <p>
+                Two passed stones in a row end the game. However, since Blue played first, White
+                must pass last.
+            </p>,
+        ];
+    }
+    config(): PuzzleConfig {
+        return {
+            puzzle_player_move_mode: "fixed",
+            width: 9,
+            height: 9,
+            initial_state: {
+                black: "b9b8c7c6c5c3d8d4d2d1e9e8e7e1e3e4e5f4",
+                white: "d7d6d5e6f9f8f7f6f5f3f2f1g3g4g6e2",
+            },
+        };
+    }
+}
+
+class Page10 extends Module2 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708552711/audio-slice-less-pauses-COMBINED/slice33_and_34_combined_bkl2un.mp3",
+        );
+    }
+    text(): JSX.Element | Array<JSX.Element> {
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>Blue has territory on the left, and White has it on the right.</p>,
             <p>We can see Blue has 23 points.</p>,
         ];
     }
@@ -370,10 +443,10 @@ class Page8 extends Module2 {
     }
 }
 
-class Page9 extends Module2 {
+class Page11 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852131/kids-go-server-audio-slices/slice_35_wfol1w.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472354/audio-slices-less-pauses/slice35_less_pauses_pzy4sf.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -407,10 +480,10 @@ class Page9 extends Module2 {
     }
 }
 
-class Page10 extends Module2 {
+class Page12 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854836/kids-go-server-COMBINED-audio-slices/slice_audio20_c9djke.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708553650/audio-slice-less-pauses-COMBINED/slice36_38_and_39_combined_kymjby.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -447,11 +520,10 @@ class Page10 extends Module2 {
     }
 }
 
-// Original Page 11 was removed
-class Page11 extends Module2 {
+class Page13 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852250/kids-go-server-audio-slices/slice_39_mxndol.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472581/audio-slices-less-pauses/slice39_less_pauses_t7eggo.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -481,10 +553,10 @@ class Page11 extends Module2 {
     }
 }
 
-class Page12 extends Module2 {
+class Page14 extends Module2 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854836/kids-go-server-COMBINED-audio-slices/slice_audio22_mqye6w.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708554038/audio-slice-less-pauses-COMBINED/slice41_42_and_43_combined_hz4vsr.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -502,8 +574,8 @@ class Page12 extends Module2 {
             ></audio>,
             <p>
                 You now know enough to play your first game of Go! There are actually two more
-                rules, but it can be confusing at first. Play a couple games against the Easy Bot +4
-                and then come back to read the rest of these lessons.
+                rules, but it can be confusing at first. Play a couple of games against the Easy
+                Bot. You can get 6 extra stones at the start, to make it a better game. Have fun!
             </p>,
         ];
     }
@@ -525,4 +597,6 @@ export const module2: Array<typeof Content> = [
     Page10,
     Page11,
     Page12,
+    Page13,
+    Page14,
 ];
