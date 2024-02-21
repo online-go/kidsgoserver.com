@@ -51,7 +51,7 @@ class Module3 extends Content {
 class Page1 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707980713/kids-go-server-audio-slices/slice_43_and46_combined_happyscribe_aldycz.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708554656/audio-slice-less-pauses-COMBINED/slice45_and_48_combined_dgsntg.mp3",
         );
     }
 
@@ -94,7 +94,7 @@ class Page1 extends Module3 {
 class Page2 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852142/kids-go-server-audio-slices/slice_44_q7lpzz.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708554818/audio-slices-less-pauses/slice46_less_pauses_revised_npgupt.mp3",
         );
     }
 
@@ -130,7 +130,7 @@ class Page2 extends Module3 {
 class Page3 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852242/kids-go-server-audio-slices/slice_45_sppnll.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472373/audio-slices-less-pauses/slice45_less_pauses_qcmti9.mp3",
         );
     }
 
@@ -170,7 +170,7 @@ class Page3 extends Module3 {
 class Page4 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852244/kids-go-server-audio-slices/slice_47_jrmlld.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472580/audio-slices-less-pauses/slice47_less_pauses_oddmrp.mp3",
         );
     }
 
@@ -209,7 +209,7 @@ class Page4 extends Module3 {
 class Page5 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852140/kids-go-server-audio-slices/slice_48_xyddn9.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472377/audio-slices-less-pauses/slice48_less_pauses_l10z1c.mp3",
         );
     }
 
@@ -246,7 +246,7 @@ class Page5 extends Module3 {
 class Page6 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852182/kids-go-server-audio-slices/slice_49_d4thir.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472379/audio-slices-less-pauses/slice49_less_pauses_i2uwkz.mp3",
         );
     }
 
@@ -288,7 +288,7 @@ class Page6 extends Module3 {
 class Page7 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854777/kids-go-server-COMBINED-audio-slices/slice_audio29_daawhn.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708555182/audio-slice-less-pauses-COMBINED/slice52_53_and_54_combined_idgmba.mp3",
         );
     }
 
@@ -306,7 +306,7 @@ class Page7 extends Module3 {
             ></audio>,
             <p>It looks like White can't play at A because the team would have no liberties.</p>,
             <p>But playing at A captures six Blue stones first giving White three liberties.</p>,
-            <p>Remember any stone played must have liberties at the end of the turn.</p>,
+            <p>Remember, any stone played must have liberties at the end of the turn.</p>,
         ];
     }
     config(): PuzzleConfig {
@@ -333,7 +333,7 @@ class Page7 extends Module3 {
 class Page8 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852252/kids-go-server-audio-slices/slice_53_opde2c.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472586/audio-slices-less-pauses/slice53_less_pauses_smoepq.mp3",
         );
     }
 
@@ -373,7 +373,7 @@ class Page8 extends Module3 {
 class Page9 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854777/kids-go-server-COMBINED-audio-slices/slice_audio31_taai6n.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708555395/audio-slice-less-pauses-COMBINED/slice54_and_57_combined_fhlma2.mp3",
         );
     }
 
@@ -412,7 +412,7 @@ class Page9 extends Module3 {
 class Page10 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852213/kids-go-server-audio-slices/slice_56_vstyr0.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472590/audio-slices-less-pauses/slice56_less_pauses_myxeli.mp3",
         );
     }
 
@@ -451,7 +451,7 @@ class Page10 extends Module3 {
 class Page11 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852153/kids-go-server-audio-slices/slice_57_wkypxz.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472582/audio-slices-less-pauses/slice57_less_pauses_ksavic.mp3",
         );
     }
 
@@ -492,7 +492,7 @@ class Page11 extends Module3 {
 class Page12 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852193/kids-go-server-audio-slices/slice_58_rgp6ej.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708555523/audio-slices-less-pauses/slice60_less_pauses_revised_wseie1.mp3",
         );
     }
 
@@ -544,7 +544,7 @@ class Page12 extends Module3 {
 class Page13 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852203/kids-go-server-audio-slices/slice_59_gd2ccm.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708555614/audio-slices-less-pauses/slice61_less_pauses_revised_ptlzux.mp3",
         );
     }
 
@@ -587,7 +587,7 @@ class Page13 extends Module3 {
 class Page14 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852206/kids-go-server-audio-slices/slice_60_qnp88e.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472596/audio-slices-less-pauses/slice60_less_pauses_vlwhff.mp3",
         );
     }
 
@@ -627,7 +627,7 @@ class Page14 extends Module3 {
 class Page15 extends Module3 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852151/kids-go-server-audio-slices/slice_61_neohe9.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472583/audio-slices-less-pauses/slice61_less_pauses_fh5hpq.mp3",
         );
     }
 
