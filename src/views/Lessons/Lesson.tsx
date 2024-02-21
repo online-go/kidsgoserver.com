@@ -111,7 +111,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         const animation = content.animate(() => {
             setText(target_text.slice(0, ct++));
             return target_text.length >= ct;
-        }, 500);
+        }, 0); // Remove 500ms animation and replace with 0ms animation for text field in left panel since we have the audio now
         cancel_animation_ref.current = () => {
             animation.cancel();
             setText(target_text);

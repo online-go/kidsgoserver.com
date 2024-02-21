@@ -53,9 +53,8 @@ class Module1 extends Content {
 class Page1 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854748/kids-go-server-COMBINED-audio-slices/slice_audio1_nkvkon.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472624/audio-slice-less-pauses-COMBINED/slice1_and_2_combined_wxolf5.mp3",
         );
-        console.log("Page1 constructor");
     }
 
     text(): JSX.Element | Array<JSX.Element> {
@@ -70,11 +69,11 @@ class Page1 extends Module1 {
                 autoPlay={true} // This line auto plays the audio when we click the next button to navigate to the next page
                 src={this.audioUrl}
             ></audio>,
-            <span>In Go we place stones on the lines, not in the squares!</span>,
-            <span>
+            <p>In Go we place stones on the lines, not in the squares!</p>,
+            <p>
                 The darker color, Blast Off Blue in this case, always goes first, followed by the
                 lighter color, Whammo White here.
-            </span>,
+            </p>,
         ];
     }
     config(): PuzzleConfig {
@@ -91,9 +90,8 @@ class Page1 extends Module1 {
 class Page2 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854682/kids-go-server-COMBINED-audio-slices/slice_audio2_pcjrth.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472317/audio-slices-less-pauses/slice3_less_pauses_c9w9eo.mp3",
         );
-        console.log("page 2 constructor");
     }
 
     text(): JSX.Element | Array<JSX.Element> {
@@ -136,7 +134,7 @@ class Page2 extends Module1 {
 class Page3 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854677/kids-go-server-COMBINED-audio-slices/slice_audio3_n7porg.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472317/audio-slices-less-pauses/slice4_less_pauses_jiozem.mp3",
         );
     }
 
@@ -176,7 +174,7 @@ class Page3 extends Module1 {
 class Page4 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854678/kids-go-server-COMBINED-audio-slices/slice_audio4_xitqmt.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472318/audio-slices-less-pauses/slice5_less_pauses_pebkdl.mp3",
         );
     }
 
@@ -214,7 +212,7 @@ class Page4 extends Module1 {
 class Page5 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854684/kids-go-server-COMBINED-audio-slices/slice_audio5_l4jolv.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708473054/audio-slices-less-pauses/slice6_less_pauses_revised_zbk8aa.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -259,7 +257,7 @@ class Page5 extends Module1 {
 class Page6 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854745/kids-go-server-COMBINED-audio-slices/slice_audio6_hpjrch.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472320/audio-slices-less-pauses/slice7_less_pauses_nmppvy.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -300,7 +298,7 @@ class Page6 extends Module1 {
 class Page7 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854750/kids-go-server-COMBINED-audio-slices/slice_audio7_cflubx.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708473412/audio-slice-less-pauses-COMBINED/slice8_and_9_combined_revised_fxjbn9.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -339,7 +337,7 @@ class Page7 extends Module1 {
 class Page8 extends Module1 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854685/kids-go-server-COMBINED-audio-slices/slice_audio8_d4znwa.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472323/audio-slices-less-pauses/slice10_less_pauses_o5h9dp.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -382,11 +380,11 @@ class Puzzle1 extends Module1 {
     constructor() {
         // This is the manually sliced audio clip for the first puzzle
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707977976/kids-go-server-audio-slices/slice_first_puzzle_audio_wflxs8.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708547807/audio-slice-less-pauses-COMBINED/slice11_and_12_combined_dzwlo9.mp3",
         );
         // Success audio for the popup audio!  Says "Good job!"
         this.successAudio = new Audio(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852115/kids-go-server-audio-slices/slice_13_q0v6nw.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708547864/audio-slices-less-pauses/slice13_less_pauses_revised_tanua8.mp3",
         );
     }
 
@@ -441,10 +439,10 @@ class Puzzle2 extends Module1 {
     private successAudio: HTMLAudioElement;
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852119/kids-go-server-audio-slices/slice_14_s6dmem.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472327/audio-slices-less-pauses/slice14_less_pauses_if00pt.mp3",
         );
         this.successAudio = new Audio(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852116/kids-go-server-audio-slices/slice_15_cidisp.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472328/audio-slices-less-pauses/slice15_less_pauses_w7g2jr.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -496,10 +494,10 @@ class Puzzle3 extends Module1 {
     private successAudio: HTMLAudioElement;
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852118/kids-go-server-audio-slices/slice_16_p8yhmr.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472329/audio-slices-less-pauses/slice16_less_pauses_muc2vl.mp3",
         );
         this.successAudio = new Audio(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852117/kids-go-server-audio-slices/slice_17_z0n55r.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472331/audio-slices-less-pauses/slice17_less_pauses_znln8h.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
@@ -552,10 +550,10 @@ class Puzzle4 extends Module1 {
     private successAudio: HTMLAudioElement;
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852119/kids-go-server-audio-slices/slice_18_emq25v.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708548582/audio-slices-less-pauses/slice18_less_pauses_revised_y2583y.mp3",
         );
         this.successAudio = new Audio(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852119/kids-go-server-audio-slices/slice_19_ddyawc.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708548659/audio-slices-less-pauses/slice19_less_pauses_revised_fykpjy.mp3",
         );
     }
     text(): JSX.Element | Array<JSX.Element> {
