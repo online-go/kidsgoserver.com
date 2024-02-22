@@ -38,7 +38,6 @@ class Module4 extends Content {
     };
 
     componentWillUnmount() {
-        // Stop audio playback and cleanup when the component is about to unmount
         const audio = this.audioRef.current;
         if (audio) {
             audio.pause();
@@ -50,7 +49,7 @@ class Module4 extends Content {
 class Page1 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852183/kids-go-server-audio-slices/slice_62_r1hj23.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708636014/audio-slices-less-pauses/slice64_less_pauses_revised_lppayu.mp3",
         );
     }
 
@@ -89,7 +88,7 @@ class Page1 extends Module4 {
 class Page2 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854783/kids-go-server-COMBINED-audio-slices/slice_audio38_mlvvoo.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708636318/audio-slice-less-pauses-COMBINED/slice65_and_66_combined_j2mjda.mp3",
         );
     }
 
@@ -126,7 +125,7 @@ class Page2 extends Module4 {
 class Page3 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852173/kids-go-server-audio-slices/slice_65_gpvvns.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708636476/audio-slices-less-pauses/slice67_less_pauses_revised_hg7s10.mp3",
         );
     }
 
@@ -162,7 +161,7 @@ class Page3 extends Module4 {
 class Page4 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854803/kids-go-server-COMBINED-audio-slices/slice_audio40_mtldvl.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708636656/audio-slice-less-pauses-COMBINED/slice68_69_and_70combined_ffqsh6.mp3",
         );
     }
 
@@ -203,7 +202,7 @@ class Page4 extends Module4 {
 class Page5 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852250/kids-go-server-audio-slices/slice_69_dinyyb.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708636813/audio-slices-less-pauses/slice71_less_pauses_revised_e95kry.mp3",
         );
     }
 
@@ -243,7 +242,7 @@ class Page5 extends Module4 {
 class Page6 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852255/kids-go-server-audio-slices/slice_70_wwqk0a.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472600/audio-slices-less-pauses/slice70_less_pauses_obbwtz.mp3",
         );
     }
 
@@ -283,7 +282,7 @@ class Page6 extends Module4 {
 class Page7 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707854795/kids-go-server-COMBINED-audio-slices/slice_audio43_meba67.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708637273/audio-slice-less-pauses-COMBINED/slice73_and_74_combined_mscsc1.mp3",
         );
     }
 
@@ -300,8 +299,8 @@ class Page7 extends Module4 {
                 src={this.audioUrl}
             ></audio>,
             <p>
-                So, White can play anywhere on the board except at the triangled point. Perhaps
-                White will play at 2, and then Blue might play at say 3.
+                So White can play anywhere on the board except at the triangled point. Perhaps White
+                will play at 2, and then Blue might play at say, 3.
             </p>,
         ];
     }
@@ -336,7 +335,7 @@ class Page7 extends Module4 {
 class Page8 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852272/kids-go-server-audio-slices/slice_73_k8hksh.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472604/audio-slices-less-pauses/slice73_less_pauses_k2puq1.mp3",
         );
     }
 
@@ -378,7 +377,7 @@ class Page8 extends Module4 {
 class Page9 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852178/kids-go-server-audio-slices/slice_74_hbb6np.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472598/audio-slices-less-pauses/slice74_less_pauses_tsdqt4.mp3",
         );
     }
 
@@ -415,7 +414,7 @@ class Page9 extends Module4 {
 class Page10 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852276/kids-go-server-audio-slices/slice_75_gyn0dn.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472612/audio-slices-less-pauses/slice75_less_pauses_d1dylj.mp3",
         );
     }
 
@@ -457,7 +456,7 @@ class Page10 extends Module4 {
 class Page11 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852279/kids-go-server-audio-slices/slice_76_bcgtdu.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708637886/audio-slices-less-pauses/slice78_less_pauses_revised_tyedip.mp3",
         );
     }
 
@@ -497,7 +496,7 @@ class Page11 extends Module4 {
 class Page12 extends Module4 {
     constructor() {
         super(
-            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1707852282/kids-go-server-audio-slices/slice_77_jfgnzq.wav",
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708637983/audio-slices-less-pauses/slice79_less_pauses_revised_m0msdr.mp3",
         );
     }
 
@@ -516,7 +515,7 @@ class Page12 extends Module4 {
             <p>
                 Sometimes a ko is meaningless and only affects the stone in atari. Don't worry about
                 ko too much for right now, just start playing some games and you'll learn more as
-                you go. When you are ready, come back and do some more lessons.
+                you go. When you're ready, come back and do some more lessons.
             </p>,
         ];
     }
