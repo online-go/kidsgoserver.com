@@ -24,19 +24,56 @@ import { openPopup } from "PopupDialog";
 const POPUP_TIMEOUT = 3000;
 
 class Module1 extends Content {
-    constructor() {
+    audioRef: React.RefObject<HTMLAudioElement>;
+    audioUrl: string;
+
+    constructor(audioUrl: string) {
         super();
+        this.audioRef = React.createRef();
+        this.audioUrl = audioUrl;
+    }
+
+    playAudio = async () => {
+        const audio = this.audioRef.current;
+        if (audio) {
+            await audio.play();
+        }
+    };
+
+    componentWillUnmount() {
+        // Stop audio playback and cleanup when the component is about to unmount
+        const audio = this.audioRef.current;
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
     }
 }
 
 class Page1 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472624/audio-slice-less-pauses-COMBINED/slice1_and_2_combined_wxolf5.mp3",
+        );
+    }
+
     text(): JSX.Element | Array<JSX.Element> {
         return [
-            <span>In Go we place stones on the lines, not in the squares!</span>,
-            <span>
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true} // This line auto plays the audio when we click the next button to navigate to the next page
+                src={this.audioUrl}
+            ></audio>,
+            <p>In Go we place stones on the lines, not in the squares!</p>,
+            <p>
                 The darker color, Blast Off Blue in this case, always goes first, followed by the
                 lighter color, Whammo White here.
-            </span>,
+            </p>,
         ];
     }
     config(): PuzzleConfig {
@@ -51,13 +88,29 @@ class Page1 extends Module1 {
 }
 
 class Page2 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472317/audio-slices-less-pauses/slice3_less_pauses_c9w9eo.mp3",
+        );
+    }
+
     text(): JSX.Element | Array<JSX.Element> {
-        return (
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
             <p>
                 The spaces next to the stones are important, we call them Liberties. This stone has
-                four liberties.
-            </p>
-        );
+                four liberties where the lines cross.
+            </p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -79,13 +132,29 @@ class Page2 extends Module1 {
 }
 
 class Page3 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472317/audio-slices-less-pauses/slice4_less_pauses_jiozem.mp3",
+        );
+    }
+
     text(): JSX.Element | Array<JSX.Element> {
-        return (
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
             <p>
                 There are no liberties off the edge of the board, so this stone only has two
                 liberties.
-            </p>
-        );
+            </p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -103,8 +172,26 @@ class Page3 extends Module1 {
 }
 
 class Page4 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472318/audio-slices-less-pauses/slice5_less_pauses_pebkdl.mp3",
+        );
+    }
+
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>And this stone only has three</p>;
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>And this stone only has three.</p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -123,13 +210,28 @@ class Page4 extends Module1 {
 }
 
 class Page5 extends Module1 {
-    text(): JSX.Element | Array<JSX.Element> {
-        return (
-            <p>
-                Stones that touch each other are friends, they get to share their liberties and play
-                as a team!
-            </p>
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708473054/audio-slices-less-pauses/slice6_less_pauses_revised_zbk8aa.mp3",
         );
+    }
+    text(): JSX.Element | Array<JSX.Element> {
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>
+                Stones of the same color that touch each other are on the same team. So they share
+                their liberties.
+            </p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -153,13 +255,28 @@ class Page5 extends Module1 {
 }
 
 class Page6 extends Module1 {
-    text(): JSX.Element | Array<JSX.Element> {
-        return (
-            <p>
-                If the other player surrounds 3 out of 4 liberties, we say the stone is in Atari,
-                which means it can be captured on the next turn.
-            </p>
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472320/audio-slices-less-pauses/slice7_less_pauses_nmppvy.mp3",
         );
+    }
+    text(): JSX.Element | Array<JSX.Element> {
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>
+                If the other player takes 3 out of 4 liberties, we say a stone is in Atari, which
+                means it can be captured on the next turn.
+            </p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -179,10 +296,25 @@ class Page6 extends Module1 {
 }
 
 class Page7 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708473412/audio-slice-less-pauses-COMBINED/slice8_and_9_combined_revised_fxjbn9.mp3",
+        );
+    }
     text(): JSX.Element | Array<JSX.Element> {
         return [
-            <p>If we add a stone, then they become team players and get new liberties.</p>,
-            <p>Now they have three liberties and are safe from being captured!</p>,
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>If we add a stone, then they form a team and get new liberties.</p>,
+            <p>Now they have three liberties and are safe from immediate capture.</p>,
         ];
     }
     config(): PuzzleConfig {
@@ -203,13 +335,28 @@ class Page7 extends Module1 {
 }
 
 class Page8 extends Module1 {
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472323/audio-slices-less-pauses/slice10_less_pauses_o5h9dp.mp3",
+        );
+    }
     text(): JSX.Element | Array<JSX.Element> {
-        return (
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
             <p>
                 If Blue goes somewhere else though, then White can capture the stone and remove it
-                from the board
-            </p>
-        );
+                from the board.
+            </p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -228,8 +375,33 @@ class Page8 extends Module1 {
 }
 
 class Puzzle1 extends Module1 {
+    private successAudio: HTMLAudioElement;
+
+    constructor() {
+        // This is the manually sliced audio clip for the first puzzle
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708547807/audio-slice-less-pauses-COMBINED/slice11_and_12_combined_dzwlo9.mp3",
+        );
+        // Success audio for the popup audio!  Says "Good job!"
+        this.successAudio = new Audio(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708547864/audio-slices-less-pauses/slice13_less_pauses_revised_tanua8.mp3",
+        );
+    }
+
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>Lets try some simple problems now. Try and capture the White stone.</p>;
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>Lets try some simple problems now. Try and capture the White stone.</p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -243,6 +415,10 @@ class Puzzle1 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[0][3] === 0) {
+                // If we chain the success audio after the captureDelay, the "good job audio clip" happens after we go to the next puzzle
+                this.successAudio
+                    .play()
+                    .catch((error) => console.error("Error playing success audio:", error));
                 this.captureDelay(() => {
                     openPopup({
                         text: <Axol>Good job!</Axol>,
@@ -260,8 +436,29 @@ class Puzzle1 extends Module1 {
 }
 
 class Puzzle2 extends Module1 {
+    private successAudio: HTMLAudioElement;
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472327/audio-slices-less-pauses/slice14_less_pauses_if00pt.mp3",
+        );
+        this.successAudio = new Audio(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472328/audio-slices-less-pauses/slice15_less_pauses_w7g2jr.mp3",
+        );
+    }
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>Try and capture the White stone.</p>;
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>Try and capture the White stone.</p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -274,6 +471,9 @@ class Puzzle2 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
+                this.successAudio
+                    .play()
+                    .catch((error) => console.error("Error playing success audio:", error));
                 this.captureDelay(() => {
                     openPopup({
                         text: <Axol>You did it!</Axol>,
@@ -291,8 +491,29 @@ class Puzzle2 extends Module1 {
 }
 
 class Puzzle3 extends Module1 {
+    private successAudio: HTMLAudioElement;
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472329/audio-slices-less-pauses/slice16_less_pauses_muc2vl.mp3",
+        );
+        this.successAudio = new Audio(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708472331/audio-slices-less-pauses/slice17_less_pauses_znln8h.mp3",
+        );
+    }
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>Try and capture the White stones.</p>;
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>Try and capture the White stones.</p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -306,6 +527,9 @@ class Puzzle3 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
+                this.successAudio
+                    .play()
+                    .catch((error) => console.error("Error playing success audio:", error));
                 this.captureDelay(() => {
                     openPopup({
                         text: <Axol>Nice work!</Axol>,
@@ -323,8 +547,29 @@ class Puzzle3 extends Module1 {
 }
 
 class Puzzle4 extends Module1 {
+    private successAudio: HTMLAudioElement;
+    constructor() {
+        super(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708548582/audio-slices-less-pauses/slice18_less_pauses_revised_y2583y.mp3",
+        );
+        this.successAudio = new Audio(
+            "https://res.cloudinary.com/dn8rdavoi/video/upload/v1708548659/audio-slices-less-pauses/slice19_less_pauses_revised_fykpjy.mp3",
+        );
+    }
     text(): JSX.Element | Array<JSX.Element> {
-        return <p>Try and capture the White stones.</p>;
+        return [
+            <button key="playButton" onClick={this.playAudio}>
+                Play Audio
+            </button>,
+            <audio
+                key="audioElement"
+                ref={this.audioRef}
+                style={{ visibility: "hidden" }}
+                autoPlay={true}
+                src={this.audioUrl}
+            ></audio>,
+            <p>Try and capture these White stones.</p>,
+        ];
     }
     config(): PuzzleConfig {
         return {
@@ -338,6 +583,9 @@ class Puzzle4 extends Module1 {
     onSetGoban(goban: Goban): void {
         goban.on("update", () => {
             if (goban.engine.board[3][4] === 0) {
+                this.successAudio
+                    .play()
+                    .catch((error) => console.error("Error playing success audio:", error));
                 this.captureDelay(() => {
                     openPopup({
                         text: <Axol>Very clever!</Axol>,
