@@ -39,6 +39,7 @@ export function KidOpponents(props: OpponentListProperties): JSX.Element {
         proxy.current = chat_manager.join(props.channel);
         proxy.current.on("join", () => refresh(Math.random()));
         proxy.current.on("part", () => refresh(Math.random()));
+        proxy.current.on("update-user", () => refresh(Math.random()));
         window["proxy"] = proxy.current;
         refresh(proxy.current.channel.users_by_name.length);
 
