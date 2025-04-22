@@ -84,9 +84,6 @@ export function LandingPage(): JSX.Element {
                     <div className="flames" />
                 </div>
 
-                <div className="agf-logo"></div>
-                <div className="ogs-logo"></div>
-
                 <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
                     <span className="label">PLAY</span>
                     <div className="flames" />

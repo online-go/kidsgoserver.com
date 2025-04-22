@@ -121,37 +121,6 @@ ROCKET_LAUNCH_DURATION = 1.25s
         background-image: url("/1.0/pages/home/learn.svg");
     }
 
-    .agf-logo {
-        position: absolute;
-        bottom: calc(var(--ROCKETHEIGHT) * 0.10);
-        left: calc(5vw + var(--ROCKETWIDTH) + 2rem);
-        width: 3.5rem;
-        height: 3.5rem;
-        background-image: url("/1.0/pages/home/AGFlogo.png");
-        background-repeat: no-repeat;
-        background-size: contain;
-
-        +portrait() {
-            left: calc(5vw + var(--ROCKETWIDTH) + 1rem);
-        }
-    }
-
-    .ogs-logo {
-        position: absolute;
-        bottom: calc(var(--ROCKETHEIGHT) * 0.05);
-        right: calc(5vw + var(--ROCKETWIDTH) + 2rem);
-        width: 3.5rem;
-        height: 3.5rem;
-        background-image: url("/1.0/pages/home/OGS.png");
-        background-repeat: no-repeat;
-        background-size: contain;
-
-        +portrait() {
-            bottom: calc(var(--ROCKETHEIGHT) * 0.03);
-            right: calc(5vw + var(--ROCKETWIDTH) + 1rem);
-        }
-    }
-
     .play-rocket {
         right: 5vw;
         background-image: url("/1.0/pages/home/play.svg");
