@@ -472,6 +472,15 @@ class Puzzle4 extends Module1 {
                 });
             }
         });
+        goban.on("puzzle-wrong-answer", () => {
+            console.log("WRONG");
+
+            void openPopup({
+                text: <Axol>Try again!</Axol>,
+                no_cancel: true,
+                timeout: POPUP_TIMEOUT,
+            });
+        });
     }
 }
 
