@@ -398,7 +398,7 @@ class Page12 extends Module3 {
             goban.setMarkByPrettyCoordinates("f7", "1");
             goban.setMarkByPrettyCoordinates("g7", "2");
             goban.setMarkByPrettyCoordinates("g6", "3");
-        });
+        }, 5500);
     }
 }
 

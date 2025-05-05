@@ -164,7 +164,6 @@ class Page5 extends Module4 {
         };
     }
     onSetGoban(goban: Goban): void {
-        goban.setMarkByPrettyCoordinates("d4", "A");
         goban.setMarkByPrettyCoordinates("e4", "1");
     }
 }

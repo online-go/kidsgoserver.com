@@ -87,7 +87,15 @@ export function configure_goban() {
         getNetworkLatency: (): number => get_network_latency(),
         getLocation: (): string => window.location.pathname,
         //getShowMoveNumbers: (): boolean => !!preferences.get("show-move-numbers"),
-        getShowVariationMoveNumbers: (): boolean => preferences.get("show-variation-move-numbers"),
+        getShowVariationMoveNumbers: (): boolean => {
+            const location = window.location.pathname;
+            // Hacky solution because if we check the global_goban's mode, it is undefined on page refresh,
+            // we will just check the browser url to omit showing the numbers on the stones
+            if (location.includes("/learn-to-play/")) {
+                return false;
+            }
+            return preferences.get("show-variation-move-numbers");
+        },
         getMoveTreeNumbering: (): "none" | "move-number" | "move-coordinates" =>
             preferences.get("move-tree-numbering"),
         getCDNReleaseBase: (): string => data.get("config.cdn_release"),

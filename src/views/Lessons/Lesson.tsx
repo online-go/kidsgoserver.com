@@ -170,6 +170,8 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         console.log(opts);
         goban_ref.current = new GobanCanvas(opts);
         const goban: Goban = goban_ref.current;
+        // This triggers the same re-render that the replay button does, and we pass this down to the Module classes where the puzzles are
+        content.resetGoban = () => setReplay(Math.random());
         content.setGoban(goban);
         content.setNext(next);
 
@@ -182,7 +184,8 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             animateCaptures(
                 removed_stones,
                 goban,
-                (content_config as any).flip_animated_capture_color
+                // (content_config as any).flip_animated_capture_color
+                (content_config as any)
                     ? goban.engine.colorToMove()
                     : goban.engine.colorNotToMove(),
             );
@@ -211,8 +214,9 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                 this.instructional_goban.goban.disableStonePlacement();
                 this.forceUpdate();
                  */
-            goban.engine.place(-1, -1);
-            //goban.disableStonePlacement();
+            // Use the following line to have the computer pass
+            // goban.engine.place(-1, -1);
+            goban.disableStonePlacement();
         });
         goban.on("error", () => {
             console.log("ERROR");

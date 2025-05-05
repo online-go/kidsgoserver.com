@@ -242,6 +242,8 @@ export class Content extends TypedEventEmitter<Events> {
     hidePlayButton() {
         return false;
     }
+    // Uses the 'replay' button on the lesson page to reset the goban's state by triggering a re-render
+    resetGoban?: () => void;
 }
 
 let content_navigate = (_path: string) => {

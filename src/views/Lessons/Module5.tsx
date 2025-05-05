@@ -168,14 +168,17 @@ class Page5 extends Module5 {
             width: 9,
             height: 9,
             initial_state: {
-                black: "f7f8e8",
+                black: "f7f8",
                 white: "e7f6g5g7h6g8",
             },
         };
     }
     onSetGoban(goban: Goban): void {
         goban.setMarkByPrettyCoordinates("g8", "1");
-        goban.setMarkByPrettyCoordinates("e8", "2");
+        this.delay(() => {
+            goban.placeByPrettyCoordinates("e8");
+            goban.setMarkByPrettyCoordinates("e8", "2");
+        }, 6000);
     }
 }
 
