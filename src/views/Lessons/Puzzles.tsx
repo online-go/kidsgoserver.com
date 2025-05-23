@@ -92,7 +92,6 @@ export function Puzzles({
         useState<boolean>(false);
     const [hintsOn, setHintsOn] = useState(false);
 
-    console.log("hintsOn value local state", hintsOn);
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
@@ -128,7 +127,6 @@ export function Puzzles({
     ));
 
     const removeHints = () => {
-        console.log("got to remove hints function!");
         const goban: Goban = goban_ref.current;
         const move = goban.engine.cur_move;
         move.branches.forEach((item) => goban.deleteCustomMark(item.x, item.y, "hint", true));
@@ -136,41 +134,7 @@ export function Puzzles({
     };
 
     const showHint = () => {
-        console.log("HELLO CLICKED HINT BUTTON");
-        // this.ref_hint_button.current?.blur();
-        const content = new puzzles[puzzleNumber]();
-        const content_config = content.config();
-        const opts: GobanConfig = Object.assign(
-            {
-                board_div: container || undefined,
-                interactive: true,
-                mode: "puzzle",
-                width: 9,
-                height: 9,
-                circle_radius: 0.45,
-                draw_top_labels: false,
-                draw_right_labels: false,
-                draw_left_labels: false,
-                draw_bottom_labels: false,
-                player_id: 0,
-                server_socket: null,
-                square_size: "auto",
-                dont_draw_last_move: true,
-
-                puzzle_opponent_move_mode: "automatic",
-                puzzle_player_move_mode: "free",
-                getPuzzlePlacementSetting: () => {
-                    return { mode: "play" };
-                },
-            },
-            content_config,
-        ) as GobanConfig;
-        goban_opts_ref.current = opts;
-        // console.log(opts);
-        // console.log("opts.move_tree.branches", opts.move_tree.branches);
         const goban: Goban = goban_ref.current;
-        // console.log("goban.engine.cur_move", goban.engine.cur_move);
-        // console.log("goban.engine.cur_move.correct_answer", goban.engine.cur_move.correct_answer);
 
         if (hintsOn) {
             removeHints();
@@ -242,7 +206,7 @@ export function Puzzles({
         ) as GobanConfig;
 
         goban_opts_ref.current = opts;
-        // console.log(opts);
+        console.log(opts);
         goban_ref.current = new GobanCanvas(opts);
         const goban: Goban = goban_ref.current;
         // This triggers the same re-render that the replay button does, and we pass this down to the Module classes where the puzzles are
