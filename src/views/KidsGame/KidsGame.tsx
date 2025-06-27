@@ -63,6 +63,8 @@ export function KidsGame(): JSX.Element {
     const phase = usePhase(goban_ref.current);
     //const [race] = uiClassToRaceIdx(user.ui_class);
     const [whiteId, setWhiteId] = useState(0);
+    const [captureWin, setCaptureWin] = useState(false);
+    console.log("captureWin", captureWin);
     const race = usePlayerRace(whiteId);
 
     const game_id = parseInt(params.id);
@@ -138,7 +140,19 @@ export function KidsGame(): JSX.Element {
         };
 
         const onCapturedStones = ({ removed_stones }) => {
+            console.log("hit onCapturedStones function!");
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
+
+            if (removed_stones && removed_stones.length > 0) {
+                console.log("got inside to set state of captureWin to true");
+                console.log("goban.engine.phase", goban.engine.phase);
+                setCaptureWin(true);
+                setTimeout(() => {
+                    if (goban_ref.current && goban_ref.current.engine.phase === "play") {
+                        goban_ref.current.resign();
+                    }
+                }, 1000);
+            }
         };
 
         let last_player_to_move = 0;
@@ -374,15 +388,15 @@ export function KidsGame(): JSX.Element {
         : "Friend";
     */
 
-    const winner_username =
-        `${goban_ref.current?.engine.winner}` === `${user.id}`
-            ? "You"
-            : goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username;
+    // const winner_username =
+    //     `${goban_ref.current?.engine.winner}` === `${user.id}`
+    //         ? "You"
+    //         : goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username;
 
-    const result =
-        phase === "finished" && winner_username === "You"
-            ? "You have won by " + goban_ref.current?.engine.outcome
-            : winner_username + " wins by " + goban_ref.current?.engine.outcome;
+    // const result =
+    //     phase === "finished" && winner_username === "You"
+    //         ? "You have won by " + goban_ref.current?.engine.outcome
+    //         : winner_username + " wins by " + goban_ref.current?.engine.outcome;
 
     return (
         <>
