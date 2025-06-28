@@ -64,7 +64,8 @@ export function KidsGame(): JSX.Element {
     //const [race] = uiClassToRaceIdx(user.ui_class);
     const [whiteId, setWhiteId] = useState(0);
     const [captureWin, setCaptureWin] = useState(false);
-    console.log("captureWin", captureWin);
+    const [captureWinPlayer, setCaptureWinPlayer] = useState(0);
+
     const race = usePlayerRace(whiteId);
 
     const game_id = parseInt(params.id);
@@ -155,11 +156,13 @@ export function KidsGame(): JSX.Element {
                 // setTimeout(() => {
                 const playerToMove = goban.engine.playerToMove();
 
-                if (playerToMove !== user.id) {
+                if (playerToMove !== user?.id) {
                     console.log("Opponent resigns.");
-                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign
+                    setCaptureWinPlayer(user?.id);
+                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this technically works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost
                 } else {
                     console.log("User resigns.");
+                    setCaptureWinPlayer(opponent?.id);
                     goban_ref.current.resign();
                 }
                 // }
@@ -428,6 +431,7 @@ export function KidsGame(): JSX.Element {
                     <ResultsDialog
                         goban={goban_ref?.current}
                         captureWin={captureWin}
+                        captureWinPlayer={captureWinPlayer}
                         onPlayAgain={() => {
                             void navigate("/play");
                         }}

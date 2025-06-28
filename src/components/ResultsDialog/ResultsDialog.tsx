@@ -25,6 +25,7 @@ import { countPasses } from "@kidsgo/lib/countPasses";
 interface ResultsDialogProps {
     goban?: Goban;
     captureWin?: boolean;
+    captureWinPlayer?: Number;
     onPlayAgain: () => void;
     onClose: () => void;
 }
@@ -36,6 +37,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
         return null;
     }
 
+    console.log("captureWinPlayer", props.captureWinPlayer);
     // We usually use area scoring for aga, so the computeScore doesn't return
     // captures. But in this case the AGF wants us to report in territory scoring,
     // so we adjust.
@@ -47,7 +49,6 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
 
     const isResignation = props.goban?.engine?.outcome === "Resignation";
     const isCaptureWin = props.captureWin;
-    console.log("isCaptureWin INSIDE RESULTSDIALOG COMPONENT", isCaptureWin);
 
     const black_svg_url = ((props.goban as any)?.theme_black?.getSadStoneSvgUrl() || "").replace(
         "sad",
@@ -106,7 +107,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
                         <div className="result-center-message">
                             {isCaptureWin ? (
                                 <div>
-                                    {!userWon
+                                    {props.captureWinPlayer === user.id
                                         ? "You won by capturing them first!"
                                         : "They won by capturing you first!"}
                                 </div>
