@@ -131,6 +131,10 @@ export function KidsGame(): JSX.Element {
             );
             mvs.map((p) => prettyCoordinates(p.x, p.y, goban.height));
 
+            // console.log("BLACK ID", goban_ref.current?.engine.players.black.id);
+            // console.log("WHITE ID", goban_ref.current?.engine.players.white.id);
+            // console.log("PLAYERS", goban_ref.current?.engine.players);
+            // console.log("CURRENT PLAYER", user.id);
             const isResignation = goban?.engine?.outcome === "Resignation";
 
             if (goban.engine.phase === "finished" && !isResignation) {
@@ -145,13 +149,21 @@ export function KidsGame(): JSX.Element {
 
             if (removed_stones && removed_stones.length > 0) {
                 console.log("got inside to set state of captureWin to true");
-                console.log("goban.engine.phase", goban.engine.phase);
+                // console.log("goban.engine.phase", goban.engine.phase);
                 setCaptureWin(true);
-                setTimeout(() => {
-                    if (goban_ref.current && goban_ref.current.engine.phase === "play") {
-                        goban_ref.current.resign();
-                    }
-                }, 1000);
+
+                // setTimeout(() => {
+                const playerToMove = goban.engine.playerToMove();
+
+                if (playerToMove !== user.id) {
+                    console.log("Opponent resigns.");
+                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign
+                } else {
+                    console.log("User resigns.");
+                    goban_ref.current.resign();
+                }
+                // }
+                // }, 3000);
             }
         };
 
@@ -415,6 +427,7 @@ export function KidsGame(): JSX.Element {
                 {phase === "finished" && !gameFinishedClosed && (
                     <ResultsDialog
                         goban={goban_ref?.current}
+                        captureWin={captureWin}
                         onPlayAgain={() => {
                             void navigate("/play");
                         }}
