@@ -144,19 +144,17 @@ export function KidsGame(): JSX.Element {
             console.log("hit onCapturedStones function!");
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
 
-            if (removed_stones && removed_stones.length > 0) {
-                setCaptureWin(true);
-                const playerToMove = goban.engine.playerToMove();
+            setCaptureWin(true);
+            const playerToMove = goban.engine.playerToMove();
 
-                if (playerToMove !== user?.id) {
-                    console.log("Opponent resigns.");
-                    setCaptureWinPlayer(user?.id);
-                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this technically works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost
-                } else {
-                    console.log("User resigns.");
-                    setCaptureWinPlayer(opponent?.id);
-                    goban_ref.current.resign();
-                }
+            if (playerToMove !== user?.id) {
+                console.log("Opponent resigns.");
+                setCaptureWinPlayer(user?.id);
+                goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this technically works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost
+            } else {
+                console.log("User resigns.");
+                setCaptureWinPlayer(opponent?.id);
+                goban_ref.current.resign();
             }
         };
 
