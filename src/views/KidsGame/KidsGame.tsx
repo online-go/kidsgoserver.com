@@ -132,10 +132,6 @@ export function KidsGame(): JSX.Element {
             );
             mvs.map((p) => prettyCoordinates(p.x, p.y, goban.height));
 
-            // console.log("BLACK ID", goban_ref.current?.engine.players.black.id);
-            // console.log("WHITE ID", goban_ref.current?.engine.players.white.id);
-            // console.log("PLAYERS", goban_ref.current?.engine.players);
-            // console.log("CURRENT PLAYER", user.id);
             const isResignation = goban?.engine?.outcome === "Resignation";
 
             if (goban.engine.phase === "finished" && !isResignation) {
@@ -149,11 +145,7 @@ export function KidsGame(): JSX.Element {
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
 
             if (removed_stones && removed_stones.length > 0) {
-                console.log("got inside to set state of captureWin to true");
-                // console.log("goban.engine.phase", goban.engine.phase);
                 setCaptureWin(true);
-
-                // setTimeout(() => {
                 const playerToMove = goban.engine.playerToMove();
 
                 if (playerToMove !== user?.id) {
@@ -165,8 +157,6 @@ export function KidsGame(): JSX.Element {
                     setCaptureWinPlayer(opponent?.id);
                     goban_ref.current.resign();
                 }
-                // }
-                // }, 3000);
             }
         };
 
@@ -431,7 +421,7 @@ export function KidsGame(): JSX.Element {
                     <ResultsDialog
                         goban={goban_ref?.current}
                         captureWin={captureWin}
-                        captureWinPlayer={captureWinPlayer}
+                        captureWinPlayer={captureWinPlayer} // HACK: id of player that won, won't match internal state because the USER always resigns to make the Go board not interactable
                         onPlayAgain={() => {
                             void navigate("/play");
                         }}
