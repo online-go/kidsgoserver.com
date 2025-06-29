@@ -53,7 +53,18 @@ export function Matchmaking(): JSX.Element {
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
     const [board_size, setBoardSize] = React.useState(9);
     const [captureGame, setCaptureGame] = React.useState(false);
-    console.log("captureGame", captureGame);
+
+    const handleGameModeChange = (isCaptureMode: boolean) => {
+        setCaptureGame(isCaptureMode);
+
+        // Sync to localStorage so kidsgo-routes.tsx can load the proper query parameter if we are playing the capture game
+        if (isCaptureMode) {
+            localStorage.setItem("gameMode", "capture");
+        } else {
+            localStorage.removeItem("gameMode");
+        }
+    };
+
     useEnsureUserIsCreated();
 
     // setup redirect back to home after an hour of inactivity
@@ -395,22 +406,25 @@ export function Matchmaking(): JSX.Element {
                         onChange={() => setBoardSize(13)}
                     />
                     <label htmlFor="board-size-13">13x13</label>
+                </div>
+                <div className="settings">
+                    Game Mode:
                     <input
                         type="radio"
                         id="normal-game"
                         name="game-mode"
                         checked={captureGame === false}
-                        onChange={() => setCaptureGame(false)}
+                        onChange={() => handleGameModeChange(false)}
                     />
-                    <label htmlFor="normal-game">Normal Game</label>
+                    <label htmlFor="normal-game">Normal</label>
                     <input
                         type="radio"
                         id="first-capture"
                         name="game-mode"
                         checked={captureGame === true}
-                        onChange={() => setCaptureGame(true)}
+                        onChange={() => handleGameModeChange(true)}
                     />
-                    <label htmlFor="first-capture">Capture Game</label>
+                    <label htmlFor="first-capture">1st Capture</label>
                 </div>
 
                 <button

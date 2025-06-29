@@ -154,7 +154,7 @@ export function KidsGame(): JSX.Element {
                 if (playerToMove !== user?.id) {
                     console.log("Opponent resigns.");
                     setCaptureWinPlayer(user?.id);
-                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
+                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign or disable board clicks instead. This only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
                 } else {
                     console.log("User resigns.");
                     setCaptureWinPlayer(opponent?.id);
