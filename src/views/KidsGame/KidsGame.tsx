@@ -70,7 +70,6 @@ export function KidsGame(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams();
     const mode = searchParams.get("mode");
 
-    console.log("mode", mode);
     const race = usePlayerRace(whiteId);
 
     const game_id = parseInt(params.id);

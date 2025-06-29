@@ -52,7 +52,8 @@ export function Matchmaking(): JSX.Element {
     const [race, idx] = uiClassToRaceIdx(user.ui_class);
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
     const [board_size, setBoardSize] = React.useState(9);
-
+    const [captureGame, setCaptureGame] = React.useState(false);
+    console.log("captureGame", captureGame);
     useEnsureUserIsCreated();
 
     // setup redirect back to home after an hour of inactivity
@@ -246,6 +247,7 @@ export function Matchmaking(): JSX.Element {
             play(e);
         }
     };
+
     function back() {
         void navigate("/");
     }
@@ -393,6 +395,22 @@ export function Matchmaking(): JSX.Element {
                         onChange={() => setBoardSize(13)}
                     />
                     <label htmlFor="board-size-13">13x13</label>
+                    <input
+                        type="radio"
+                        id="normal-game"
+                        name="game-mode"
+                        checked={captureGame === false}
+                        onChange={() => setCaptureGame(false)}
+                    />
+                    <label htmlFor="normal-game">Normal Game</label>
+                    <input
+                        type="radio"
+                        id="first-capture"
+                        name="game-mode"
+                        checked={captureGame === true}
+                        onChange={() => setCaptureGame(true)}
+                    />
+                    <label htmlFor="first-capture">Capture Game</label>
                 </div>
 
                 <button
