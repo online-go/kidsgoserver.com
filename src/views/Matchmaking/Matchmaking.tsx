@@ -52,7 +52,9 @@ export function Matchmaking(): JSX.Element {
     const [race, idx] = uiClassToRaceIdx(user.ui_class);
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
     const [board_size, setBoardSize] = React.useState(9);
-    const [captureGame, setCaptureGame] = React.useState(false);
+    const [captureGame, setCaptureGame] = React.useState(() => {
+        return localStorage.getItem("gameMode") === "capture";
+    });
 
     const handleGameModeChange = (isCaptureMode: boolean) => {
         setCaptureGame(isCaptureMode);
