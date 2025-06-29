@@ -396,16 +396,6 @@ export function KidsGame(): JSX.Element {
         : "Friend";
     */
 
-    // const winner_username =
-    //     `${goban_ref.current?.engine.winner}` === `${user.id}`
-    //         ? "You"
-    //         : goban_ref.current?.engine.player_pool[goban_ref.current?.engine.winner]?.username;
-
-    // const result =
-    //     phase === "finished" && winner_username === "You"
-    //         ? "You have won by " + goban_ref.current?.engine.outcome
-    //         : winner_username + " wins by " + goban_ref.current?.engine.outcome;
-
     return (
         <>
             <div id="KidsGame" className={race ? avatar_background_class(race as Race) : ""}>

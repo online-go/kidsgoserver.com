@@ -37,7 +37,6 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
         return null;
     }
 
-    console.log("captureWinPlayer", props.captureWinPlayer);
     // We usually use area scoring for aga, so the computeScore doesn't return
     // captures. But in this case the AGF wants us to report in territory scoring,
     // so we adjust.
