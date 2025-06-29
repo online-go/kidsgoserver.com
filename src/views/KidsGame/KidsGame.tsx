@@ -18,7 +18,7 @@
 import * as React from "react";
 import * as data from "@/lib/data";
 import { sfx } from "@/lib/sfx";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useResizeDetector } from "react-resize-detector";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { _ } from "@/lib/translate";
@@ -51,6 +51,7 @@ export function KidsGame(): JSX.Element {
     const user = data.get("user");
 
     const params = useParams();
+
     const navigate = useNavigate();
     const container = useRef<HTMLDivElement>(null);
     const goban_ref = useRef<Goban>(null);
@@ -66,6 +67,10 @@ export function KidsGame(): JSX.Element {
     const [captureWin, setCaptureWin] = useState(false);
     const [captureWinPlayer, setCaptureWinPlayer] = useState(0);
 
+    const [searchParams, _] = useSearchParams();
+    const mode = searchParams.get("mode");
+
+    console.log("mode", mode);
     const race = usePlayerRace(whiteId);
 
     const game_id = parseInt(params.id);
@@ -141,20 +146,21 @@ export function KidsGame(): JSX.Element {
         };
 
         const onCapturedStones = ({ removed_stones }) => {
-            console.log("hit onCapturedStones function!");
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
 
-            setCaptureWin(true);
-            const playerToMove = goban.engine.playerToMove();
+            if (mode === "capture") {
+                setCaptureWin(true);
+                const playerToMove = goban.engine.playerToMove();
 
-            if (playerToMove !== user?.id) {
-                console.log("Opponent resigns.");
-                setCaptureWinPlayer(user?.id);
-                goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this technically works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost
-            } else {
-                console.log("User resigns.");
-                setCaptureWinPlayer(opponent?.id);
-                goban_ref.current.resign();
+                if (playerToMove !== user?.id) {
+                    console.log("Opponent resigns.");
+                    setCaptureWinPlayer(user?.id);
+                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign, this only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
+                } else {
+                    console.log("User resigns.");
+                    setCaptureWinPlayer(opponent?.id);
+                    goban_ref.current.resign();
+                }
             }
         };
 
