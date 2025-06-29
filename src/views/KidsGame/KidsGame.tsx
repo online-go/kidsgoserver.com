@@ -67,7 +67,7 @@ export function KidsGame(): JSX.Element {
     const [captureWin, setCaptureWin] = useState(false);
     const [captureWinPlayer, setCaptureWinPlayer] = useState(0);
 
-    const [searchParams, _] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const mode = searchParams.get("mode");
 
     console.log("mode", mode);
