@@ -238,8 +238,13 @@ export function HelpPage(): JSX.Element {
                         . The lessons and general concept of the site are by Paul Barchilon and
                         Terry Benson. Initial programming and bot hosting were provided by Akita
                         Noek, with additional programming by Nathan Harwit. The majority of the
-                        problems in lesson 8 were taken from goproblems.com. The entire project has
-                        been funded solely by donations. If you would like to contribute,{" "}
+                        problems in lesson 8 were donated by{" "}
+                        <a href="https://goproblems.com/" target="_blank" rel="noopener noreferrer">
+                            goproblems.com
+                        </a>
+                        . Visit their site to access thousands more problems of all levels, for
+                        free. The entire project has been funded solely by donations. If you would
+                        like to contribute,{" "}
                         <a
                             href="https://www.agfgo.org/donate"
                             target="_blank"
