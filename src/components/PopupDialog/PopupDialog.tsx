@@ -65,9 +65,25 @@ interface OpenPopupProps {
     timeout?: number;
 }
 
+// Helper function to filter out suppressed error messages
+// function filterErrorMessage(text: string | React.ReactNode): string | React.ReactNode {
+//     if (typeof text === "string" && text.includes("Error: Game is not in progress")) {
+//         console.log("hit this block, returning empty error string");
+//         // return "";
+//         return;
+//         // return true;
+//     }
+//     return text;
+//     // return text; // Return original text for everything else
+// }
+
 let root: ReactDOM.Root;
 
 export function openPopup(props: OpenPopupProps): Promise<void> {
+    if (typeof props.text === "string" && props.text.includes("Error: Game is not in progress")) {
+        console.log("Suppressing popup for game not in progress error");
+        return Promise.resolve(); // Don't create any popup at all
+    }
     const container = document.createElement("DIV");
     document.body.append(container);
 
@@ -106,6 +122,7 @@ export function openPopup(props: OpenPopupProps): Promise<void> {
         <React.StrictMode>
             <PopupDialog
                 text={props.text}
+                // text={filterErrorMessage(props.text)}
                 className={props.className}
                 onAccept={props.no_accept ? undefined : onaccept}
                 onCancel={props.no_cancel ? undefined : oncancel}
