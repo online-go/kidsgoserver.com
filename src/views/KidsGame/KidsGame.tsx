@@ -147,7 +147,8 @@ export function KidsGame(): JSX.Element {
         const onCapturedStones = ({ removed_stones }) => {
             animateCaptures(removed_stones, goban, goban.engine.colorToMove());
 
-            if (mode === "capture") {
+            const currentMode = new URLSearchParams(window.location.search).get("mode");
+            if (currentMode === "capture") {
                 setCaptureWin(true);
                 const playerToMove = goban.engine.playerToMove();
 
@@ -297,6 +298,14 @@ export function KidsGame(): JSX.Element {
             clearInterval(animation_interval);
         };
     }, [game_id, container]);
+
+    useEffect(() => {
+        // If localStorage says capture mode but URL doesn't have it, restore it (happens in weird edge cases, maybe 1/10 times)
+        if (localStorage.getItem("gameMode") === "capture" && mode !== "capture") {
+            setSearchParams({ mode: "capture" });
+            console.log("Restored missing ?mode=capture to URL");
+        }
+    }, [mode]);
 
     function quit() {
         if (
