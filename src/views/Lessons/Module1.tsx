@@ -48,6 +48,7 @@ class Page1 extends Module1 {
                 The darker color, Blast Off Blue in this case, always goes first, followed by the
                 lighter color, Whammo White here.
             </p>,
+            <p>Use the next arrow in the bottom right to continue.</p>,
         ];
     }
     config(): PuzzleConfig {
