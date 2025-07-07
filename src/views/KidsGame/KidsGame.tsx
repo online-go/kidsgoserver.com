@@ -432,7 +432,6 @@ export function KidsGame(): JSX.Element {
                 {phase === "finished" && !gameFinishedClosed && (
                     <ResultsDialog
                         goban={goban_ref?.current}
-                        // captureWin={captureWin}
                         onPlayAgain={() => {
                             void navigate("/play");
                         }}
