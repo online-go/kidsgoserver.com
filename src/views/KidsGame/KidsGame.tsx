@@ -216,6 +216,7 @@ export function KidsGame(): JSX.Element {
                     /* If we just joined the game, don't replay the animation */
                     if (pass_last_move !== 0) {
                         if (goban.engine.last_official_move.passed()) {
+                            console.log("Hello from inner passStrongHandler()!");
                             const color = goban.engine.colorToMove();
                             const other_color = color === "black" ? "white" : "black";
 
@@ -299,8 +300,10 @@ export function KidsGame(): JSX.Element {
         };
     }, [game_id, container]);
 
+    // There's a small chance (1/10) or specific sequence where the url initially contains the query string "?mode=capture", but then gets removed,
+    // this causes a bug where the user thinks they are playing the capture game, but because the query string is missing, they aren't
+    // This code adds the query string back if localStorage says we should be in capture mode
     useEffect(() => {
-        // If localStorage says capture mode but URL doesn't have it, restore it (happens in weird edge cases, maybe 1/10 times)
         if (localStorage.getItem("gameMode") === "capture" && mode !== "capture") {
             setSearchParams({ mode: "capture" });
             console.log("Restored missing ?mode=capture to URL");
@@ -389,7 +392,10 @@ export function KidsGame(): JSX.Element {
         user.id !== player_to_move &&
         user.id in (goban_ref.current?.engine.player_pool || {}) &&
         move_number > 1;
-    const can_pass = user.id === player_to_move;
+    console.log("searchParams[mode]", searchParams.get("mode"));
+    // Always disable the pass button in our capture game mode, this way we can make sure the pass prisoners are never shown in the Captures component.
+    // This prevents potential data inconsistencies from the user passing in the capture game (is makes no sense why the user would pass in this game mode, but this prevents them from doing it altogether)
+    const can_pass = user.id === player_to_move && searchParams.get("mode") !== "capture";
     const bot_game =
         isBot(goban_ref.current?.engine.players.black) ||
         isBot(goban_ref.current?.engine.players.white);

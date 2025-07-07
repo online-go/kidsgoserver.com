@@ -229,7 +229,7 @@ export function Matchmaking(): JSX.Element {
                 }
 
                 function checkForReject(notification) {
-                    console.log("challenge rejection check notification:", notification);
+                    // console.log("challenge rejection check notification:", notification);
                     if (notification.type === "gameOfferRejected") {
                         /* non checked delete to purge old notifications that
                          * could be around after browser refreshes, connection

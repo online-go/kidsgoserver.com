@@ -18,6 +18,7 @@
 import * as React from "react";
 import { Goban } from "goban";
 import { countPasses } from "@kidsgo/lib/countPasses";
+import { useSearchParams } from "react-router-dom";
 
 interface CapturesProps {
     color: "black" | "white";
@@ -35,18 +36,26 @@ function yrandpercent(i: number): number {
 export function Captures({ color, goban }: CapturesProps): JSX.Element {
     //const [r, refresh] = React.useState(0);
     const [numCaptures, setNumCaptures] = React.useState(goban?.engine[color + "_prisoners"] || 0);
-
+    const [searchParams, setSearchParams] = useSearchParams();
     React.useEffect(() => {
         if (goban) {
             const passes = countPasses(goban);
             const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-            const captures = prisoners[color].prisoners + passes[color];
+            let captures =
+                searchParams.get("mode") === "capture"
+                    ? prisoners[color].prisoners + passes[color]
+                    : prisoners[color].prisoners;
             setNumCaptures(captures);
 
             const doDelayedRefresh = () => {
                 const passes = countPasses(goban);
                 const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-                const captures = prisoners[color].prisoners + passes[color];
+                if (searchParams.get("mode") === "capture") {
+                    captures = prisoners[color].prisoners;
+                } else {
+                    captures = prisoners[color].prisoners + passes[color];
+                }
+
                 setTimeout(() => {
                     setNumCaptures(captures);
                 }, 3000);
@@ -54,7 +63,11 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
             const doImmediateRefresh = () => {
                 const passes = countPasses(goban);
                 const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-                const captures = prisoners[color].prisoners + passes[color];
+                if (searchParams.get("mode") === "capture") {
+                    captures = prisoners[color].prisoners;
+                } else {
+                    captures = prisoners[color].prisoners + passes[color];
+                }
                 setNumCaptures(captures);
             };
 
