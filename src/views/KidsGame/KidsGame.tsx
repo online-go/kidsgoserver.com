@@ -150,15 +150,16 @@ export function KidsGame(): JSX.Element {
             const currentMode = new URLSearchParams(window.location.search).get("mode");
             if (currentMode === "capture") {
                 setCaptureWin(true);
+                localStorage.setItem("captureWin", "true");
                 const playerToMove = goban.engine.playerToMove();
 
                 if (playerToMove !== user?.id) {
                     console.log("Opponent resigns.");
-                    setCaptureWinPlayer(user?.id);
+                    localStorage.setItem("captureWinPlayer", user?.id?.toString() || "0");
                     goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign or disable board clicks instead. This only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
                 } else {
                     console.log("User resigns.");
-                    setCaptureWinPlayer(opponent?.id);
+                    localStorage.setItem("captureWinPlayer", opponent?.id?.toString() || "0");
                     goban_ref.current.resign();
                 }
             }
@@ -297,6 +298,9 @@ export function KidsGame(): JSX.Element {
                 goban.redraw(true);
             }, 1);
             clearInterval(animation_interval);
+            // Clear the capture winner and captureWin boolean value from localStorage so the winner is reset before we start the next game we play
+            localStorage.removeItem("captureWinPlayer");
+            localStorage.removeItem("captureWin");
         };
     }, [game_id, container]);
 
@@ -428,8 +432,7 @@ export function KidsGame(): JSX.Element {
                 {phase === "finished" && !gameFinishedClosed && (
                     <ResultsDialog
                         goban={goban_ref?.current}
-                        captureWin={captureWin}
-                        captureWinPlayer={captureWinPlayer} // HACK: id of player that won, won't match internal state because the USER always resigns to make the Go board not interactable
+                        // captureWin={captureWin}
                         onPlayAgain={() => {
                             void navigate("/play");
                         }}

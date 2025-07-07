@@ -24,14 +24,15 @@ import { countPasses } from "@kidsgo/lib/countPasses";
 
 interface ResultsDialogProps {
     goban?: Goban;
-    captureWin?: boolean;
-    captureWinPlayer?: Number;
     onPlayAgain: () => void;
     onClose: () => void;
 }
 
 export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     const user = useUser();
+    const captureWinPlayer = Number(localStorage.getItem("captureWinPlayer") || "0");
+    const isCaptureWin = localStorage.getItem("captureWin") === "true";
+    const isResignation = props.goban?.engine?.outcome === "Resignation";
 
     if (!props.goban) {
         return null;
@@ -45,9 +46,6 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     const passes = countPasses(props.goban);
     score.black.prisoners = score_prisoners.black.prisoners + passes.black;
     score.white.prisoners = score_prisoners.white.prisoners + passes.white;
-
-    const isResignation = props.goban?.engine?.outcome === "Resignation";
-    const isCaptureWin = props.captureWin;
 
     const black_svg_url = ((props.goban as any)?.theme_black?.getSadStoneSvgUrl() || "").replace(
         "sad",
@@ -106,7 +104,7 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
                         <div className="result-center-message">
                             {isCaptureWin ? (
                                 <div>
-                                    {props.captureWinPlayer === user.id
+                                    {captureWinPlayer === user.id
                                         ? "You won by capturing them first!"
                                         : "They won by capturing you first!"}
                                 </div>

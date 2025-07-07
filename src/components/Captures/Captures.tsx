@@ -45,6 +45,7 @@ export function Captures({ color, goban }: CapturesProps): JSX.Element {
                 const mode = searchParams.get("mode");
 
                 // Don't count pass stones in our capture game mode, this avoids a bug where if the user wins, the opponent is forced to pass and we get one extra prisoner in the bowl
+                // Also, we don't let users click the pass button in the capture game mode now either, so this ensures consistency
                 return mode === "capture"
                     ? prisoners[color].prisoners
                     : prisoners[color].prisoners + passes[color];
