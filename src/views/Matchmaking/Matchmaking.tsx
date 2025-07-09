@@ -410,23 +410,25 @@ export function Matchmaking(): JSX.Element {
                     <label htmlFor="board-size-13">13x13</label>
                 </div>
                 <div className="settings">
-                    Game Mode:
-                    <input
-                        type="radio"
-                        id="normal-game"
-                        name="game-mode"
-                        checked={captureGame === false}
-                        onChange={() => handleGameModeChange(false)}
-                    />
-                    <label htmlFor="normal-game">Normal</label>
-                    <input
-                        type="radio"
-                        id="first-capture"
-                        name="game-mode"
-                        checked={captureGame === true}
-                        onChange={() => handleGameModeChange(true)}
-                    />
-                    <label htmlFor="first-capture">1st Capture</label>
+                    <div className="gamemode-spacer">
+                        Game Mode:
+                        <input
+                            type="radio"
+                            id="normal-game"
+                            name="game-mode"
+                            checked={captureGame === false}
+                            onChange={() => handleGameModeChange(false)}
+                        />
+                        <label htmlFor="normal-game">Normal</label>
+                        <input
+                            type="radio"
+                            id="first-capture"
+                            name="game-mode"
+                            checked={captureGame === true}
+                            onChange={() => handleGameModeChange(true)}
+                        />
+                        <label htmlFor="first-capture">1st Capture</label>
+                    </div>
                 </div>
 
                 <button
