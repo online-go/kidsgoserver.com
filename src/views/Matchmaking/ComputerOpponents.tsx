@@ -26,6 +26,7 @@ interface OpponentListProperties {
     channel: string;
     value: string;
     handicap: number;
+    captureGame?: boolean;
     onChange: (user: string, handicap: number, full_user: any) => void;
 }
 
@@ -53,6 +54,46 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
         };
     }, []);
 
+    React.useEffect(() => {
+        if (props.captureGame) {
+            const easyBot = bots.find(
+                (bot) => bot.kidsgo_bot_name?.toLowerCase()?.includes("easy"),
+            );
+            if (easyBot && (!props.value || props.value !== easyBot.id || props.handicap !== 0)) {
+                // Auto-select Easy bot and sync parent state
+                props.onChange(easyBot.id, 0, easyBot);
+            }
+        }
+    }, [props.captureGame, bots]);
+    // Early return for capture mode - only show Easy bot
+    if (props.captureGame) {
+        const easyBot = bots.find((bot) => bot.kidsgo_bot_name?.toLowerCase()?.includes("easy"));
+
+        if (!easyBot) {
+            return;
+        }
+
+        const [race, idx] = uiClassToRaceIdx(easyBot.ui_class);
+        const isSelected = props.value === easyBot.id && props.handicap === 0;
+
+        return (
+            <div className="OpponentList-container">
+                <div className="OpponentList ComputerOpponents">
+                    <h4>Bots to Play</h4>
+                    <span
+                        className={`bot ${isSelected ? "active" : ""}`}
+                        onClick={() => {
+                            props.onChange(easyBot.id, 0, easyBot);
+                        }}
+                    >
+                        <Avatar race={race} idx={idx} />
+                        Easy
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="OpponentList-container">
             <div className="OpponentList ComputerOpponents">
@@ -60,6 +101,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
                 {(bots.length >= 1 || null) &&
                     bots
                         .filter((bot) => !!bot.kidsgo_bot_name)
+
                         .map((bot: any) => {
                             const [race, idx] = uiClassToRaceIdx(bot.ui_class);
                             const handicaps =
