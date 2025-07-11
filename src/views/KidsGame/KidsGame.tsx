@@ -154,9 +154,12 @@ export function KidsGame(): JSX.Element {
                 const playerToMove = goban.engine.playerToMove();
 
                 if (playerToMove !== user?.id) {
-                    console.log("Opponent resigns.");
+                    console.log(
+                        "Opponent resigns (currently user is ALWAYS resigning to lock board state though).",
+                    );
                     localStorage.setItem("captureWinPlayer", user?.id?.toString() || "0");
-                    goban_ref.current.resign(); // TODO: Need to force OPPONENT to resign or disable board clicks instead. This only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
+                    // TODO: Need to force OPPONENT to resign or disable board clicks instead. This only works because I'm setting the winner manually, but the Goban / internal state thinks we always resign and thus lost the game
+                    goban_ref.current.resign();
                 } else {
                     console.log("User resigns.");
                     localStorage.setItem("captureWinPlayer", opponent?.id?.toString() || "0");
@@ -217,7 +220,6 @@ export function KidsGame(): JSX.Element {
                     /* If we just joined the game, don't replay the animation */
                     if (pass_last_move !== 0) {
                         if (goban.engine.last_official_move.passed()) {
-                            console.log("Hello from inner passStrongHandler()!");
                             const color = goban.engine.colorToMove();
                             const other_color = color === "black" ? "white" : "black";
 
@@ -251,7 +253,6 @@ export function KidsGame(): JSX.Element {
                 text: formatted,
                 no_cancel: true,
             });
-            //console.log("show-message", formatted, message_id, parameters);
         });
         goban.on("clear-message", () => {
             closePopup();
@@ -396,7 +397,6 @@ export function KidsGame(): JSX.Element {
         user.id !== player_to_move &&
         user.id in (goban_ref.current?.engine.player_pool || {}) &&
         move_number > 1;
-    console.log("searchParams[mode]", searchParams.get("mode"));
     // Always disable the pass button in our capture game mode, this way we can make sure the pass prisoners are never shown in the Captures component.
     // This prevents potential data inconsistencies from the user passing in the capture game (is makes no sense why the user would pass in this game mode, but this prevents them from doing it altogether)
     const can_pass = user.id === player_to_move && searchParams.get("mode") !== "capture";

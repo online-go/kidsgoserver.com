@@ -377,18 +377,21 @@ export function Matchmaking(): JSX.Element {
                             <img src={white_svg_url} alt="white" />
                         </label>
                     </div>
-                    {my_color === "black" ? " with " : " and give "}
-                    <select
-                        value={handicap}
-                        onChange={(ev) => setHandicap(parseInt(ev.target.value))}
-                    >
-                        <option value="0">no</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    {handicap === 1 ? " starting stone and no komi " : " extra stones. "}
+                    {!captureGame && (my_color === "black" ? " with " : " and give ")}
+                    {!captureGame && (
+                        <select
+                            value={handicap}
+                            onChange={(ev) => setHandicap(parseInt(ev.target.value))}
+                        >
+                            <option value="0">no</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    )}
+                    {!captureGame &&
+                        (handicap === 1 ? " starting stone and no komi " : " extra stones. ")}
                 </div>
                 <div className="settings">
                     Board size:
