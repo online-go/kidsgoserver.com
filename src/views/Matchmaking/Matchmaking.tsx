@@ -422,7 +422,7 @@ export function Matchmaking(): JSX.Element {
                             checked={captureGame === false}
                             onChange={() => handleGameModeChange(false)}
                         />
-                        <label htmlFor="normal-game">Normal</label>
+                        <label htmlFor="normal-game">Regular Go</label>
                         <input
                             type="radio"
                             id="first-capture"
@@ -430,7 +430,7 @@ export function Matchmaking(): JSX.Element {
                             checked={captureGame === true}
                             onChange={() => handleGameModeChange(true)}
                         />
-                        <label htmlFor="first-capture">1st Capture</label>
+                        <label htmlFor="first-capture">Capture Go</label>
                     </div>
                 </div>
 
