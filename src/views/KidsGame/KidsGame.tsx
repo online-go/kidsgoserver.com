@@ -398,7 +398,7 @@ export function KidsGame(): JSX.Element {
         user.id in (goban_ref.current?.engine.player_pool || {}) &&
         move_number > 1;
     // Always disable the pass button in our capture game mode, this way we can make sure the pass prisoners are never shown in the Captures component.
-    // This prevents potential data inconsistencies from the user passing in the capture game (is makes no sense why the user would pass in this game mode, but this prevents them from doing it altogether)
+    // This prevents potential data inconsistencies from the user passing in the capture game (it makes no sense why the user would pass in this game mode, but this prevents them from doing it altogether)
     const can_pass = user.id === player_to_move && searchParams.get("mode") !== "capture";
     const bot_game =
         isBot(goban_ref.current?.engine.players.black) ||
