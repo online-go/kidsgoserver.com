@@ -21,7 +21,7 @@ import { BackButton } from "@kidsgo/components/BackButton";
 const helpSections = [
     { id: "avatars", title: "Avatars" },
     { id: "starting", title: "Starting a Game" },
-    { id: "firstCapture", title: "First Capture" },
+    { id: "captureGo", title: "Capture Go" },
     { id: "boards", title: "Board Sizes" },
     { id: "ending", title: "Ending the Game" },
     { id: "scoring", title: "Scoring the Game" },
@@ -118,13 +118,13 @@ export function HelpPage(): JSX.Element {
                     {isMobile && <BackToTopButton />}
                 </section>
 
-                <section id="firstCapture">
-                    <h2>First Capture</h2>
+                <section id="captureGo">
+                    <h2>Capture Go</h2>
                     <p>
                         This is a training game for Go, with fewer rules. Whoever captures one or
                         more stones wins, and then you can start a new game. It is helpful for very
                         young children who aren’t old enough to play Go. 4 and 5 year old kids can
-                        start with First Capture, and progress to full Go when they are ready.
+                        start with Capture Go, and progress to Regular Go when they are ready.
                     </p>
                     {isMobile && <BackToTopButton />}
                 </section>
