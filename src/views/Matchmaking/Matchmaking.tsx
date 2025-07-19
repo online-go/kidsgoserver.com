@@ -414,7 +414,7 @@ export function Matchmaking(): JSX.Element {
                 </div>
                 <div className="settings">
                     <div className="gamemode-spacer">
-                        Game Mode:
+                        Game:
                         <input
                             type="radio"
                             id="normal-game"
