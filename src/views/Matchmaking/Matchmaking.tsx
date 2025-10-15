@@ -18,7 +18,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/hooks";
-import { post, del } from "@/lib/requests";
+import { post, del, get } from "@/lib/requests";
 import { socket } from "@/lib/sockets";
 import * as data from "@/lib/data";
 import cached from "@/lib/cached";
@@ -153,52 +153,80 @@ export function Matchmaking(): JSX.Element {
         openPopup({ text: `Sending challenge`, no_accept: true, no_cancel: true })
             .then(() => {})
             .catch(() => {});
-        post(`players/${opponent}/challenge`, challenge)
+
+        // Clear any old challenges before sending a new one
+        get("me/challenges", { page_size: 30 })
             .then((res) => {
-                // we can actually be redirected before this returns if we receive the notification
-                // before the post result, so in this case, just close things down and enjoy the game,
-                // nothing else to do.
-                if (window.location.pathname.startsWith("/game")) {
+                // Filter for challenges where current user is the challenger (outgoing challenges)
+                const outgoingChallenges = res.results.filter(
+                    (c: any) => c.challenger.id === user.id,
+                );
+
+                // Delete all outgoing challenges
+                const deletionPromises = outgoingChallenges.map((c: any) =>
+                    del(`me/challenges/${c.id}`).catch((err) => {
+                        console.warn("Failed to delete old challenge:", err);
+                    }),
+                );
+
+                return Promise.all(deletionPromises);
+            })
+            .catch((err) => {
+                console.warn("Failed to fetch challenges:", err);
+                // Continue anyway - don't block sending the new challenge
+            })
+            .finally(() => {
+                // Send the new challenge after cleaning up old ones
+                sendChallenge();
+            });
+
+        const sendChallenge = () => {
+            post(`players/${opponent}/challenge`, challenge)
+                .then((res) => {
+                    // we can actually be redirected before this returns if we receive the notification
+                    // before the post result, so in this case, just close things down and enjoy the game,
+                    // nothing else to do.
+                    if (window.location.pathname.startsWith("/game")) {
+                        closePopup();
+                        return;
+                    }
+
+                    const challenge_id = res.challenge;
+                    const game_id = typeof res.game === "object" ? res.game.id : res.game;
+                    let keepalive_interval;
+
+                    notification_manager.event_emitter.on("notification", checkForReject);
+
                     closePopup();
-                    return;
-                }
-
-                const challenge_id = res.challenge;
-                const game_id = typeof res.game === "object" ? res.game.id : res.game;
-                let keepalive_interval;
-
-                notification_manager.event_emitter.on("notification", checkForReject);
-
-                closePopup();
-                openPopup({
-                    text: `Waiting for opponent to accept challenge`,
-                    no_accept: true,
-                })
-                    .then(() => {
-                        off(false);
+                    openPopup({
+                        text: `Waiting for opponent to accept challenge`,
+                        no_accept: true,
                     })
-                    .catch(() => {
-                        console.log("going to cancel");
-                        del("me/challenges/%%", challenge_id)
-                            .then(() => off(true)) // we cancelled successfully, so fully disconnect from that game
-                            .catch(() => off(false)); // we didn't cancel in time, game on!
-                    });
-                active_check();
-
-                function active_check() {
-                    keepalive_interval = setInterval(() => {
-                        socket.send("challenge/keepalive", {
-                            challenge_id: challenge_id,
-                            game_id: game_id,
+                        .then(() => {
+                            off(false);
+                        })
+                        .catch(() => {
+                            console.log("going to cancel");
+                            del("me/challenges/%%", challenge_id)
+                                .then(() => off(true)) // we cancelled successfully, so fully disconnect from that game
+                                .catch(() => off(false)); // we didn't cancel in time, game on!
                         });
-                    }, 1000);
-                    /*
+                    active_check();
+
+                    function active_check() {
+                        keepalive_interval = setInterval(() => {
+                            socket.send("challenge/keepalive", {
+                                challenge_id: challenge_id,
+                                game_id: game_id,
+                            });
+                        }, 1000);
+                        /*
                     socket.send("game/connect", { game_id: game_id });
                     socket.on(`game/${game_id}/gamedata`, onGamedata);
                     */
-                }
+                    }
 
-                /*
+                    /*
                 function onGamedata() {
                     off(false);
                     closePopup();
@@ -206,45 +234,46 @@ export function Matchmaking(): JSX.Element {
                 }
                 */
 
-                function onRejected(message?: string) {
-                    off(true);
-                    closePopup();
-                    openPopup({
-                        text: message || "Your challenge was declined",
-                        no_cancel: true,
-                    })
-                        .then(() => 0)
-                        .catch(() => 0);
-                }
-
-                function off(disconnect: boolean) {
-                    clearTimeout(keepalive_interval);
-                    if (disconnect) {
-                        socket.send("game/disconnect", { game_id: game_id });
+                    function onRejected(message?: string) {
+                        off(true);
+                        closePopup();
+                        openPopup({
+                            text: message || "Your challenge was declined",
+                            no_cancel: true,
+                        })
+                            .then(() => 0)
+                            .catch(() => 0);
                     }
-                    //socket.off(`game/${game_id}/gamedata`, onGamedata);
-                    //socket.off(`game/${game_id}/rejected`, onRejected);
-                    notification_manager.event_emitter.off("notification", checkForReject);
-                    closePopup();
-                }
 
-                function checkForReject(notification) {
-                    console.log("challenge rejection check notification:", notification);
-                    if (notification.type === "gameOfferRejected") {
-                        /* non checked delete to purge old notifications that
-                         * could be around after browser refreshes, connection
-                         * drops, etc. */
-                        notification_manager.deleteNotification(notification);
-                        if (notification.game_id === game_id) {
-                            onRejected(notification.message);
+                    function off(disconnect: boolean) {
+                        clearTimeout(keepalive_interval);
+                        if (disconnect) {
+                            socket.send("game/disconnect", { game_id: game_id });
+                        }
+                        //socket.off(`game/${game_id}/gamedata`, onGamedata);
+                        //socket.off(`game/${game_id}/rejected`, onRejected);
+                        notification_manager.event_emitter.off("notification", checkForReject);
+                        closePopup();
+                    }
+
+                    function checkForReject(notification) {
+                        console.log("challenge rejection check notification:", notification);
+                        if (notification.type === "gameOfferRejected") {
+                            /* non checked delete to purge old notifications that
+                             * could be around after browser refreshes, connection
+                             * drops, etc. */
+                            notification_manager.deleteNotification(notification);
+                            if (notification.game_id === game_id) {
+                                onRejected(notification.message);
+                            }
                         }
                     }
-                }
-            })
-            .catch((err) => {
-                closePopup();
-                errorAlerter(err);
-            });
+                })
+                .catch((err) => {
+                    closePopup();
+                    errorAlerter(err);
+                });
+        };
         /*
             })
             .catch((err) => {
