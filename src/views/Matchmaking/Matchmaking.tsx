@@ -55,6 +55,7 @@ export function Matchmaking(): JSX.Element {
     const [captureGame, setCaptureGame] = React.useState(() => {
         return localStorage.getItem("gameMode") === "capture";
     });
+    const [isSendingChallenge, setIsSendingChallenge] = React.useState(false);
 
     const handleGameModeChange = (isCaptureMode: boolean) => {
         setCaptureGame(isCaptureMode);
@@ -104,6 +105,13 @@ export function Matchmaking(): JSX.Element {
     */
 
     const play = (_e) => {
+        // Prevent race conditions from multiple rapid clicks
+        if (isSendingChallenge) {
+            return;
+        }
+
+        setIsSendingChallenge(true);
+
         //const hc = isBot(opponent) ? handicap : 0;
         const hc = handicap;
 
@@ -171,13 +179,14 @@ export function Matchmaking(): JSX.Element {
 
                 return Promise.all(deletionPromises);
             })
-            .catch((err) => {
-                console.warn("Failed to fetch challenges:", err);
-                // Continue anyway - don't block sending the new challenge
-            })
-            .finally(() => {
+            .then(() => {
                 // Send the new challenge after cleaning up old ones
                 sendChallenge();
+            })
+            .catch((err) => {
+                closePopup();
+                setIsSendingChallenge(false);
+                errorAlerter(err);
             });
 
         const sendChallenge = () => {
@@ -254,6 +263,7 @@ export function Matchmaking(): JSX.Element {
                         //socket.off(`game/${game_id}/rejected`, onRejected);
                         notification_manager.event_emitter.off("notification", checkForReject);
                         closePopup();
+                        setIsSendingChallenge(false);
                     }
 
                     function checkForReject(notification) {
@@ -271,6 +281,7 @@ export function Matchmaking(): JSX.Element {
                 })
                 .catch((err) => {
                     closePopup();
+                    setIsSendingChallenge(false);
                     errorAlerter(err);
                 });
         };
@@ -301,8 +312,12 @@ export function Matchmaking(): JSX.Element {
 
     // The 0-9 regex disabled the computer opponents for now.
     const canPlay =
-        !user.anonymous && opponent && opponent !== `${user.id}` && /[0-9]+/.test(opponent);
-    const canView = !!game_to_view;
+        !user.anonymous &&
+        opponent &&
+        opponent !== `${user.id}` &&
+        /[0-9]+/.test(opponent) &&
+        !isSendingChallenge;
+    const canView = !!game_to_view && !isSendingChallenge;
     //const showGameSettings = canPlay && isBot(opponent);
 
     const openSignin = (): void => {
