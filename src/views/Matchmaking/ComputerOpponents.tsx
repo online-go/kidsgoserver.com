@@ -26,6 +26,7 @@ interface OpponentListProperties {
     channel: string;
     value: string;
     handicap: number;
+    captureGame?: boolean;
     onChange: (user: string, handicap: number, full_user: any) => void;
 }
 
@@ -53,6 +54,45 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
         };
     }, []);
 
+    // Auto-select Easy bot and sync parent state when we have choose the captureGame mode
+    React.useEffect(() => {
+        if (props.captureGame) {
+            const easyBot = bots.find(
+                (bot) => bot.kidsgo_bot_name?.toLowerCase()?.includes("easy"),
+            );
+            if (easyBot) {
+                props.onChange(easyBot.id, 0, easyBot);
+            }
+        }
+    }, [props.captureGame, bots]);
+
+    // If we are in captureGame mode, only show Easy bot as it's the best bot for playing first capture because it's weak
+    if (props.captureGame) {
+        const easyBot = bots.find((bot) => bot.kidsgo_bot_name?.toLowerCase()?.includes("easy"));
+
+        if (easyBot) {
+            const [race, idx] = uiClassToRaceIdx(easyBot.ui_class);
+            const isSelected = props.value === easyBot.id && props.handicap === 0;
+
+            return (
+                <div className="OpponentList-container">
+                    <div className="OpponentList ComputerOpponents">
+                        <h4>Bots to Play</h4>
+                        <span
+                            className={`bot ${isSelected ? "active" : ""}`}
+                            onClick={() => {
+                                props.onChange(easyBot.id, 0, easyBot);
+                            }}
+                        >
+                            <Avatar race={race} idx={idx} />
+                            Easy
+                        </span>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     return (
         <div className="OpponentList-container">
             <div className="OpponentList ComputerOpponents">
@@ -60,6 +100,7 @@ export function ComputerOpponents(props: OpponentListProperties): JSX.Element {
                 {(bots.length >= 1 || null) &&
                     bots
                         .filter((bot) => !!bot.kidsgo_bot_name)
+
                         .map((bot: any) => {
                             const [race, idx] = uiClassToRaceIdx(bot.ui_class);
                             const handicaps =

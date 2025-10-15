@@ -18,6 +18,7 @@
 import * as React from "react";
 import { Goban } from "goban";
 import { countPasses } from "@kidsgo/lib/countPasses";
+import { useSearchParams } from "react-router-dom";
 
 interface CapturesProps {
     color: "black" | "white";
@@ -35,27 +36,30 @@ function yrandpercent(i: number): number {
 export function Captures({ color, goban }: CapturesProps): JSX.Element {
     //const [r, refresh] = React.useState(0);
     const [numCaptures, setNumCaptures] = React.useState(goban?.engine[color + "_prisoners"] || 0);
-
+    const [searchParams, setSearchParams] = useSearchParams();
     React.useEffect(() => {
         if (goban) {
-            const passes = countPasses(goban);
-            const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-            const captures = prisoners[color].prisoners + passes[color];
-            setNumCaptures(captures);
-
-            const doDelayedRefresh = () => {
+            const computeCaptures = () => {
                 const passes = countPasses(goban);
                 const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-                const captures = prisoners[color].prisoners + passes[color];
+                const mode = searchParams.get("mode");
+
+                // Don't count pass stones in our capture game mode, this avoids a bug where if the user wins, the opponent is forced to pass and we get one extra prisoner in the bowl
+                // Also, we don't let users click the pass button in the capture game mode now either, so this ensures consistency
+                return mode === "capture"
+                    ? prisoners[color].prisoners
+                    : prisoners[color].prisoners + passes[color];
+            };
+
+            setNumCaptures(computeCaptures());
+
+            const doDelayedRefresh = () => {
                 setTimeout(() => {
-                    setNumCaptures(captures);
+                    setNumCaptures(computeCaptures());
                 }, 3000);
             };
             const doImmediateRefresh = () => {
-                const passes = countPasses(goban);
-                const prisoners = goban.engine.computeScore(true); // true for prisoners only scoring
-                const captures = prisoners[color].prisoners + passes[color];
-                setNumCaptures(captures);
+                setNumCaptures(computeCaptures());
             };
 
             goban.on("captured-stones", doDelayedRefresh);

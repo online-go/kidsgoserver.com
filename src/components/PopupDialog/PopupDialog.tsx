@@ -68,6 +68,10 @@ interface OpenPopupProps {
 let root: ReactDOM.Root;
 
 export function openPopup(props: OpenPopupProps): Promise<void> {
+    if (typeof props.text === "string" && props.text.includes("Error: Game is not in progress")) {
+        console.log("Suppressing popup for game not in progress error");
+        return Promise.resolve(); // Don't create any popup at all
+    }
     const container = document.createElement("DIV");
     document.body.append(container);
 

@@ -30,6 +30,9 @@ interface ResultsDialogProps {
 
 export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     const user = useUser();
+    const captureWinPlayer = Number(localStorage.getItem("captureWinPlayer") || "0");
+    const isCaptureWin = localStorage.getItem("captureWin") === "true";
+    const isResignation = props.goban?.engine?.outcome === "Resignation";
 
     if (!props.goban) {
         return null;
@@ -43,8 +46,6 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
     const passes = countPasses(props.goban);
     score.black.prisoners = score_prisoners.black.prisoners + passes.black;
     score.white.prisoners = score_prisoners.white.prisoners + passes.white;
-
-    const isResignation = props.goban?.engine?.outcome === "Resignation";
 
     const black_svg_url = ((props.goban as any)?.theme_black?.getSadStoneSvgUrl() || "").replace(
         "sad",
@@ -101,9 +102,19 @@ export function ResultsDialog(props: ResultsDialogProps): JSX.Element {
                         </div>
 
                         <div className="result-center-message">
-                            <div>
-                                {userWon ? "They resigned, you won!" : "You resigned, they won!"}
-                            </div>
+                            {isCaptureWin ? (
+                                <div>
+                                    {captureWinPlayer === user.id
+                                        ? "You won by capturing them first!"
+                                        : "They won by capturing you first!"}
+                                </div>
+                            ) : (
+                                <div>
+                                    {userWon
+                                        ? "They resigned, you won!"
+                                        : "You resigned, they won!"}
+                                </div>
+                            )}
                         </div>
 
                         <div className="white">

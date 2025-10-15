@@ -21,6 +21,7 @@ import { BackButton } from "@kidsgo/components/BackButton";
 const helpSections = [
     { id: "avatars", title: "Avatars" },
     { id: "starting", title: "Starting a Game" },
+    { id: "captureGo", title: "Capture Go" },
     { id: "boards", title: "Board Sizes" },
     { id: "ending", title: "Ending the Game" },
     { id: "scoring", title: "Scoring the Game" },
@@ -113,6 +114,17 @@ export function HelpPage(): JSX.Element {
                         It will take a few games with a player to see what the right handicap should
                         be. If you don’t know, just play even. If someone wins 2 or more times,
                         adjust the handicap.
+                    </p>
+                    {isMobile && <BackToTopButton />}
+                </section>
+
+                <section id="captureGo">
+                    <h2>Capture Go</h2>
+                    <p>
+                        This is a training game for Go, with fewer rules. Whoever captures one or
+                        more stones wins, and then you can start a new game. It is helpful for very
+                        young children who aren’t old enough to play Go. 4 and 5 year old kids can
+                        start with Capture Go, and progress to Regular Go when they are ready.
                     </p>
                     {isMobile && <BackToTopButton />}
                 </section>

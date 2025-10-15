@@ -52,7 +52,14 @@ function Main(props): JSX.Element {
                 return;
             }
 
-            void navigate(`/game/${game.id}`);
+            const savedGameMode = localStorage.getItem("gameMode");
+
+            let navigationUrl = `/game/${game.id}`;
+            if (savedGameMode === "capture") {
+                navigationUrl += "?mode=capture";
+            }
+
+            void navigate(navigationUrl);
 
             console.log("Need to go to game", game.id);
         });

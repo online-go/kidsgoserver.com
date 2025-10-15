@@ -52,6 +52,20 @@ export function Matchmaking(): JSX.Element {
     const [race, idx] = uiClassToRaceIdx(user.ui_class);
     const [my_color, setMyColor] = React.useState<"black" | "white">("black");
     const [board_size, setBoardSize] = React.useState(9);
+    const [captureGame, setCaptureGame] = React.useState(() => {
+        return localStorage.getItem("gameMode") === "capture";
+    });
+
+    const handleGameModeChange = (isCaptureMode: boolean) => {
+        setCaptureGame(isCaptureMode);
+
+        // Sync to localStorage so kidsgo-routes.tsx can load the proper query parameter if we are playing the capture game
+        if (isCaptureMode) {
+            localStorage.setItem("gameMode", "capture");
+        } else {
+            localStorage.removeItem("gameMode");
+        }
+    };
 
     useEnsureUserIsCreated();
 
@@ -246,6 +260,7 @@ export function Matchmaking(): JSX.Element {
             play(e);
         }
     };
+
     function back() {
         void navigate("/");
     }
@@ -320,6 +335,7 @@ export function Matchmaking(): JSX.Element {
                             channel="kidsgo"
                             value={opponent}
                             handicap={handicap}
+                            captureGame={captureGame}
                             onChange={setOpponentAndHandicap}
                         />
                     </div>
@@ -361,19 +377,21 @@ export function Matchmaking(): JSX.Element {
                             <img src={white_svg_url} alt="white" />
                         </label>
                     </div>
-                    {my_color === "black" ? " with " : " and give "}
-                    <select
-                        value={handicap}
-                        onChange={(ev) => setHandicap(parseInt(ev.target.value))}
-                    >
-                        <option value="0">no</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        {/* <option value="6">6</option> */}
-                    </select>
-                    {handicap === 1 ? " starting stone and no komi " : " extra stones. "}
+                    {!captureGame && (my_color === "black" ? " with " : " and give ")}
+                    {!captureGame && (
+                        <select
+                            value={handicap}
+                            onChange={(ev) => setHandicap(parseInt(ev.target.value))}
+                        >
+                            <option value="0">no</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    )}
+                    {!captureGame &&
+                        (handicap === 1 ? " starting stone and no komi " : " extra stones. ")}
                 </div>
                 <div className="settings">
                     Board size:
@@ -393,6 +411,27 @@ export function Matchmaking(): JSX.Element {
                         onChange={() => setBoardSize(13)}
                     />
                     <label htmlFor="board-size-13">13x13</label>
+                </div>
+                <div className="settings">
+                    <div className="gamemode-spacer">
+                        Game:
+                        <input
+                            type="radio"
+                            id="normal-game"
+                            name="game-mode"
+                            checked={captureGame === false}
+                            onChange={() => handleGameModeChange(false)}
+                        />
+                        <label htmlFor="normal-game">Regular Go</label>
+                        <input
+                            type="radio"
+                            id="first-capture"
+                            name="game-mode"
+                            checked={captureGame === true}
+                            onChange={() => handleGameModeChange(true)}
+                        />
+                        <label htmlFor="first-capture">Capture Go</label>
+                    </div>
                 </div>
 
                 <button
