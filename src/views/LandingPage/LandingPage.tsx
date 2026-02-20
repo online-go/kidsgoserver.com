@@ -20,6 +20,18 @@ import { _ } from "@/lib/translate";
 import { useNavigate } from "react-router-dom";
 import { kidsgo_sfx } from "@kidsgo/lib/kidsgo-sfx";
 import { useUser } from "@/lib/hooks";
+import Lottie from "lottie-react";
+
+function useLottieAnimation(path: string): object | null {
+    const [animation, setAnimation] = React.useState<object | null>(null);
+    React.useEffect(() => {
+        fetch(path)
+            .then((r) => r.json())
+            .then(setAnimation)
+            .catch(console.error);
+    }, [path]);
+    return animation;
+}
 
 const ROCKET_LAUNCH_DURATION = 1.25; // seconds. This should match the time in LandingPage.styl to sync animation and navigation
 let navigate_timeout;
@@ -27,6 +39,8 @@ let navigate_timeout;
 export function LandingPage(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
+    const starsAnimation = useLottieAnimation("/pages/home/STARS_ANIM_01_v01.json");
+    const raccoonAnimation = useLottieAnimation("/pages/home/RACCOON_CAR-ANIM_01_v01.json");
     const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
         React.useState(false as boolean);
     const [play_launching, set_play_launching]: [boolean, (tf: boolean) => void] = React.useState(
@@ -75,6 +89,22 @@ export function LandingPage(): JSX.Element {
         <div id="LandingPage">
             <div className="spacer" />
             <div className="mountain-background">
+                {starsAnimation && (
+                    <Lottie
+                        animationData={starsAnimation}
+                        loop
+                        autoplay
+                        className="stars-animation"
+                    />
+                )}
+                {raccoonAnimation && (
+                    <Lottie
+                        animationData={raccoonAnimation}
+                        loop
+                        autoplay
+                        className="raccoon-animation"
+                    />
+                )}
                 <div className="logo" />
                 <div
                     className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}

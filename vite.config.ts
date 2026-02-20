@@ -280,13 +280,14 @@ function ogs_vite_middleware(): Plugin {
                         ".jpg": "image/jpeg",
                         ".jpeg": "image/jpeg",
                         ".webm": "video/webm",
+                        ".json": "application/json",
                     };
                     for (const [ext, mime_type] of Object.entries(static_files)) {
                         try {
-                            if (url.endsWith(ext)) {
+                            if (url.endsWith(ext) && url !== "/manifest.json") {
                                 const f = path.resolve(__dirname + "/assets/" + url);
                                 console.info(`GET ${url} -> ${f}`);
-                                if (ext === ".svg") {
+                                if (ext === ".svg" || ext === ".json") {
                                     send_response(await fs.readFile(f, "utf-8"), mime_type);
                                 } else {
                                     send_response(await fs.readFile(f, null), mime_type);
