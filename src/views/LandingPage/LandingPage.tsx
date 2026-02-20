@@ -25,10 +25,16 @@ import Lottie from "lottie-react";
 function useLottieAnimation(path: string): object | null {
     const [animation, setAnimation] = React.useState<object | null>(null);
     React.useEffect(() => {
-        fetch(path)
+        const controller = new AbortController();
+        fetch(path, { signal: controller.signal })
             .then((r) => r.json())
             .then(setAnimation)
-            .catch(console.error);
+            .catch((err) => {
+                if (err.name !== "AbortError") {
+                    console.error(err);
+                }
+            });
+        return () => controller.abort();
     }, [path]);
     return animation;
 }

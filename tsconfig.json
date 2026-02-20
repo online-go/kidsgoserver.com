@@ -35,8 +35,7 @@
 
         "sourceMap": true,
         "jsx": "react",
-        "skipLibCheck": true,
-        "resolveJsonModule": true
+        "skipLibCheck": true
     },
     "files": [
         "./src/kidsgo.tsx",
