@@ -26,7 +26,7 @@ function useLottieAnimation(path: string): object | null {
     const [animation, setAnimation] = React.useState<object | null>(null);
     React.useEffect(() => {
         const controller = new AbortController();
-        fetch(path, { signal: controller.signal })
+        fetch(path, { signal: controller.signal, credentials: "omit" })
             .then((r) => r.json())
             .then(setAnimation)
             .catch((err) => {
