@@ -47,7 +47,9 @@ export function LandingPage(): JSX.Element {
     const user = useUser();
     const cdnBase = window["cdn_service"] + "/" + window["kidsgo_release"];
     const starsAnimation = useLottieAnimation(`${cdnBase}/pages/home/STARS_ANIM_01_v01.json`);
-    const raccoonAnimation = useLottieAnimation(`${cdnBase}/pages/home/RACCOON_CAR-ANIM_01_v01.json`);
+    const raccoonAnimation = useLottieAnimation(
+        `${cdnBase}/pages/home/RACCOON_CAR-ANIM_01_v01.json`,
+    );
     const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
         React.useState(false as boolean);
     const [play_launching, set_play_launching]: [boolean, (tf: boolean) => void] = React.useState(
