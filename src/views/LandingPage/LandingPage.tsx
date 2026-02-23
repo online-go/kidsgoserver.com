@@ -22,13 +22,24 @@ import { kidsgo_sfx } from "@kidsgo/lib/kidsgo-sfx";
 import { useUser } from "@/lib/hooks";
 import Lottie from "lottie-react";
 
+const animationCache = new Map<string, object>();
+
 function useLottieAnimation(path: string): object | null {
-    const [animation, setAnimation] = React.useState<object | null>(null);
+    const [animation, setAnimation] = React.useState<object | null>(
+        animationCache.get(path) ?? null,
+    );
     React.useEffect(() => {
+        if (animationCache.has(path)) {
+            setAnimation(animationCache.get(path)!);
+            return;
+        }
         const controller = new AbortController();
         fetch(path, { signal: controller.signal, credentials: "omit" })
             .then((r) => r.json())
-            .then(setAnimation)
+            .then((data) => {
+                animationCache.set(path, data);
+                setAnimation(data);
+            })
             .catch((err) => {
                 if (err.name !== "AbortError") {
                     console.error(err);
@@ -144,8 +155,6 @@ export function LandingPage(): JSX.Element {
                                   className="rocket-animation"
                               />
                           )}
-                    <span className="label">LEARN</span>
-                    <div className="flames" />
                 </div>
 
                 <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
@@ -166,11 +175,7 @@ export function LandingPage(): JSX.Element {
                                   className="rocket-animation"
                               />
                           )}
-                    <span className="label">PLAY</span>
-                    <div className="flames" />
                 </div>
-                <div className="learn-launchpad launchpad" />
-                <div className="play-launchpad launchpad" />
             </div>
             <div className="spacer" />
         </div>
