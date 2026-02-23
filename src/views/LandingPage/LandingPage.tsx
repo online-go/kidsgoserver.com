@@ -138,43 +138,43 @@ export function LandingPage(): JSX.Element {
                     className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}
                     onClick={learnToPlay}
                 >
-                    {learn_to_play_launching
-                        ? rocketLearnLaunch && (
-                              <Lottie
-                                  animationData={rocketLearnLaunch}
-                                  loop={false}
-                                  autoplay
-                                  className="rocket-animation"
-                              />
-                          )
-                        : rocketLearnIdle && (
-                              <Lottie
-                                  animationData={rocketLearnIdle}
-                                  loop
-                                  autoplay
-                                  className="rocket-animation"
-                              />
-                          )}
+                    {learn_to_play_launching && rocketLearnLaunch ? (
+                        <Lottie
+                            animationData={rocketLearnLaunch}
+                            loop={false}
+                            autoplay
+                            className="rocket-animation"
+                        />
+                    ) : (
+                        rocketLearnIdle && (
+                            <Lottie
+                                animationData={rocketLearnIdle}
+                                loop
+                                autoplay
+                                className="rocket-animation"
+                            />
+                        )
+                    )}
                 </div>
 
                 <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
-                    {play_launching
-                        ? rocketPlayLaunch && (
-                              <Lottie
-                                  animationData={rocketPlayLaunch}
-                                  loop={false}
-                                  autoplay
-                                  className="rocket-animation"
-                              />
-                          )
-                        : rocketPlayIdle && (
-                              <Lottie
-                                  animationData={rocketPlayIdle}
-                                  loop
-                                  autoplay
-                                  className="rocket-animation"
-                              />
-                          )}
+                    {play_launching && rocketPlayLaunch ? (
+                        <Lottie
+                            animationData={rocketPlayLaunch}
+                            loop={false}
+                            autoplay
+                            className="rocket-animation"
+                        />
+                    ) : (
+                        rocketPlayIdle && (
+                            <Lottie
+                                animationData={rocketPlayIdle}
+                                loop
+                                autoplay
+                                className="rocket-animation"
+                            />
+                        )
+                    )}
                 </div>
             </div>
             <div className="spacer" />
