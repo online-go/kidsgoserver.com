@@ -50,6 +50,14 @@ export function LandingPage(): JSX.Element {
     const raccoonAnimation = useLottieAnimation(
         `${cdnBase}/pages/home/RACCOON_CAR-ANIM_01_v01.json`,
     );
+    const rocketLearnIdle = useLottieAnimation(`${cdnBase}/pages/home/ROCKET_LEARN_IDLE_v01.json`);
+    const rocketLearnLaunch = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_LEARN_LAUNCH_v01.json`,
+    );
+    const rocketPlayIdle = useLottieAnimation(`${cdnBase}/pages/home/ROCKET_PLAY_IDLE_v01.json`);
+    const rocketPlayLaunch = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_PLAY_LAUNCH_v01.json`,
+    );
     const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
         React.useState(false as boolean);
     const [play_launching, set_play_launching]: [boolean, (tf: boolean) => void] = React.useState(
@@ -119,11 +127,45 @@ export function LandingPage(): JSX.Element {
                     className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}
                     onClick={learnToPlay}
                 >
+                    {learn_to_play_launching
+                        ? rocketLearnLaunch && (
+                              <Lottie
+                                  animationData={rocketLearnLaunch}
+                                  loop={false}
+                                  autoplay
+                                  className="rocket-animation"
+                              />
+                          )
+                        : rocketLearnIdle && (
+                              <Lottie
+                                  animationData={rocketLearnIdle}
+                                  loop
+                                  autoplay
+                                  className="rocket-animation"
+                              />
+                          )}
                     <span className="label">LEARN</span>
                     <div className="flames" />
                 </div>
 
                 <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
+                    {play_launching
+                        ? rocketPlayLaunch && (
+                              <Lottie
+                                  animationData={rocketPlayLaunch}
+                                  loop={false}
+                                  autoplay
+                                  className="rocket-animation"
+                              />
+                          )
+                        : rocketPlayIdle && (
+                              <Lottie
+                                  animationData={rocketPlayIdle}
+                                  loop
+                                  autoplay
+                                  className="rocket-animation"
+                              />
+                          )}
                     <span className="label">PLAY</span>
                     <div className="flames" />
                 </div>
