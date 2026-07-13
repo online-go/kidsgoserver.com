@@ -59,7 +59,7 @@ export function LandingPage(): JSX.Element {
     const cdnBase = window["cdn_service"] + "/" + window["kidsgo_release"];
     const starsAnimation = useLottieAnimation(`${cdnBase}/pages/home/STARS_ANIM_01_v01.json`);
     const raccoonAnimation = useLottieAnimation(
-        `${cdnBase}/pages/home/RACCOON_CAR-ANIM_01_v01.json`,
+        `${cdnBase}/pages/home/RACCOON_CAR-ANIM_IDLE_01_v03.json`,
     );
     const rocketLearnIdle = useLottieAnimation(`${cdnBase}/pages/home/ROCKET_LEARN_IDLE_v01.json`);
     const rocketLearnLaunch = useLottieAnimation(
