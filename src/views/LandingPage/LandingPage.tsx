@@ -20,6 +20,35 @@ import { _ } from "@/lib/translate";
 import { useNavigate } from "react-router-dom";
 import { kidsgo_sfx } from "@kidsgo/lib/kidsgo-sfx";
 import { useUser } from "@/lib/hooks";
+import Lottie from "lottie-react";
+
+const animationCache = new Map<string, object>();
+
+function useLottieAnimation(path: string): object | null {
+    const [animation, setAnimation] = React.useState<object | null>(
+        animationCache.get(path) ?? null,
+    );
+    React.useEffect(() => {
+        if (animationCache.has(path)) {
+            setAnimation(animationCache.get(path)!);
+            return;
+        }
+        const controller = new AbortController();
+        fetch(path, { signal: controller.signal, credentials: "omit" })
+            .then((r) => r.json())
+            .then((data) => {
+                animationCache.set(path, data);
+                setAnimation(data);
+            })
+            .catch((err) => {
+                if (err.name !== "AbortError") {
+                    console.error(err);
+                }
+            });
+        return () => controller.abort();
+    }, [path]);
+    return animation;
+}
 
 const ROCKET_LAUNCH_DURATION = 1.25; // seconds. This should match the time in LandingPage.styl to sync animation and navigation
 let navigate_timeout;
@@ -27,6 +56,19 @@ let navigate_timeout;
 export function LandingPage(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
+    const cdnBase = window["cdn_service"] + "/" + window["kidsgo_release"];
+    const starsAnimation = useLottieAnimation(`${cdnBase}/pages/home/STARS_ANIM_01_v01.json`);
+    const raccoonAnimation = useLottieAnimation(
+        `${cdnBase}/pages/home/RACCOON_CAR-ANIM_IDLE_01_v03.json`,
+    );
+    const rocketLearnIdle = useLottieAnimation(`${cdnBase}/pages/home/ROCKET_LEARN_IDLE_v01.json`);
+    const rocketLearnLaunch = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_LEARN_LAUNCH_v01.json`,
+    );
+    const rocketPlayIdle = useLottieAnimation(`${cdnBase}/pages/home/ROCKET_PLAY_IDLE_v01.json`);
+    const rocketPlayLaunch = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_PLAY_LAUNCH_v01.json`,
+    );
     const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
         React.useState(false as boolean);
     const [play_launching, set_play_launching]: [boolean, (tf: boolean) => void] = React.useState(
@@ -75,21 +117,65 @@ export function LandingPage(): JSX.Element {
         <div id="LandingPage">
             <div className="spacer" />
             <div className="mountain-background">
+                {starsAnimation && (
+                    <Lottie
+                        animationData={starsAnimation}
+                        loop
+                        autoplay
+                        className="stars-animation"
+                    />
+                )}
+                {raccoonAnimation && (
+                    <Lottie
+                        animationData={raccoonAnimation}
+                        loop
+                        autoplay
+                        className="raccoon-animation"
+                    />
+                )}
                 <div className="logo" />
                 <div
                     className={`learn-to-play-rocket ${learn_to_play_launching ? "launch" : ""}`}
                     onClick={learnToPlay}
                 >
-                    <span className="label">LEARN</span>
-                    <div className="flames" />
+                    {learn_to_play_launching && rocketLearnLaunch ? (
+                        <Lottie
+                            animationData={rocketLearnLaunch}
+                            loop={false}
+                            autoplay
+                            className="rocket-animation"
+                        />
+                    ) : (
+                        rocketLearnIdle && (
+                            <Lottie
+                                animationData={rocketLearnIdle}
+                                loop
+                                autoplay
+                                className="rocket-animation"
+                            />
+                        )
+                    )}
                 </div>
 
                 <div className={`play-rocket ${play_launching ? "launch" : ""}`} onClick={play}>
-                    <span className="label">PLAY</span>
-                    <div className="flames" />
+                    {play_launching && rocketPlayLaunch ? (
+                        <Lottie
+                            animationData={rocketPlayLaunch}
+                            loop={false}
+                            autoplay
+                            className="rocket-animation"
+                        />
+                    ) : (
+                        rocketPlayIdle && (
+                            <Lottie
+                                animationData={rocketPlayIdle}
+                                loop
+                                autoplay
+                                className="rocket-animation"
+                            />
+                        )
+                    )}
                 </div>
-                <div className="learn-launchpad launchpad" />
-                <div className="play-launchpad launchpad" />
             </div>
             <div className="spacer" />
         </div>

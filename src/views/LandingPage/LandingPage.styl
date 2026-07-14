@@ -27,12 +27,8 @@ ROCKET_LAUNCH_DURATION = 1.25s
 }
 
 :root {
-    //--ROCKETWIDTH: min(10vw, 10rem);
     --ROCKETWIDTH: "min(20vw, 10rem)" % "";
     --ROCKETHEIGHT: calc(var(--ROCKETWIDTH) * 3);
-    --FLAMEWIDTH: calc(var(--ROCKETWIDTH) / 2);
-    --FLAMECENTER: calc(var(--FLAMEWIDTH) / 2);
-    --FLAMEHEIGHT: calc(var(--ROCKETHEIGHT) / 2);
 }
 
 #LandingPage {
@@ -69,8 +65,28 @@ ROCKET_LAUNCH_DURATION = 1.25s
         flex-grow: 1;
         position: relative;
         text-align: center;
-        background-image: url("/1.0/pages/home/background_with_logos_6_1_2025.svg");
+        background-image: url("/1.0/pages/home/background_with_logos_and_no_raccoon_2_19_2026.svg");
         background-repeat: no-repeat;
+    }
+
+    .stars-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .raccoon-animation {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-49%);
+        width: 32%;
+        pointer-events: none;
+        z-index: 3;
     }
 
     .logo {
@@ -90,69 +106,32 @@ ROCKET_LAUNCH_DURATION = 1.25s
         width: var(--ROCKETWIDTH);
         text-align: center;
         height: var(--ROCKETHEIGHT);
-        background-repeat: no-repeat;
-        background-position: bottom;
         z-index: z.rocket;
         cursor: pointer;
 
-        .flames {
-            display: none;
-            z-index: z.flame;
-            height: var(--FLAMEHEIGHT);
-            width: var(--FLAMEWIDTH);
+        .rocket-animation {
             position: absolute;
-            top: var(--ROCKETHEIGHT);
-            left: "calc(var(--ROCKETWIDTH) / 2 - (var(--FLAMECENTER) / 2) * 1.2)" % "";
-            background-image: svg-load("../assets/pages/home/flame.svg");
-            background-repeat: no-repeat;
-            background-position: 0 -30px;
+            top: 15%;
+            left: 50%;
+            width: 600%;
+            height: 2500%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
-        .label {
-            position: relative;
-            color: white;
-            top: calc(var(--ROCKETHEIGHT) * 0.5 - 0.75rem);
-
-        }
     }
 
     .learn-to-play-rocket {
         left: 5vw;
-        background-image: url("/1.0/pages/home/learn.svg");
     }
 
     .play-rocket {
         right: 5vw;
-        background-image: url("/1.0/pages/home/play.svg");
     }
 
     .launch {
         transform: translateY(-100vh);
         animation: rocket-launch ROCKET_LAUNCH_DURATION;
         animation-timing-function: cubic-bezier(0.73, 0.27, 0.95, 0.66);
-
-        .flames {
-            display: inline-block;
-        }
-    }
-
-    .launchpad {
-        position: absolute;
-        display: inline-block;
-        bottom: calc(var(--ROCKETHEIGHT) * 0.05);
-        height: calc(var(--ROCKETHEIGHT) * 0.1);
-        width: var(--ROCKETWIDTH);
-        text-align: center;
-        background-repeat: no-repeat;
-    }
-
-    .learn-launchpad {
-        left: 5vw;
-        background-image: svg-load("../assets/pages/home/launchpad.svg");
-    }
-
-    .play-launchpad {
-        right: 5vw;
-        background-image: svg-load("../assets/pages/home/launchpad.svg");
     }
 }
