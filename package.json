@@ -20,6 +20,7 @@
         "defaults"
     ],
     "dependencies": {
+        "lottie-react": "^2.4.1",
         "ogs": "file:./online-go.com"
     },
     "devDependencies": {
