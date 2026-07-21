@@ -54,8 +54,22 @@
         flex-grow: 1;
         position: relative;
         text-align: center;
-        background-image: url("/1.0/pages/home/background_with_logos_and_no_raccoon_2_19_2026.svg");
+    }
+
+    // Holds everything except the title animation so the whole scene can start
+    // as a dark silhouette and gradually brighten while the title intro plays.
+    .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("/1.0/pages/home/background_no_planets_7_20_2026.svg");
         background-repeat: no-repeat;
+    }
+
+    .scene.intro-darkened {
+        animation: intro-brighten 5s ease-out forwards;
     }
 
     .stars-animation {
@@ -78,15 +92,17 @@
         z-index: 3;
     }
 
-    .logo {
+    // Above the raccoon/stars but below the rockets, so a launching rocket
+    // flies over the title/planets. During the intro the .scene filter makes
+    // the scene a single layer, so the title still draws on top of it.
+    .title-animation {
         position: absolute;
-        text-align: center;
-        background-image: url("/1.0/pages/home/kidsgoserver.svg");
-        background-repeat: no-repeat;
-        display: inline-block;
-        width: 80%;
-        height: 80%;
-        left: 10%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: z.rocket - 1;
     }
 
     .learn-to-play-rocket, .play-rocket {
@@ -115,19 +131,19 @@
     // Proportions measured from the reference video.
     .rocket-popup {
         position: absolute;
-        bottom: 30%;
-        width: 26%;
+        bottom: 28%;
+        width: 39%;
         aspect-ratio: 1;
         pointer-events: none;
         z-index: z.rocket + 1;
     }
 
     .learn-popup {
-        left: 20%;
+        left: 17.5%;
     }
 
     .play-popup {
-        right: 20%;
+        right: 17.5%;
     }
 
     .learn-to-play-rocket {
@@ -136,5 +152,19 @@
 
     .play-rocket {
         right: 5vw;
+    }
+}
+
+// Hold the scene as a dark silhouette while the title appears alone,
+// then gradually brighten to full.
+@keyframes intro-brighten {
+    0% {
+        filter: brightness(0.12);
+    }
+    45% {
+        filter: brightness(0.12);
+    }
+    100% {
+        filter: brightness(1);
     }
 }

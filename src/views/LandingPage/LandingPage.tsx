@@ -20,7 +20,7 @@ import { _ } from "@/lib/translate";
 import { useNavigate } from "react-router-dom";
 import { kidsgo_sfx } from "@kidsgo/lib/kidsgo-sfx";
 import { useUser } from "@/lib/hooks";
-import Lottie from "lottie-react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
 
 const animationCache = new Map<string, object>();
 
@@ -51,8 +51,10 @@ function useLottieAnimation(path: string): object | null {
 }
 
 // The v03 launch compositions animate their own liftoff: ignition at ~1.6s,
-// craft fully off-canvas by ~4.3s, smoke synced to match.
-const ROCKET_NAVIGATE_DELAY = 4.5; // seconds
+// craft fully off-canvas by ~4.3s, smoke synced to match. We skip the first
+// chunk of that pre-liftoff pause so the rocket reacts faster to the click.
+const LAUNCH_SKIP_FRAMES = 40; // 60fps composition frames
+const ROCKET_NAVIGATE_DELAY = 3.8; // seconds; ~4.5s full sequence minus the skip
 let navigate_timeout;
 
 interface RocketAnimations {
@@ -70,7 +72,11 @@ function useRocketAnimations(cdnBase: string, rocket: "PLAY" | "LEARN"): RocketA
     return {
         idleBase: useLottieAnimation(`${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_BASE_v03.json`),
         idleSmoke: useLottieAnimation(`${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_SMOKE_v03.json`),
-        idleCraft: useLottieAnimation(`${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_v03.json`),
+        idleCraft: useLottieAnimation(
+            `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_${
+                rocket === "PLAY" ? "v04" : "v03"
+            }.json`,
+        ),
         idleCraftHover: useLottieAnimation(
             `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_HOVER_v03.json`,
         ),
@@ -80,11 +86,30 @@ function useRocketAnimations(cdnBase: string, rocket: "PLAY" | "LEARN"): RocketA
         launchSmoke: useLottieAnimation(
             `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_SMOKE_v03.json`,
         ),
+        // Patched crafts: the LEARN/PLAY text no longer fades out on the button
+        // press, and the learn button's mid-flight shine sweep (which washed
+        // out the blue fill behind the text) is silenced.
         launchCraft: useLottieAnimation(
-            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_CRAFT_v03.json`,
+            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_CRAFT_${
+                rocket === "LEARN" ? "v07" : "v04"
+            }.json`,
         ),
         popup: useLottieAnimation(`${cdnBase}/pages/home/HOME_POP-UP_${rocket}_ANIM_v02.json`),
     };
+}
+
+function LaunchLayer({ data }: { data: object }): JSX.Element {
+    const ref = React.useRef<LottieRefCurrentProps>(null);
+    return (
+        <Lottie
+            lottieRef={ref}
+            animationData={data}
+            loop={false}
+            autoplay
+            onDOMLoaded={() => ref.current?.goToAndPlay(LAUNCH_SKIP_FRAMES, true)}
+            className="rocket-animation"
+        />
+    );
 }
 
 function Rocket({
@@ -117,30 +142,9 @@ function Rocket({
         >
             {launching ? (
                 <>
-                    {animations.launchSmoke && (
-                        <Lottie
-                            animationData={animations.launchSmoke}
-                            loop={false}
-                            autoplay
-                            className="rocket-animation"
-                        />
-                    )}
-                    {animations.launchBase && (
-                        <Lottie
-                            animationData={animations.launchBase}
-                            loop={false}
-                            autoplay
-                            className="rocket-animation"
-                        />
-                    )}
-                    {animations.launchCraft && (
-                        <Lottie
-                            animationData={animations.launchCraft}
-                            loop={false}
-                            autoplay
-                            className="rocket-animation"
-                        />
-                    )}
+                    {animations.launchSmoke && <LaunchLayer data={animations.launchSmoke} />}
+                    {animations.launchBase && <LaunchLayer data={animations.launchBase} />}
+                    {animations.launchCraft && <LaunchLayer data={animations.launchCraft} />}
                 </>
             ) : (
                 <>
@@ -182,6 +186,9 @@ export function LandingPage(): JSX.Element {
     const raccoonAnimation = useLottieAnimation(
         `${cdnBase}/pages/home/RACCOON_CAR-ANIM_IDLE_01_v03.json`,
     );
+    const titleIntro = useLottieAnimation(`${cdnBase}/pages/home/TITLE_01_INTRO-ANIM_v02.json`);
+    const titleIdle = useLottieAnimation(`${cdnBase}/pages/home/TITLE_01_IDLE_v02.json`);
+    const [title_intro_done, set_title_intro_done] = React.useState(false);
     const learnAnimations = useRocketAnimations(cdnBase, "LEARN");
     const playAnimations = useRocketAnimations(cdnBase, "PLAY");
     const [learn_to_play_launching, set_learn_to_play_launching]: [boolean, (tf: boolean) => void] =
@@ -241,53 +248,67 @@ export function LandingPage(): JSX.Element {
         <div id="LandingPage">
             <div className="spacer" />
             <div className="mountain-background">
-                {starsAnimation && (
-                    <Lottie
-                        animationData={starsAnimation}
-                        loop
-                        autoplay
-                        className="stars-animation"
+                <div className={`scene ${title_intro_done ? "" : "intro-darkened"}`}>
+                    {starsAnimation && (
+                        <Lottie
+                            animationData={starsAnimation}
+                            loop
+                            autoplay
+                            className="stars-animation"
+                        />
+                    )}
+                    {raccoonAnimation && (
+                        <Lottie
+                            animationData={raccoonAnimation}
+                            loop
+                            autoplay
+                            className="raccoon-animation"
+                        />
+                    )}
+                    {learn_hovering && !learn_to_play_launching && learnAnimations.popup && (
+                        <Lottie
+                            animationData={learnAnimations.popup}
+                            loop={false}
+                            autoplay
+                            className="rocket-popup learn-popup"
+                        />
+                    )}
+                    {play_hovering && !play_launching && playAnimations.popup && (
+                        <Lottie
+                            animationData={playAnimations.popup}
+                            loop={false}
+                            autoplay
+                            className="rocket-popup play-popup"
+                        />
+                    )}
+                    <Rocket
+                        className="learn-to-play-rocket"
+                        animations={learnAnimations}
+                        launching={learn_to_play_launching}
+                        onClick={learnToPlay}
+                        onHoverChange={set_learn_hovering}
                     />
-                )}
-                {raccoonAnimation && (
-                    <Lottie
-                        animationData={raccoonAnimation}
-                        loop
-                        autoplay
-                        className="raccoon-animation"
+                    <Rocket
+                        className="play-rocket"
+                        animations={playAnimations}
+                        launching={play_launching}
+                        onClick={play}
+                        onHoverChange={set_play_hovering}
                     />
+                </div>
+                {title_intro_done && titleIdle ? (
+                    <Lottie animationData={titleIdle} loop autoplay className="title-animation" />
+                ) : (
+                    titleIntro && (
+                        <Lottie
+                            animationData={titleIntro}
+                            loop={false}
+                            autoplay
+                            onComplete={() => set_title_intro_done(true)}
+                            className="title-animation"
+                        />
+                    )
                 )}
-                <div className="logo" />
-                {learn_hovering && !learn_to_play_launching && learnAnimations.popup && (
-                    <Lottie
-                        animationData={learnAnimations.popup}
-                        loop={false}
-                        autoplay
-                        className="rocket-popup learn-popup"
-                    />
-                )}
-                {play_hovering && !play_launching && playAnimations.popup && (
-                    <Lottie
-                        animationData={playAnimations.popup}
-                        loop={false}
-                        autoplay
-                        className="rocket-popup play-popup"
-                    />
-                )}
-                <Rocket
-                    className="learn-to-play-rocket"
-                    animations={learnAnimations}
-                    launching={learn_to_play_launching}
-                    onClick={learnToPlay}
-                    onHoverChange={set_learn_hovering}
-                />
-                <Rocket
-                    className="play-rocket"
-                    animations={playAnimations}
-                    launching={play_launching}
-                    onClick={play}
-                    onHoverChange={set_play_hovering}
-                />
             </div>
             <div className="spacer" />
         </div>
