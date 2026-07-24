@@ -54,7 +54,13 @@ function useLottieAnimation(path: string): object | null {
 // craft fully off-canvas by ~4.3s, smoke synced to match. We skip the first
 // chunk of that pre-liftoff pause so the rocket reacts faster to the click.
 const LAUNCH_SKIP_FRAMES = 40; // 60fps composition frames
+// After the rocket has flown off-canvas we hand off to the cutscene overlay
+// (airlock -> video -> skip) rather than navigating straight to the page.
 const ROCKET_NAVIGATE_DELAY = 3.8; // seconds; ~4.5s full sequence minus the skip
+// Skip button: the "in" animation runs frames 0-35, then it idles by looping
+// frames 35-176 (matches the After Effects loop expression from the animator).
+const SKIP_INTRO_END = 35;
+const SKIP_LOOP_END = 176;
 let navigate_timeout;
 
 interface RocketAnimations {
@@ -183,6 +189,117 @@ function Rocket({
     );
 }
 
+// Full-screen overlay played after a rocket launches: the airlock transition
+// loops while the (large) cutscene video buffers, then the video plays with a
+// skip button overlaid. Skipping or the video ending navigates onward.
+function Cutscene({
+    variant,
+    cdnBase,
+    onDone,
+}: {
+    variant: "LEARN" | "PLAY";
+    cdnBase: string;
+    onDone: () => void;
+}): JSX.Element {
+    const airlock = useLottieAnimation(
+        `${cdnBase}/pages/home/GFX_TRANSITION_AIRLOCK_${variant}_01_v04_loop.json`,
+    );
+    const skip = useLottieAnimation(`${cdnBase}/pages/home/BUTTON_SKIP_${variant}_v03.json`);
+    const videoUrl = `${cdnBase}/pages/home/KidsGoServer_Animation_CUT-SCENE_${variant}_v06.mp4`;
+
+    const skipRef = React.useRef<LottieRefCurrentProps>(null);
+    const videoRef = React.useRef<HTMLVideoElement>(null);
+    const doneRef = React.useRef(false);
+
+    const [phase, setPhase] = React.useState<"airlock" | "video">("airlock");
+    const [videoReady, setVideoReady] = React.useState(false);
+    const [airlockLooped, setAirlockLooped] = React.useState(false);
+
+    function finish() {
+        if (doneRef.current) {
+            return;
+        }
+        doneRef.current = true;
+        onDone();
+    }
+
+    // Leave the airlock only once the video can play through AND the airlock has
+    // shown at least one full loop, so the hand-off never flashes or stalls.
+    React.useEffect(() => {
+        if (phase === "airlock" && videoReady && airlockLooped) {
+            setPhase("video");
+        }
+    }, [phase, videoReady, airlockLooped]);
+
+    // Safety net: never loop the airlock forever. Once it has shown a loop, give
+    // the video a few seconds to buffer, then advance regardless (play() keeps
+    // buffering). If the video can't load at all, skip straight to the page.
+    React.useEffect(() => {
+        if (!airlockLooped) {
+            return;
+        }
+        const t = setTimeout(() => setVideoReady(true), 5000);
+        return () => clearTimeout(t);
+    }, [airlockLooped]);
+
+    React.useEffect(() => {
+        if (phase !== "video" || !videoRef.current) {
+            return;
+        }
+        const el = videoRef.current;
+        el.play().catch(() => {
+            // Autoplay-with-sound can be blocked this far from the click; fall
+            // back to a muted play so the cutscene still runs.
+            el.muted = true;
+            void el.play().catch(() => undefined);
+        });
+    }, [phase]);
+
+    return (
+        <div className="cutscene-overlay">
+            {phase === "airlock" && airlock && (
+                <Lottie
+                    animationData={airlock}
+                    loop
+                    autoplay
+                    onLoopComplete={() => setAirlockLooped(true)}
+                    className="cutscene-square"
+                />
+            )}
+            <video
+                ref={videoRef}
+                src={videoUrl}
+                preload="auto"
+                playsInline
+                onCanPlayThrough={() => setVideoReady(true)}
+                onEnded={finish}
+                onError={finish}
+                className={`cutscene-square cutscene-video ${phase === "video" ? "visible" : ""}`}
+            />
+            {phase === "video" && skip && (
+                <div className="cutscene-square cutscene-skip" onClick={finish}>
+                    <Lottie
+                        lottieRef={skipRef}
+                        animationData={skip}
+                        loop
+                        autoplay={false}
+                        onDOMLoaded={() =>
+                            skipRef.current?.playSegments(
+                                [
+                                    [0, SKIP_INTRO_END],
+                                    [SKIP_INTRO_END, SKIP_LOOP_END],
+                                ],
+                                true,
+                            )
+                        }
+                        className="cutscene-square"
+                    />
+                </div>
+            )}
+        </div>
+    );
+}
+
 export function LandingPage(): JSX.Element {
     const navigate = useNavigate();
     const user = useUser();
@@ -203,6 +320,12 @@ export function LandingPage(): JSX.Element {
     );
     const [learn_hovering, set_learn_hovering] = React.useState(false);
     const [play_hovering, set_play_hovering] = React.useState(false);
+    // Once a rocket has flown off, this holds the cutscene to play before we
+    // land on the destination page.
+    const [cutscene, set_cutscene] = React.useState<{
+        variant: "LEARN" | "PLAY";
+        destination: string;
+    } | null>(null);
 
     // Gate the whole intro on every asset being ready so that on refresh the
     // scene never flashes a fully-lit raccoon before the dark-to-bright intro
@@ -221,6 +344,7 @@ export function LandingPage(): JSX.Element {
         other_launching: boolean,
         set_launching: (tf: boolean) => void,
         set_other_launching: (tf: boolean) => void,
+        variant: "LEARN" | "PLAY",
         destination: string,
     ) {
         if (launching) {
@@ -237,7 +361,7 @@ export function LandingPage(): JSX.Element {
         set_launching(true);
 
         navigate_timeout = setTimeout(() => {
-            void navigate(destination);
+            set_cutscene({ variant, destination });
         }, ROCKET_NAVIGATE_DELAY * 1000);
     }
 
@@ -247,6 +371,7 @@ export function LandingPage(): JSX.Element {
             play_launching,
             set_learn_to_play_launching,
             set_play_launching,
+            "LEARN",
             "/learn-to-play",
         );
     }
@@ -257,6 +382,7 @@ export function LandingPage(): JSX.Element {
             learn_to_play_launching,
             set_play_launching,
             set_learn_to_play_launching,
+            "PLAY",
             "/character-selection",
         );
     }
@@ -334,6 +460,13 @@ export function LandingPage(): JSX.Element {
                     ))}
             </div>
             <div className="spacer" />
+            {cutscene && (
+                <Cutscene
+                    variant={cutscene.variant}
+                    cdnBase={cdnBase}
+                    onDone={() => void navigate(cutscene.destination)}
+                />
+            )}
         </div>
     );
 }

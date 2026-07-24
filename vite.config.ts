@@ -280,6 +280,7 @@ function ogs_vite_middleware(): Plugin {
                         ".jpg": "image/jpeg",
                         ".jpeg": "image/jpeg",
                         ".webm": "video/webm",
+                        ".mp4": "video/mp4",
                         ".json": "application/json",
                     };
                     for (const [ext, mime_type] of Object.entries(static_files)) {
