@@ -15,17 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-ROCKET_LAUNCH_DURATION = 1.25s
-
-@keyframes rocket-launch {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-100vh);
-    }
-}
-
 :root {
     --ROCKETWIDTH: "min(20vw, 10rem)" % "";
     --ROCKETHEIGHT: calc(var(--ROCKETWIDTH) * 3);
@@ -65,8 +54,22 @@ ROCKET_LAUNCH_DURATION = 1.25s
         flex-grow: 1;
         position: relative;
         text-align: center;
-        background-image: url("/1.0/pages/home/background_with_logos_and_no_raccoon_2_19_2026.svg");
+    }
+
+    // Holds everything except the title animation so the whole scene can start
+    // as a dark silhouette and gradually brighten while the title intro plays.
+    .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("/1.0/pages/home/background_no_planets_7_20_2026.svg");
         background-repeat: no-repeat;
+    }
+
+    .scene.intro-darkened {
+        animation: intro-brighten 4s ease-out forwards;
     }
 
     .stars-animation {
@@ -81,7 +84,7 @@ ROCKET_LAUNCH_DURATION = 1.25s
 
     .raccoon-animation {
         position: absolute;
-        bottom: 10%;
+        bottom: 8%;
         left: 50%;
         transform: translateX(-49%);
         width: 32%;
@@ -89,15 +92,17 @@ ROCKET_LAUNCH_DURATION = 1.25s
         z-index: 3;
     }
 
-    .logo {
+    // Above the raccoon/stars but below the rockets, so a launching rocket
+    // flies over the title/planets. During the intro the .scene filter makes
+    // the scene a single layer, so the title still draws on top of it.
+    .title-animation {
         position: absolute;
-        text-align: center;
-        background-image: url("/1.0/pages/home/kidsgoserver.svg");
-        background-repeat: no-repeat;
-        display: inline-block;
-        width: 80%;
-        height: 80%;
-        left: 10%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: z.rocket - 1;
     }
 
     .learn-to-play-rocket, .play-rocket {
@@ -121,6 +126,26 @@ ROCKET_LAUNCH_DURATION = 1.25s
 
     }
 
+    // Positioned relative to the square mountain-background so the popup lands
+    // between the rocket and the raccoon regardless of viewport aspect ratio.
+    // Proportions measured from the reference video.
+    .rocket-popup {
+        position: absolute;
+        bottom: 28%;
+        width: 39%;
+        aspect-ratio: 1;
+        pointer-events: none;
+        z-index: z.rocket + 1;
+    }
+
+    .learn-popup {
+        left: 17.5%;
+    }
+
+    .play-popup {
+        right: 17.5%;
+    }
+
     .learn-to-play-rocket {
         left: 5vw;
     }
@@ -128,10 +153,75 @@ ROCKET_LAUNCH_DURATION = 1.25s
     .play-rocket {
         right: 5vw;
     }
+}
 
-    .launch {
-        transform: translateY(-100vh);
-        animation: rocket-launch ROCKET_LAUNCH_DURATION;
-        animation-timing-function: cubic-bezier(0.73, 0.27, 0.95, 0.66);
+// Full-screen cutscene overlay (airlock transition -> video -> skip button).
+.cutscene-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #000;
+    overflow: hidden;
+}
+
+// The airlock, video and skip art are all square (2400x2400); size each to the
+// largest square that fits the viewport, centered, matching the home framing.
+.cutscene-square {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: "min(100vw, 100vh)" % "";
+    height: "min(100vw, 100vh)" % "";
+    object-fit: contain;
+}
+
+.cutscene-video {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.cutscene-video.visible {
+    opacity: 1;
+}
+
+// Wraps the skip Lottie. The button art sits centered inside a large transparent
+// canvas, so we shrink the canvas and tuck it into the bottom-right corner (the
+// negative offsets let the empty padding hang off-screen so the button hugs the
+// corner). Tune size via width/height, position via right/bottom.
+.cutscene-skip {
+    top: auto;
+    left: auto;
+    right: -2%;
+    bottom: -6%;
+    transform: none;
+    width: "min(24vw, 24vh)" % "";
+    height: "min(24vw, 24vh)" % "";
+    z-index: 1001;
+    cursor: pointer;
+
+    .cutscene-square {
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// Hold the scene as a dark silhouette while the title appears alone,
+// then gradually brighten to full.
+@keyframes intro-brighten {
+    0% {
+        filter: brightness(0.06);
+    }
+    25% {
+        filter: brightness(0.06);
+    }
+    100% {
+        filter: brightness(1);
     }
 }
