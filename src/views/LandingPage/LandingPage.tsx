@@ -50,7 +50,7 @@ function useLottieAnimation(path: string): object | null {
     return animation;
 }
 
-// The v03 launch compositions animate their own liftoff: ignition at ~1.6s,
+// The v04 launch compositions animate their own liftoff: ignition at ~1.6s,
 // craft fully off-canvas by ~4.3s, smoke synced to match. We skip the first
 // chunk of that pre-liftoff pause so the rocket reacts faster to the click.
 const LAUNCH_SKIP_FRAMES = 40; // 60fps composition frames
@@ -66,35 +66,40 @@ interface RocketAnimations {
     launchSmoke: object | null;
     launchCraft: object | null;
     popup: object | null;
+    // True once the idle layers that show during the dark intro are all loaded.
+    ready: boolean;
 }
 
 function useRocketAnimations(cdnBase: string, rocket: "PLAY" | "LEARN"): RocketAnimations {
+    const idleBase = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_BASE_v03.json`,
+    );
+    const idleSmoke = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_SMOKE_v03.json`,
+    );
+    const idleCraft = useLottieAnimation(
+        `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_${
+            rocket === "PLAY" ? "v04" : "v03"
+        }.json`,
+    );
     return {
-        idleBase: useLottieAnimation(`${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_BASE_v03.json`),
-        idleSmoke: useLottieAnimation(`${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_SMOKE_v03.json`),
-        idleCraft: useLottieAnimation(
-            `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_${
-                rocket === "PLAY" ? "v04" : "v03"
-            }.json`,
-        ),
+        idleBase,
+        idleSmoke,
+        idleCraft,
         idleCraftHover: useLottieAnimation(
             `${cdnBase}/pages/home/ROCKET_${rocket}_IDLE_CRAFT_HOVER_v03.json`,
         ),
         launchBase: useLottieAnimation(
-            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_BASE_v03.json`,
+            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_BASE_v04.json`,
         ),
         launchSmoke: useLottieAnimation(
-            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_SMOKE_v03.json`,
+            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_SMOKE_v04.json`,
         ),
-        // Patched crafts: the LEARN/PLAY text no longer fades out on the button
-        // press, and the learn button's mid-flight shine sweep (which washed
-        // out the blue fill behind the text) is silenced.
         launchCraft: useLottieAnimation(
-            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_CRAFT_${
-                rocket === "LEARN" ? "v07" : "v04"
-            }.json`,
+            `${cdnBase}/pages/home/ROCKET_${rocket}_LAUNCH_CRAFT_v04.json`,
         ),
         popup: useLottieAnimation(`${cdnBase}/pages/home/HOME_POP-UP_${rocket}_ANIM_v02.json`),
+        ready: !!idleBase && !!idleSmoke && !!idleCraft,
     };
 }
 
@@ -199,6 +204,18 @@ export function LandingPage(): JSX.Element {
     const [learn_hovering, set_learn_hovering] = React.useState(false);
     const [play_hovering, set_play_hovering] = React.useState(false);
 
+    // Gate the whole intro on every asset being ready so that on refresh the
+    // scene never flashes a fully-lit raccoon before the dark-to-bright intro
+    // plays. Until this is true we render nothing; once true, everything mounts
+    // at once and the title intro + brightening start together.
+    const assets_ready =
+        !!starsAnimation &&
+        !!raccoonAnimation &&
+        !!titleIntro &&
+        !!titleIdle &&
+        learnAnimations.ready &&
+        playAnimations.ready;
+
     function launch(
         launching: boolean,
         other_launching: boolean,
@@ -248,58 +265,65 @@ export function LandingPage(): JSX.Element {
         <div id="LandingPage">
             <div className="spacer" />
             <div className="mountain-background">
-                <div className={`scene ${title_intro_done ? "" : "intro-darkened"}`}>
-                    {starsAnimation && (
+                {assets_ready && (
+                    <div className={`scene ${title_intro_done ? "" : "intro-darkened"}`}>
+                        {starsAnimation && (
+                            <Lottie
+                                animationData={starsAnimation}
+                                loop
+                                autoplay
+                                className="stars-animation"
+                            />
+                        )}
+                        {raccoonAnimation && (
+                            <Lottie
+                                animationData={raccoonAnimation}
+                                loop
+                                autoplay
+                                className="raccoon-animation"
+                            />
+                        )}
+                        {learn_hovering && !learn_to_play_launching && learnAnimations.popup && (
+                            <Lottie
+                                animationData={learnAnimations.popup}
+                                loop={false}
+                                autoplay
+                                className="rocket-popup learn-popup"
+                            />
+                        )}
+                        {play_hovering && !play_launching && playAnimations.popup && (
+                            <Lottie
+                                animationData={playAnimations.popup}
+                                loop={false}
+                                autoplay
+                                className="rocket-popup play-popup"
+                            />
+                        )}
+                        <Rocket
+                            className="learn-to-play-rocket"
+                            animations={learnAnimations}
+                            launching={learn_to_play_launching}
+                            onClick={learnToPlay}
+                            onHoverChange={set_learn_hovering}
+                        />
+                        <Rocket
+                            className="play-rocket"
+                            animations={playAnimations}
+                            launching={play_launching}
+                            onClick={play}
+                            onHoverChange={set_play_hovering}
+                        />
+                    </div>
+                )}
+                {assets_ready &&
+                    (title_intro_done ? (
                         <Lottie
-                            animationData={starsAnimation}
+                            animationData={titleIdle}
                             loop
                             autoplay
-                            className="stars-animation"
+                            className="title-animation"
                         />
-                    )}
-                    {raccoonAnimation && (
-                        <Lottie
-                            animationData={raccoonAnimation}
-                            loop
-                            autoplay
-                            className="raccoon-animation"
-                        />
-                    )}
-                    {learn_hovering && !learn_to_play_launching && learnAnimations.popup && (
-                        <Lottie
-                            animationData={learnAnimations.popup}
-                            loop={false}
-                            autoplay
-                            className="rocket-popup learn-popup"
-                        />
-                    )}
-                    {play_hovering && !play_launching && playAnimations.popup && (
-                        <Lottie
-                            animationData={playAnimations.popup}
-                            loop={false}
-                            autoplay
-                            className="rocket-popup play-popup"
-                        />
-                    )}
-                    <Rocket
-                        className="learn-to-play-rocket"
-                        animations={learnAnimations}
-                        launching={learn_to_play_launching}
-                        onClick={learnToPlay}
-                        onHoverChange={set_learn_hovering}
-                    />
-                    <Rocket
-                        className="play-rocket"
-                        animations={playAnimations}
-                        launching={play_launching}
-                        onClick={play}
-                        onHoverChange={set_play_hovering}
-                    />
-                </div>
-                {title_intro_done && titleIdle ? (
-                    <Lottie animationData={titleIdle} loop autoplay className="title-animation" />
-                ) : (
-                    titleIntro && (
+                    ) : (
                         <Lottie
                             animationData={titleIntro}
                             loop={false}
@@ -307,8 +331,7 @@ export function LandingPage(): JSX.Element {
                             onComplete={() => set_title_intro_done(true)}
                             className="title-animation"
                         />
-                    )
-                )}
+                    ))}
             </div>
             <div className="spacer" />
         </div>
