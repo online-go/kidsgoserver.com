@@ -24,12 +24,13 @@ import { uiClassToRaceIdx, avatar_background_class } from "@kidsgo/components/Av
 import { useUser } from "@/lib/hooks";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import { MatteVideo } from "@kidsgo/components/MatteVideo";
+import { playAirlockTransition } from "@kidsgo/components/AirlockTransition";
 
 const animationCache = new Map<string, object>();
 
-// Warms CSS background images for the destination pages, which the browser
-// would otherwise only fetch once the page renders. Deduped by URL; the map
-// holds the Image handles so in-flight loads can't be garbage collected.
+// Warms destination-page CSS background art, which the browser would otherwise
+// only fetch on render. The map holds the Image handles so in-flight loads
+// can't be garbage collected.
 const preloaded_images = new Map<string, HTMLImageElement>();
 function preload_image(url: string) {
     if (preloaded_images.has(url)) {
@@ -40,39 +41,66 @@ function preload_image(url: string) {
     preloaded_images.set(url, img);
 }
 
+// Shared so preload_animation and useLottieAnimation don't each fetch the same
+// path before the first lands in animationCache.
+const pendingAnimations = new Map<string, Promise<object>>();
+function loadAnimation(path: string): Promise<object> {
+    const cached = animationCache.get(path);
+    if (cached) {
+        return Promise.resolve(cached);
+    }
+    let pending = pendingAnimations.get(path);
+    if (!pending) {
+        pending = fetch(path, { credentials: "omit" })
+            .then((r) => r.json())
+            .then((data: object) => {
+                animationCache.set(path, data);
+                return data;
+            })
+            .finally(() => pendingAnimations.delete(path));
+        pendingAnimations.set(path, pending);
+    }
+    return pending;
+}
+
+// Warm the cache ahead of the component that needs the animation.
+function preload_animation(path: string) {
+    loadAnimation(path).catch(() => {
+        // The consuming component will retry and log.
+    });
+}
+
 function useLottieAnimation(path: string): object | null {
     const [animation, setAnimation] = React.useState<object | null>(
         animationCache.get(path) ?? null,
     );
     React.useEffect(() => {
-        if (animationCache.has(path)) {
-            setAnimation(animationCache.get(path)!);
-            return;
-        }
-        const controller = new AbortController();
-        fetch(path, { signal: controller.signal, credentials: "omit" })
-            .then((r) => r.json())
+        let cancelled = false;
+        loadAnimation(path)
             .then((data) => {
-                animationCache.set(path, data);
-                setAnimation(data);
+                if (!cancelled) {
+                    setAnimation(data);
+                }
             })
             .catch((err) => {
-                if (err.name !== "AbortError") {
+                if (!cancelled) {
                     console.error(err);
                 }
             });
-        return () => controller.abort();
+        return () => {
+            cancelled = true;
+        };
     }, [path]);
     return animation;
 }
 
-// The v04 launch compositions animate their own liftoff: ignition at ~1.6s,
-// craft fully off-canvas by ~4.3s, smoke synced to match. We skip the first
-// chunk of that pre-liftoff pause so the rocket reacts faster to the click.
+// The launch compositions animate their own liftoff (ignition ~1.6s, off-canvas
+// by ~4.3s). We skip part of that pre-liftoff pause so the rocket reacts faster
+// to the click.
 const LAUNCH_SKIP_FRAMES = 40; // 60fps composition frames
 // After the rocket has flown off-canvas we hand off to the cutscene overlay
-// (video with skip button -> one-shot airlock) rather than navigating straight
-// to the page.
+// (video with skip button -> airlock door transition) rather than navigating
+// straight to the page.
 const ROCKET_NAVIGATE_DELAY = 3.8; // seconds; ~4.5s full sequence minus the skip
 // Skip button: the "in" animation runs frames 0-35, then it idles by looping
 // frames 35-176 (matches the After Effects loop expression from the animator).
@@ -143,12 +171,16 @@ function LaunchLayer({ data }: { data: object }): JSX.Element {
 
 function Rocket({
     className,
+    popupClassName,
+    popupShowing,
     animations,
     launching,
     onClick,
     onHoverChange,
 }: {
     className: string;
+    popupClassName: string;
+    popupShowing: boolean;
     animations: RocketAnimations;
     launching: boolean;
     onClick: () => void;
@@ -169,6 +201,11 @@ function Rocket({
             onMouseEnter={() => set_hovering(true)}
             onMouseLeave={() => set_hovering(false)}
         >
+            <MatteVideo
+                src={animations.popupVideo}
+                playing={popupShowing}
+                className={`rocket-popup ${popupClassName} ${popupShowing ? "visible" : ""}`}
+            />
             {launching ? (
                 <>
                     {animations.launchSmoke && <LaunchLayer data={animations.launchSmoke} />}
@@ -207,9 +244,10 @@ function Rocket({
     );
 }
 
-// Full-screen overlay played after a rocket launches: video (with skip
-// button) -> one-shot airlock -> navigate. Mounted hidden (`active` false) at
-// rocket-click so its assets load during the launch animation.
+// Full-screen overlay played after a rocket launches: video (with skip button)
+// -> airlock doors close -> navigate while shut -> doors open on the
+// destination page. Mounted hidden (`active` false) at rocket-click so its
+// assets load during the launch animation.
 function Cutscene({
     variant,
     cdnBase,
@@ -230,6 +268,7 @@ function Cutscene({
     const skipRef = React.useRef<LottieRefCurrentProps>(null);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const doneRef = React.useRef(false);
+    const airlockStartedRef = React.useRef(false);
 
     const [phase, setPhase] = React.useState<"video" | "airlock">("video");
     const [videoFailed, setVideoFailed] = React.useState(false);
@@ -242,7 +281,7 @@ function Cutscene({
         onDone();
     }
 
-    // Video ended, skipped, or failed: hand off to the one-shot airlock.
+    // Video ended, skipped, or failed: hand off to the airlock doors.
     function endVideo() {
         if (phase === "airlock") {
             return;
@@ -259,13 +298,24 @@ function Cutscene({
         }
     }, [active, videoFailed]);
 
-    // If the airlock animation itself failed to load, navigate rather than
+    // Hand off to the global airlock overlay, which navigates while the doors
+    // are shut. If the animation never loads, navigate anyway rather than
     // stranding the user on a black screen.
     React.useEffect(() => {
-        if (phase !== "airlock" || airlock) {
+        if (phase !== "airlock" || airlockStartedRef.current) {
             return;
         }
-        const t = setTimeout(finish, 3000);
+        if (airlock) {
+            airlockStartedRef.current = true;
+            playAirlockTransition(airlock, finish);
+            return;
+        }
+        const t = setTimeout(() => {
+            // Settle before navigating, or a JSON arriving after this plays
+            // the doors over the page we already navigated to.
+            airlockStartedRef.current = true;
+            finish();
+        }, 3000);
         return () => clearTimeout(t);
     }, [phase, airlock]);
 
@@ -291,19 +341,13 @@ function Cutscene({
                 playsInline
                 onEnded={endVideo}
                 onError={() => setVideoFailed(true)}
+                // Held through the airlock phase: the video is paused, not
+                // reset, so its last frame stays behind the closing doors
+                // instead of the overlay's black background.
                 className={`cutscene-square cutscene-video ${
-                    active && phase === "video" ? "visible" : ""
+                    active && (phase === "video" || phase === "airlock") ? "visible" : ""
                 }`}
             />
-            {active && phase === "airlock" && airlock && (
-                <Lottie
-                    animationData={airlock}
-                    loop={false}
-                    autoplay
-                    onComplete={finish}
-                    className="cutscene-square"
-                />
-            )}
             {active && phase === "video" && skip && (
                 <div className="cutscene-square cutscene-skip" onClick={endVideo}>
                     <Lottie
@@ -358,10 +402,8 @@ export function LandingPage(): JSX.Element {
     } | null>(null);
     const [cutscene_visible, set_cutscene_visible] = React.useState(false);
 
-    // Gate the whole intro on every asset being ready so that on refresh the
-    // scene never flashes a fully-lit raccoon before the dark-to-bright intro
-    // plays; once true, everything mounts at once and the title intro +
-    // brightening start together.
+    // Gated on every asset being ready, so a refresh never flashes a fully-lit
+    // raccoon before the dark-to-bright intro plays.
     const assets_ready =
         !!starsAnimation &&
         !!raccoonAnimation &&
@@ -372,11 +414,13 @@ export function LandingPage(): JSX.Element {
     // Fallback if an asset fetch fails: show whatever loaded rather than
     // leaving a blank page behind the removed loading screen.
     const [assets_timed_out, set_assets_timed_out] = React.useState(false);
-    const show_scene = assets_ready || assets_timed_out;
+    // Dropped while the cutscene covers it: the hidden scene's Lotties keep
+    // animating and compete for the main thread, which made the transition
+    // choppy on phones.
+    const show_scene = (assets_ready || assets_timed_out) && !cutscene_visible;
 
-    // kidsgo.tsx leaves the raccoon loading screen up for us; remove it once
-    // our animations are ready (or after a safety timeout / on unmount) so
-    // the intro never flashes the bare blue background.
+    // kidsgo.tsx leaves the raccoon loading screen up for us; remove it only
+    // once our animations are ready, so the intro never flashes bare blue.
     React.useEffect(() => {
         if (assets_ready) {
             hide_loading_screen();
@@ -410,6 +454,12 @@ export function LandingPage(): JSX.Element {
 
         kidsgo_sfx.play("rocket");
         set_launching(true);
+
+        // Fetched now, not at Cutscene mount, so it isn't still in flight when
+        // the video ends and the doors are needed.
+        preload_animation(
+            `${cdnBase}/pages/home/GFX_TRANSITION_AIRLOCK_${variant}_01_v04_loop.json`,
+        );
 
         // Warm the destination page's CSS background art (paths mirror the
         // page .styl files) so it isn't laggy when we land on it.
@@ -476,22 +526,10 @@ export function LandingPage(): JSX.Element {
                                 className="raccoon-animation"
                             />
                         )}
-                        <MatteVideo
-                            src={learnAnimations.popupVideo}
-                            playing={learn_popup_showing}
-                            className={`rocket-popup learn-popup ${
-                                learn_popup_showing ? "visible" : ""
-                            }`}
-                        />
-                        <MatteVideo
-                            src={playAnimations.popupVideo}
-                            playing={play_popup_showing}
-                            className={`rocket-popup play-popup ${
-                                play_popup_showing ? "visible" : ""
-                            }`}
-                        />
                         <Rocket
                             className="learn-to-play-rocket"
+                            popupClassName="learn-popup"
+                            popupShowing={learn_popup_showing}
                             animations={learnAnimations}
                             launching={learn_to_play_launching}
                             onClick={learnToPlay}
@@ -499,6 +537,8 @@ export function LandingPage(): JSX.Element {
                         />
                         <Rocket
                             className="play-rocket"
+                            popupClassName="play-popup"
+                            popupShowing={play_popup_showing}
                             animations={playAnimations}
                             launching={play_launching}
                             onClick={play}

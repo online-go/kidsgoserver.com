@@ -16,7 +16,9 @@
  */
 
 :root {
-    --ROCKETWIDTH: "min(20vw, 10rem)" % "";
+    // Tracks the scene square, like the background and popups, so the rockets
+    // scale with it instead of freezing at a fixed cap on large monitors.
+    --ROCKETWIDTH: "min(20vw, 20vh)" % "";
     --ROCKETHEIGHT: calc(var(--ROCKETWIDTH) * 3);
 }
 
@@ -98,6 +100,16 @@
         z-index: 3;
     }
 
+    // The characters start as pure black cutouts and light up on the same curve
+    // shape as the scene behind them (see intro-brighten-character). They need
+    // their own filter because the scene's can't go to 0 without blacking out
+    // the backdrop art too.
+    .scene.intro-darkened .raccoon-animation,
+    .scene.intro-darkened .learn-to-play-rocket,
+    .scene.intro-darkened .play-rocket {
+        animation: intro-brighten-character 4s ease-out forwards;
+    }
+
     // Above the raccoon/stars but below the rockets, so a launching rocket
     // flies over the title/planets. During the intro the .scene filter makes
     // the scene a single layer, so the title still draws on top of it.
@@ -111,9 +123,17 @@
         z-index: z.rocket - 1;
     }
 
+    // Lifts the hovered rocket above its neighbour: the popup is a child, so
+    // it's trapped in this rocket's stacking context.
+    .learn-to-play-rocket:hover, .play-rocket:hover {
+        z-index: z.rocket + 2;
+    }
+
     .learn-to-play-rocket, .play-rocket {
         position: absolute;
-        bottom: calc(var(--ROCKETHEIGHT) * 0.1 + 0.8rem);
+        // Percentage of the scene square, so the rockets stay on the green
+        // ledge in the background art at every size.
+        bottom: 8%;
         width: var(--ROCKETWIDTH);
         text-align: center;
         height: var(--ROCKETHEIGHT);
@@ -132,13 +152,15 @@
 
     }
 
-    // Positioned relative to the square mountain-background so the popup lands
-    // between the rocket and the raccoon regardless of viewport aspect ratio.
-    // Proportions measured from the reference video.
+    // A child of its rocket, so offsets are --ROCKETWIDTH multiples and it
+    // stays pinned at every aspect ratio. Width is in viewport units because a
+    // % would resolve against the narrow rocket box. The bubble sits centred
+    // in a square canvas about twice its width, so offsets are measured to the
+    // bubble, not the canvas edge.
     .rocket-popup {
         position: absolute;
-        bottom: 28%;
-        width: 39%;
+        bottom: "calc(var(--ROCKETWIDTH) * 0.86)" % "";
+        width: "calc(min(100vw, 100vh) * 0.39)" % "";
         aspect-ratio: 1;
         pointer-events: none;
         z-index: z.rocket + 1;
@@ -150,20 +172,26 @@
         }
     }
 
+    // Leans inboard, into the gap before the raccoon, so it reads as belonging
+    // to its rocket without covering it.
     .learn-popup {
-        left: 17.5%;
+        left: 50%;
+        transform: "translateX(calc(-50% + var(--ROCKETWIDTH) * 0.89))" % "";
     }
 
     .play-popup {
-        right: 17.5%;
+        right: 50%;
+        transform: "translateX(calc(50% - var(--ROCKETWIDTH) * 0.83))" % "";
     }
 
+    // Inset from .mountain-background (the scene square), not the viewport, so
+    // the rockets hold their place in the art at every aspect ratio.
     .learn-to-play-rocket {
-        left: 5vw;
+        left: 9%;
     }
 
     .play-rocket {
-        right: 5vw;
+        right: 9%;
     }
 }
 
@@ -183,8 +211,8 @@
     overflow: hidden;
 }
 
-// The airlock, video and skip art are all square (2400x2400); size each to the
-// largest square that fits the viewport, centered, matching the home framing.
+// The video and skip art are square; size each to the largest square that fits
+// the viewport, centered, matching the home framing.
 .cutscene-square {
     position: absolute;
     top: 50%;
@@ -205,17 +233,20 @@
 }
 
 // Wraps the skip Lottie. The button art sits centered inside a large transparent
-// canvas, so we shrink the canvas and tuck it into the bottom-right corner (the
-// negative offsets let the empty padding hang off-screen so the button hugs the
-// corner).
+// canvas, so we shrink the canvas and tuck it into the bottom-right corner.
+// Offsets are a share of that canvas, not the viewport, so the empty padding
+// hangs off by the same amount everywhere -- viewport percentages pushed the
+// button off the bottom of tall phones.
 .cutscene-skip {
+    --skip-size: "max(170px, min(42vw, 30vh))" % "";
+
     top: auto;
     left: auto;
-    right: -2%;
-    bottom: -6%;
+    right: "calc(var(--skip-size) * -0.08)" % "";
+    bottom: "calc(var(--skip-size) * -0.16)" % "";
     transform: none;
-    width: "min(24vw, 24vh)" % "";
-    height: "min(24vw, 24vh)" % "";
+    width: var(--skip-size);
+    height: var(--skip-size);
     z-index: 1001;
     cursor: pointer;
 
@@ -228,14 +259,31 @@
     }
 }
 
-// Hold the scene as a dark silhouette while the title appears alone,
-// then gradually brighten to full.
+// Hold the scene as a dark silhouette while the title appears alone, then
+// gradually brighten to full. The backdrop can't dim all the way to black
+// without losing the art, so the characters layer their own matching curve on
+// top of this one -- same shape and timing, so everything lights up in step.
 @keyframes intro-brighten {
     0% {
         filter: brightness(0.06);
     }
     25% {
         filter: brightness(0.06);
+    }
+    100% {
+        filter: brightness(1);
+    }
+}
+
+// Same hold-then-ease shape and timing as intro-brighten, but from true black.
+// Compounds with the scene's filter, so the characters land at full brightness
+// on the same frame the backdrop does.
+@keyframes intro-brighten-character {
+    0% {
+        filter: brightness(0);
+    }
+    25% {
+        filter: brightness(0);
     }
     100% {
         filter: brightness(1);
