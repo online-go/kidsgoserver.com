@@ -401,9 +401,6 @@ class Page13 extends Module2 {
     axolotlFace() {
         return true;
     }
-    hidePlayButton() {
-        return true;
-    }
 }
 
 class Page14 extends Module2 {
@@ -416,9 +413,6 @@ class Page14 extends Module2 {
         return [<p>Let's try some simple problems now.</p>];
     }
     axolotlFace() {
-        return true;
-    }
-    hidePlayButton() {
         return true;
     }
 }

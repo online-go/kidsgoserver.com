@@ -25,8 +25,8 @@ import { useUser } from "@/lib/hooks";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import { MatteVideo } from "@kidsgo/components/MatteVideo";
 import { playAirlockTransition } from "@kidsgo/components/AirlockTransition";
-
-const animationCache = new Map<string, object>();
+import { preload_animation, useLottieAnimation } from "@kidsgo/lib/lottie-loader";
+import { SATELLITE_ANIMATION_PATH } from "@kidsgo/components/SpaceBackground";
 
 // Warms destination-page CSS background art, which the browser would otherwise
 // only fetch on render. The map holds the Image handles so in-flight loads
@@ -39,59 +39,6 @@ function preload_image(url: string) {
     const img = new Image();
     img.src = url;
     preloaded_images.set(url, img);
-}
-
-// Shared so preload_animation and useLottieAnimation don't each fetch the same
-// path before the first lands in animationCache.
-const pendingAnimations = new Map<string, Promise<object>>();
-function loadAnimation(path: string): Promise<object> {
-    const cached = animationCache.get(path);
-    if (cached) {
-        return Promise.resolve(cached);
-    }
-    let pending = pendingAnimations.get(path);
-    if (!pending) {
-        pending = fetch(path, { credentials: "omit" })
-            .then((r) => r.json())
-            .then((data: object) => {
-                animationCache.set(path, data);
-                return data;
-            })
-            .finally(() => pendingAnimations.delete(path));
-        pendingAnimations.set(path, pending);
-    }
-    return pending;
-}
-
-// Warm the cache ahead of the component that needs the animation.
-function preload_animation(path: string) {
-    loadAnimation(path).catch(() => {
-        // The consuming component will retry and log.
-    });
-}
-
-function useLottieAnimation(path: string): object | null {
-    const [animation, setAnimation] = React.useState<object | null>(
-        animationCache.get(path) ?? null,
-    );
-    React.useEffect(() => {
-        let cancelled = false;
-        loadAnimation(path)
-            .then((data) => {
-                if (!cancelled) {
-                    setAnimation(data);
-                }
-            })
-            .catch((err) => {
-                if (!cancelled) {
-                    console.error(err);
-                }
-            });
-        return () => {
-            cancelled = true;
-        };
-    }, [path]);
-    return animation;
 }
 
 // The launch compositions animate their own liftoff (ignition ~1.6s, off-canvas
@@ -463,13 +410,15 @@ export function LandingPage(): JSX.Element {
 
         // Warm the destination page's CSS background art (paths mirror the
         // page .styl files) so it isn't laggy when we land on it.
+        preload_animation(cdnBase + SATELLITE_ANIMATION_PATH);
         if (variant === "LEARN") {
-            preload_image(`${cdnBase}/pages/lessons/planet.jpg`);
+            preload_image(`${cdnBase}/backgrounds/blue.webp`);
             preload_image(`${cdnBase}/pages/lessons/background.svg`);
+            preload_animation(`${cdnBase}/pages/lessons/LEARN_CHAR-ANIM_AXOLOTL_02_IDLE_v01.json`);
         } else {
             const [race, idx] = uiClassToRaceIdx(user.ui_class);
             const bg_color = avatar_background_class(race).replace("bg-", "");
-            preload_image(`${cdnBase}/backgrounds/${bg_color}.jpg`);
+            preload_image(`${cdnBase}/backgrounds/${bg_color}.webp`);
             preload_image(`${cdnBase}/avatars/${race}/${idx}.svg`);
         }
 

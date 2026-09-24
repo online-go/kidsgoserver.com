@@ -29,28 +29,74 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     background-image: svg-load("../assets/pages/lessons/axolotl.svg");
 }
 
-.big-axol-container {
-    flex: 1;
-    height: 100%;
+// Fills the board slot. The composition is square, so it takes the slot's
+// shorter side; the buttons sit in the lower part of that square, under the
+// axolotl, and fade in a beat after he pops in.
+@keyframes lesson-complete-buttons-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-content: center;
+// Mid-lesson axolotl pages: the idle axolotl filling the board slot. His
+// square composition is drawn for the Learn map's airlock window, so it's
+// zoomed a little to fill the slot.
+.LessonAxolotl {
+    position: relative;
+    width: min(100%, 100vh - 8rem);
+    aspect-ratio: 1;
+    max-height: 100%;
+    pointer-events: none;
 
-    .Axol {
-        flex: 1;
-        background-position: center bottom !important;
+    .LessonAxolotl-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: scale(1.3);
+    }
+}
 
-        &.center {
-        background-position: center center !important;
-        }
+.LessonComplete {
+    position: relative;
+    width: min(100%, 100vh - 8rem);
+    aspect-ratio: 1;
+    max-height: 100%;
+
+    .LessonComplete-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
     }
 
-    button {
-        margin: 3rem;
-        margin-bottom: 20vh;
-        font-size: 2rem;
+    // The "Complete" title ends ~83% down the composition; the button art
+    // fills the middle band of its box, so this centres it ~92% down, in the
+    // empty strip under the title.
+    .LessonComplete-buttons {
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        bottom: -9%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        opacity: 0;
+        animation: lesson-complete-buttons-in 0.6s ease-out 0.9s forwards;
+    }
+
+    .LessonComplete-button {
+        // The button art fills the middle ~60% of its 400px square.
+        width: 34%;
+        aspect-ratio: 1;
+        cursor: pointer;
+        transition: hover-pop-transition;
+
+        &:hover {
+            transform: scale(1.12);
+        }
     }
 }
 
@@ -72,12 +118,12 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         display: flex;
         flex-direction: row;
 
-        +portrait() {
+        +lessonportrait() {
             flex-direction: column;
         }
     }
 
-    +portrait() {
+    +lessonportrait() {
         #center-container {
             order: 0;
         }
@@ -98,7 +144,11 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         flex-basis: 10rem;
         min-height: 10rem;
 
-        +portrait() {
+        +lessonnarrow() {
+            min-width: 15rem;
+        }
+
+        +lessonportrait() {
             flex-basis: 5rem;
             min-height: 5rem;
         }
@@ -106,7 +156,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         display: flex;
         flex-direction: column;
 
-        +portrait() {
+        +lessonportrait() {
             flex-direction: row;
         }
 
@@ -146,7 +196,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
             justify-content: center;
             align-items: center;
             
-            +portrait() {
+            +lessonportrait() {
                 display: none !important;
             }
         }
@@ -179,17 +229,6 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         }
     }
 
-    #axolotl, .Axol {
-        display: inline-block;
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        max-width: 30rem;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
     #board-container {
         //background-color: rgba(255, 0, 255, 0.2);
 
@@ -199,10 +238,10 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         align-content: center;
         justify-content: center;
 
-        +landscape() {
+        +lessonlandscape() {
             flex-basis: 100vh // strive for square
         }
-        +portrait() {
+        +lessonportrait() {
             flex-basis: 100vw // strive for square
         }
 
@@ -228,7 +267,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         border-color: backdropborder-color
 
         /*
-        +portrait() {
+        +lessonportrait() {
             padding: 0;
             border: none;
             background: none;
@@ -243,7 +282,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         min-height: 5rem;
         height: 5rem;
 
-        +portrait() {
+        +lessonportrait() {
             display: none;
         }
         +phonelandscape() {
@@ -260,14 +299,14 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
             justify-content: center;
             margin-left: 0.5rem
             margin-right: 0.5rem
-            +portrait() {
+            +lessonportrait() {
                 margin-left: 0.2rem
                 margin-right: 0.2rem
             }
 
             .button-text {
                 max-width: 6rem;
-                +portrait() {
+                +lessonportrait() {
                     max-width: 4rem;
                 }
                 word-wrap: break-word;
@@ -296,7 +335,12 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         padding-bottom: 0.5rem;
         background: backdropcolor;
 
-        +portrait() {
+        +lessonnarrow() {
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+        }
+
+        +lessonportrait() {
             display: none;
         }
     }
@@ -323,7 +367,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         justify-content: stretch;
 
 
-        +landscape() {
+        +lessonlandscape() {
             display: none;
         }
 
@@ -349,7 +393,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         max-height: 4rem;
         text-align: center;
 
-        +portrait() {
+        +lessonportrait() {
             display: none;
         }
     }
@@ -399,11 +443,17 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         overflow: auto;
         max-height: calc(100vh - 10rem);
 
+        +lessonnarrow() {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
         p {
             margin-top: 0;
         }
 
-        +portrait() {
+        +lessonportrait() {
             margin: 0;
             overflow-y: scroll;
             border-top-left-radius: 0;
@@ -413,8 +463,18 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     }
 
 
+    // Fills the column like the old static art, but stops growing at roughly
+    // his full-screen MacBook size (the designer's reference) so big monitors
+    // don't blow him up; the auto margins centre him in any leftover space.
     .Racoon {
-        margin: 10%;
+        margin: auto 10%;
+        padding: 10% 0;
+        max-height: 46rem;
+
+        +lessonnarrow() {
+            margin: auto 2%;
+            padding: 2% 0;
+        }
     }
 
     a {
@@ -433,7 +493,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     top: 1rem;
     cursor: pointer;
     
-    +landscape() {
+    +lessonlandscape() {
         display: none;
     }
     
@@ -464,7 +524,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     right: 0.3rem;
     top: 1rem;
 
-    +landscape() {
+    +lessonlandscape() {
         display: none;
     }
 }
@@ -476,12 +536,14 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     align-items: center;
 
 
+    // Used in the lesson "Very clever!"-style popups. Those have no buttons,
+    // so the axolotl can grow down into the dialog's empty button strip.
     .Axol {
-        flex: 1;
+        flex: 0 0 auto;
         margin: 0.5rem;
         display: inline-block;
-        width: 6rem;
-        height: 6rem;
+        width: 11rem;
+        height: 11rem;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

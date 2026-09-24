@@ -34,6 +34,7 @@ import {
     PlayerAvatar,
     //uiClassToRaceIdx,
     avatar_background_class,
+    planet_for_race,
     Race,
     usePlayerRace,
 } from "@kidsgo/components/Avatar";
@@ -42,6 +43,8 @@ import { Captures } from "@kidsgo/components/Captures";
 import { BackButton } from "@kidsgo/components/BackButton";
 import { PopupDialog, openPopup, closePopup } from "@kidsgo/components/PopupDialog";
 import { ResultsDialog } from "@kidsgo/components/ResultsDialog";
+import { canRematch, requestRematch } from "@kidsgo/lib/rematch";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "@/views/Game/GameHooks";
 import { animateCaptures } from "@kidsgo/lib/animateCaptures";
 import { ChatBubble } from "./ChatBubble";
@@ -417,7 +420,14 @@ export function KidsGame(): JSX.Element {
 
     return (
         <>
-            <div id="KidsGame" className={race ? avatar_background_class(race as Race) : ""}>
+            <div
+                id="KidsGame"
+                className={
+                    (race ? avatar_background_class(race as Race) : "") +
+                    (phase === "finished" && !gameFinishedClosed ? " results-open" : "")
+                }
+            >
+                <SpaceBackground planet={race ? planet_for_race(race as Race) : null} />
                 <BackButton onClick={quit} />
                 <div className="HelpButton" onClick={() => navigate("/help")}></div>
                 {show_undo_requested && (
@@ -433,6 +443,11 @@ export function KidsGame(): JSX.Element {
                     <ResultsDialog
                         goban={goban_ref?.current}
                         onPlayAgain={() => {
+                            // Bot games rematch straight away with the same
+                            // settings; other games go back to setup.
+                            if (isBot(opponent) && canRematch(opponent?.id)) {
+                                requestRematch();
+                            }
                             void navigate("/play");
                         }}
                         onClose={() => {

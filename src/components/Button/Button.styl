@@ -32,6 +32,7 @@
 
         &:hover {
             @extend .right-light-green;
+            transform: scale(nav-arrow-hover-scale);
         }
         &:active {
             @extend .right-dark-green;
@@ -43,6 +44,7 @@
 
         &:hover {
             @extend .left-light-green;
+            transform: scaleX(-1) scale(nav-arrow-hover-scale);
         }
         &:active {
             @extend .left-dark-green;

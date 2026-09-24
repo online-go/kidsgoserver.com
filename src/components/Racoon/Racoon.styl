@@ -15,34 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@keyframes hover {
-    0%, 100% {transform: translateY(0);}
-    //50% {transform: translateY(-4px);}
-    50% {transform: translateY(-6px);}
-}
-
 .Racoon {
     flex: 1;
-
+    min-height: 0;
     display: inline-flex;
     align-items: stretch;
     align-content: stretch;
     justify-content: center;
-    
-    .Racoon-svg {
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
 
-        display: inline-block;
+    // The idle clip bobs on its own hover pad, so no CSS bob here.
+    .Racoon-animation {
         flex: 1;
-        background-image: svg-load("../assets/avatars/racoon.svg");
-    }
+        min-width: 0;
+        min-height: 0;
+        width: 100%;
+        pointer-events: none;
 
-    &.hover {
-        animation: hover 4s infinite;
-        animation: hover 3s infinite;
-        animation-timing-function: ease-in-out;
+        svg {
+            display: block;
+            // The view is cropped to his idle pose; let the pointing arm
+            // reach outside it.
+            overflow: visible;
+        }
     }
-    
 }

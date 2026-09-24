@@ -756,7 +756,8 @@ class Page19 extends Module7 {
     axolotlFace() {
         return true;
     }
-    hidePlayButton() {
+    // This closing page is the lesson's "Lesson Complete" celebration.
+    lessonComplete() {
         return true;
     }
 }

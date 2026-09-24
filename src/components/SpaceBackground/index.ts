@@ -15,27 +15,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-.BackButton {
-    @extend .stone-button
-    @extend .left-light;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 2rem;
-    height: 2rem;
-    position: fixed;
-    left: 1rem;
-    top: 1rem;
-    cursor: pointer;
-    z-index: z.back-button;
-
-    &:hover {
-        @extend .left-light-green;
-        transform: scaleX(-1) scale(nav-arrow-hover-scale);
-    }
-    &:active {
-        @extend .left-dark-green;
-    }
-}
+export * from "./SpaceBackground";

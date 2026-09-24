@@ -17,3 +17,26 @@ phonelandscape()
     @media (orientation: landscape) and (max-width: 800px) {
         {block}
     }
+
+// Lesson pages: a tall-but-wide desktop window (e.g. half of a 1080p or 4K
+// monitor) reports portrait orientation, yet has room for the three-column
+// layout, so the stacked phone layout only kicks in below this width.
+lesson-stack-width = 900px
+// Below this width the three-column layout tightens its side columns.
+lesson-narrow-width = 1100px
+
+lessonportrait()
+    @media (orientation: portrait) and (max-width: lesson-stack-width) {
+        {block}
+    }
+
+lessonlandscape()
+    @media (orientation: landscape), (min-width: lesson-stack-width + 1) {
+        {block}
+    }
+
+// Three-column windows too narrow for the full-size side columns.
+lessonnarrow()
+    @media (max-width: lesson-narrow-width) {
+        {block}
+    }

@@ -22,7 +22,9 @@ import { Content } from "./Content";
 import { Link, useLocation } from "react-router-dom";
 import { _ } from "@/lib/translate";
 import { decodeMoves, Goban, GobanCanvas, GobanConfig, prettyCoordinates } from "goban";
-import { Racoon } from "@kidsgo/components/Racoon";
+import { Racoon, RacoonPoint, pointDirectionForClick } from "@kidsgo/components/Racoon";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
+import { LessonComplete, LessonAxolotl } from "./LessonComplete";
 import { setContentNavigate } from "./Content";
 import { PersistentElement } from "@/components/PersistentElement";
 import { useNavigate } from "react-router-dom";
@@ -97,8 +99,8 @@ export function Puzzles({
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const [replay, setReplay]: [number, (x: number) => void] = useState<number>(Math.random());
     const [showAxotol, setShowAxotol]: [boolean, (x: boolean) => void] = useState<boolean>(false);
-    const [hidePlayButton, setHidePlayButton]: [boolean, (x: boolean) => void] =
-        useState<boolean>(false);
+    const [racoonPoint, setRacoonPoint] = useState<RacoonPoint | null>(null);
+    const [lessonComplete, setLessonComplete] = useState<boolean>(false);
     const [hintsOn, setHintsOn] = useState(false);
 
     const onResize = useCallback((width, height) => {
@@ -190,12 +192,7 @@ export function Puzzles({
             setText(target_text);
         };
 
-        if (content.hidePlayButton()) {
-            setHidePlayButton(true);
-        } else {
-            setHidePlayButton(false);
-        }
-
+        setLessonComplete(content.lessonComplete());
         if (content.axolotlFace()) {
             setShowAxotol(true);
             return;
@@ -324,9 +321,17 @@ export function Puzzles({
         };
     }, [puzzles, sectionName, puzzleNumber, replay]);
 
+    const pointRacoon = (ev: React.MouseEvent) => {
+        setRacoonPoint({
+            direction: pointDirectionForClick(ev, board_container_resizer.ref.current),
+            nonce: Math.random(),
+        });
+    };
+
     return (
         <>
             <div id="Lesson" className="bg-blue">
+                <SpaceBackground planet="blue" />
                 <div className="landscape-top-spacer">
                     <div className="lesson-title">
                         {/* 0 indexed puzzleNumber */}
@@ -352,14 +357,24 @@ export function Puzzles({
                         </div>
                     </div>
 
-                    <div id="board-container" ref={board_container_resizer.ref}>
-                        {showAxotol ? (
-                            <div className="big-axol-container">
-                                <div className={`Axol ${hidePlayButton ? "center" : ""}`} />
-                                {hidePlayButton ? null : (
-                                    <button onClick={() => navigate("/play")}>Play</button>
-                                )}
-                            </div>
+                    <div
+                        id="board-container"
+                        ref={board_container_resizer.ref}
+                        onClickCapture={pointRacoon}
+                    >
+                        {showAxotol && !lessonComplete ? (
+                            <LessonAxolotl />
+                        ) : showAxotol ? (
+                            <LessonComplete
+                                onReplay={() => {
+                                    setReplay(Math.random());
+                                    removeHints();
+                                }}
+                                onNext={() => {
+                                    removeHints();
+                                    navigate(next);
+                                }}
+                            />
                         ) : (
                             <div className="Goban-container">
                                 <div className="Goban">
@@ -371,7 +386,7 @@ export function Puzzles({
 
                     <div id="right-container">
                         <div className="top-spacer" />
-                        <Racoon hover />
+                        <Racoon point={racoonPoint} />
                         <div className="landscape-bottom-buttons">
                             <Link
                                 to={back}

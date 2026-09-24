@@ -19,7 +19,9 @@
 
 #LearnToPlay {
     position: absolute;
-    background-color: #001533;
+    background-color: #000;
+    isolation: isolate;
+    overflow: hidden;
     top: 0;
     right: 0;
     left: 0;
@@ -60,8 +62,11 @@
         left: 30vw;
         right: 30vw;
         */
-        background-size: cover;
-        background-image: url("/1.0/pages/lessons/planet.jpg") !important;
+        // The blue planet, seen through the airlock window behind the axolotl.
+        // Zoomed past the art's transparent sky so only planet shows.
+        background-size: 150%;
+        background-position: center 85%;
+        background-image: url("/1.0/backgrounds/blue.webp") !important;
     }
 
     .background-container {
@@ -85,6 +90,17 @@
         background-repeat: no-repeat;
     }
 
+    .axolotl-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        // Slightly shrunk and lifted so the tail clears the lesson 5 stone.
+        transform: translateY(-2%) scale(0.9);
+    }
+
     .chapter-container {
         position: absolute;
         display: flex;
@@ -92,6 +108,31 @@
         align-items: center;
         z-index: 1;
         width: 7rem;
+
+        cursor: pointer;
+
+        // Hover: the stone pops toward you and the title follows more gently,
+        // both scaling about the stone's centre on the same curve so the title
+        // trails behind for a little parallax. The scaled pieces ignore the
+        // mouse so the hover area stays the unscaled container; otherwise the
+        // grown stone keeps the hover alive after the pointer moves away.
+        .ChapterButton, .chapter-text {
+            transition: hover-pop-transition;
+            pointer-events: none;
+        }
+        &:hover {
+            z-index: 2;
+
+            .ChapterButton {
+                transform: scale(nav-arrow-hover-scale);
+            }
+            .chapter-text {
+                // Stone centre: half the 3rem stone plus the 0.5rem gap above the title.
+                transform-origin: 50% -2rem;
+                // Grows less than the stone so it trails behind it (parallax).
+                transform: scale(1.1);
+            }
+        }
     }
 
     .chapter-1-container {
