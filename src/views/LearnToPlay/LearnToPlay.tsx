@@ -30,7 +30,7 @@ import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 
 export function LearnToPlay(): JSX.Element {
     const navigate = useNavigate();
-    // Composed on the same 1920px square as background.svg, so rendering it at
+    // Composed on the same 1920px square as background_v2.svg, so rendering it at
     // the square's full size puts the axolotl in the airlock window.
     const cdnBase = window["cdn_service"] + "/" + window["kidsgo_release"];
     const axolotl = useLottieAnimation(

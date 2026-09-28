@@ -413,7 +413,7 @@ export function LandingPage(): JSX.Element {
         preload_animation(cdnBase + SATELLITE_ANIMATION_PATH);
         if (variant === "LEARN") {
             preload_image(`${cdnBase}/backgrounds/blue.webp`);
-            preload_image(`${cdnBase}/pages/lessons/background.svg`);
+            preload_image(`${cdnBase}/pages/lessons/background_v2.svg`);
             preload_animation(`${cdnBase}/pages/lessons/LEARN_CHAR-ANIM_AXOLOTL_02_IDLE_v01.json`);
         } else {
             const [race, idx] = uiClassToRaceIdx(user.ui_class);
