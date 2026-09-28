@@ -41,7 +41,6 @@ import { image_url } from "@kidsgo/lib/goban_themes";
 import { SignIn } from "@kidsgo/components/SignIn";
 import { reload_page } from "@kidsgo/lib/reload_page";
 import { ActiveGamesList } from "./ActiveGamesList";
-import { saveLastChallenge, takeRematchRequest } from "@kidsgo/lib/rematch";
 
 type ChallengeDetails = rest_api.ChallengeDetails;
 
@@ -163,15 +162,6 @@ export function Matchmaking(): JSX.Element {
                 },
             },
         };
-
-        saveLastChallenge(opponent, challenge);
-        sendChallengeTo(opponent, challenge);
-    };
-
-    // Sends `challenge` to `opponent`, clearing our stale outgoing challenges
-    // first, and shows the waiting / declined popups.
-    const sendChallengeTo = (opponent: string, challenge: ChallengeDetails) => {
-        setIsSendingChallenge(true);
 
         openPopup({ text: `Sending challenge`, no_accept: true, no_cancel: true })
             .then(() => {})
@@ -302,14 +292,6 @@ export function Matchmaking(): JSX.Element {
         };
     };
 
-    // "Play Again" on a finished bot game lands here with a rematch request.
-    React.useEffect(() => {
-        const rematch = takeRematchRequest();
-        if (rematch) {
-            sendChallengeTo(rematch.opponent, rematch.challenge as ChallengeDetails);
-        }
-    }, []);
-
     const playOrView = (e) => {
         if (game_to_view) {
             void navigate(`/game/${game_to_view.id}`);
@@ -355,15 +337,17 @@ export function Matchmaking(): JSX.Element {
         <div id="Matchmaking" className={avatar_background_class(race)}>
             <SpaceBackground planet={planet_for_race(race)} />
             <BackButton onClick={back} />
-            <button id="Lessons-button" onClick={() => navigate("/learn-to-play")}>
-                Lessons
-            </button>
-            <button id="Avatar-button" onClick={() => navigate("/character-selection")}>
-                Avatar
-            </button>
-            <button id="Help-button" onClick={() => navigate("/help")}>
-                Help
-            </button>
+            <div className="nav-buttons">
+                <button id="Lessons-button" onClick={() => navigate("/learn-to-play")}>
+                    Lessons
+                </button>
+                <button id="Avatar-button" onClick={() => navigate("/character-selection")}>
+                    Avatar
+                </button>
+                <button id="Help-button" onClick={() => navigate("/help")}>
+                    Help
+                </button>
+            </div>
             {/* <button>Character</button> */}
             <CheckForChallengeReceived />
             {/* <div className="current-user-container">

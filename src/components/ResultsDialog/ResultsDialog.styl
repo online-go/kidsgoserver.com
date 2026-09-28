@@ -38,7 +38,9 @@
 // transparent. The overlays below are positioned as fractions of the square,
 // measured from the composition.
 .ResultsDialog {
-    --S: "min(110vw, 135vh, 1200px)" % "";
+    // Capped in rem (1200px at the base size) so it grows with the rest of
+    // the UI on big screens.
+    --S: "min(110vw, 135vh, 86rem)" % "";
     position: relative;
     width: var(--S);
     height: var(--S);

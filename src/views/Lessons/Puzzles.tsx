@@ -33,6 +33,7 @@ import { BackButton } from "@kidsgo/components/BackButton";
 import { sfx } from "@/lib/sfx";
 import { setCustomMarkWithColor } from "@kidsgo/lib/configure-goban";
 import { sectionDisplayNames, sectionKeys, puzzleSectionMap } from "./PuzzleSections";
+import { boardTargetSize } from "@kidsgo/lib/board_size";
 
 export function Puzzles({
     puzzles,
@@ -106,7 +107,7 @@ export function Puzzles({
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
-            const target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = boardTargetSize(width, height);
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -386,7 +387,7 @@ export function Puzzles({
 
                     <div id="right-container">
                         <div className="top-spacer" />
-                        <Racoon point={racoonPoint} />
+                        <Racoon point={racoonPoint} boardRef={board_container_resizer.ref} />
                         <div className="landscape-bottom-buttons">
                             <Link
                                 to={back}

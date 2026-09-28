@@ -98,6 +98,15 @@
                 fade-in 2s;
         }
 
+        /* The art is 704px tall; keep it (plus its 30px bounce) inside short
+           screens such as a landscape phone. */
+        #svg-bouncer svg {
+            display: block;
+            width: auto;
+            height: min(704px, 80vh);
+            height: min(704px, 80dvh);
+        }
+
         /* Opaque overlay: the app renders underneath while the raccoon
            bounces, so this must fully cover the page until the app removes
            it. */
@@ -107,6 +116,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             display: inline-flex;
             align-items: center;
             justify-content: center;

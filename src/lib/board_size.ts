@@ -15,31 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.Racoon {
-    flex: 1;
-    min-height: 0;
-    display: inline-flex;
-    align-items: stretch;
-    align-content: stretch;
-    justify-content: center;
+// Room left around the board for its frame (the Goban-container's 1.5rem
+// padding each side plus border and some slack). It was a flat 60px when
+// the root font size was fixed at 14px; the root now grows on big screens,
+// so it's kept in rem. Too little room and the framed board outgrows its
+// flex slot, which grows to fit, which grows the board again.
+const FRAME_ALLOWANCE_REM = 60 / 14;
 
-    &.Racoon-hidden {
-        visibility: hidden;
-    }
-
-    // The idle clip bobs on its own hover pad, so no CSS bob here.
-    .Racoon-animation {
-        flex: 1;
-        min-width: 0;
-        min-height: 0;
-        width: 100%;
-        pointer-events: none;
-
-        svg {
-            display: block;
-            // The view is cropped to his idle pose; let the pointing arm
-            // reach outside it.
-            overflow: visible;
-        }
-    }
+export function boardTargetSize(width: number, height: number): number {
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 14;
+    return Math.min(width, height) - FRAME_ALLOWANCE_REM * rem;
 }

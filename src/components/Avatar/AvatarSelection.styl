@@ -18,6 +18,7 @@
 
 .AvatarSelection {
     flex: 1;
+    min-height: 0;
 
     display: inline-flex;
     flex-direction: column;
@@ -108,10 +109,17 @@
         pointer-events: none;
     }
 
+    // The alien takes all the height left under the species picker and the
+    // width between the arrows; he's the point of the page.
     .selector {
         flex: 1;
+        min-height: 0;
         display: flex;
         width: 80vw;
+
+        +portrait() {
+            width: 100vw;
+        }
 
         align-items: stretch;
         align-content: center;
@@ -124,8 +132,13 @@
             align-items: center;
             align-content: center;
             justify-content: center;
-            flex: 1;
-            max-width: 50vw;
+            // A square the height of the row (the art is square), narrowing
+            // on thin screens, so the hover area is the alien and not the
+            // whole band between the arrows.
+            flex: 0 1 auto;
+            height: 100%;
+            aspect-ratio: 1;
+            min-width: 0;
             .Avatar-svg {
                 width: 100%;
                 height: 100%;
@@ -133,14 +146,13 @@
                 max-height: 100%;
                 transition: hover-pop-transition;
                 pointer-events: none;
-                // Rests slightly small and grows to its full layout box on
-                // hover (~20% pop), so it never spills onto the species row
-                // above or the Done button below.
-                transform: scale(0.85);
+                // Fills its box at rest. The art has a margin of empty
+                // space built in, so the hover pop can grow a little past the
+                // box without touching the species row or the Done button.
             }
 
             &:hover .Avatar-svg {
-                transform: scale(1);
+                transform: scale(1.1);
             }
         }
     }
@@ -151,7 +163,7 @@
         align-items: center;
         align-content: center;
         justify-content: center;
-        margin-top: 2rem;
+        margin-top: 1.25rem;
         margin-bottom: 0.5rem;
 
         .race-selection-title {

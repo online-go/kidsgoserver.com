@@ -36,14 +36,21 @@
 
     // Cruises from just past the right edge to just past the left, dipping a
     // little as it goes. The satellite art fills roughly the middle third of
-    // its square composition, so the box is ~3x the visible satellite.
+    // its square composition, so the box is ~3x the visible satellite. Capped
+    // by the screen's short side so it stays background-sized on phones.
     .SpaceBackground-satellite-track {
         position: absolute;
         top: 4%;
         left: 0;
-        width: var(--SATELLITE-SIZE, 12rem);
-        height: var(--SATELLITE-SIZE, 12rem);
-        animation: satellite-cruise 40s linear infinite;
+        --SATELLITE-BOX: "min(var(--SATELLITE-SIZE, 12rem), 28vmin)" % "";
+        width: var(--SATELLITE-BOX);
+        height: var(--SATELLITE-BOX);
+        animation: satellite-cruise 28s linear infinite;
+
+        // Narrow screens have less distance to cover; keep it from crawling.
+        @media (max-width: 900px), (max-height: 500px) {
+            animation-duration: 18s;
+        }
     }
 
     .SpaceBackground-satellite {
@@ -77,5 +84,6 @@
 
 @keyframes satellite-cruise {
     0% { transform: translate(100vw, 0); }
-    100% { transform: translate(-100%, 18vh); }
+    // The dip is in vw so the flight angle is the same on every screen shape.
+    100% { transform: translate(-100%, 9vw); }
 }

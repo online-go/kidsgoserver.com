@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { animateCaptures } from "@kidsgo/lib/animateCaptures";
 import { BackButton } from "@kidsgo/components/BackButton";
 import { sfx } from "@/lib/sfx";
+import { boardTargetSize } from "@kidsgo/lib/board_size";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
     const navigate = useNavigate();
@@ -85,7 +86,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
-            const target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = boardTargetSize(width, height);
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -350,7 +351,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
                     <div id="right-container">
                         <div className="top-spacer" />
-                        <Racoon point={racoonPoint} />
+                        <Racoon point={racoonPoint} boardRef={board_container_resizer.ref} />
                         <div className="landscape-bottom-buttons">
                             <Link to={back} className="game-button-container">
                                 <span className="stone-button-left" />

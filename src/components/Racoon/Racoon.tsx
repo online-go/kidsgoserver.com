@@ -30,6 +30,8 @@ export interface RacoonPoint {
 
 interface RacoonProperties {
     point?: RacoonPoint | null;
+    // The board's slot. He hides when he'd be drawn taller than the board.
+    boardRef?: { current?: HTMLElement | null };
 }
 
 const POINT_FILES: Record<RacoonPointDirection, string> = {
@@ -43,6 +45,42 @@ const POINT_FILES: Record<RacoonPointDirection, string> = {
 // bob) so he fills his box like the old static art did; the pointing arm is
 // allowed to draw past the crop (see Racoon.styl).
 const RACCOON_VIEWBOX = "704 112 720 1376";
+const RACCOON_ASPECT = 1376 / 720;
+
+// True when the raccoon, drawn to fit `box`, would stand taller than the
+// board in `board`. He's hidden with `visibility` so his box keeps its size
+// and the check can't flip-flop as the layout settles.
+function useTallerThanBoard(
+    box: React.RefObject<HTMLElement>,
+    board: { current?: HTMLElement | null } | undefined,
+): boolean {
+    const [taller, setTaller] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!box.current || !board?.current) {
+            return;
+        }
+        const check = () => {
+            const b = box.current;
+            const g = board.current;
+            if (!b || !g) {
+                return;
+            }
+            const style = getComputedStyle(b);
+            const height =
+                b.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+            const drawn = Math.min(height, b.clientWidth * RACCOON_ASPECT);
+            const board_size = Math.min(g.clientWidth, g.clientHeight);
+            setTaller(drawn > board_size);
+        };
+        const observer = new ResizeObserver(check);
+        observer.observe(box.current);
+        observer.observe(board.current);
+        return () => observer.disconnect();
+    }, [box, board]);
+
+    return taller;
+}
 
 // Picks a pointing direction from where a click landed inside `target`.
 export function pointDirectionForClick(
@@ -90,9 +128,11 @@ export function Racoon(props: RacoonProperties): JSX.Element {
     }, [props.point]);
 
     const data = active ? pointing[active] : idle;
+    const box = React.useRef<HTMLDivElement>(null);
+    const hidden = useTallerThanBoard(box, props.boardRef);
 
     return (
-        <div className="Racoon">
+        <div className={"Racoon" + (hidden ? " Racoon-hidden" : "")} ref={box}>
             {data && (
                 <Lottie
                     // Remount when the clip changes so the new one starts at frame 0.

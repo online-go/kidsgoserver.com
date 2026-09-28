@@ -113,8 +113,12 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
     align-items: stretch;
     justify-content: center;
 
+    // min-height: 0 down the chain lets a tall sidebar (the puzzle section
+    // list on a landscape phone) scroll instead of stretching the row past
+    // the bottom of the screen.
     #Lesson-bottom-container {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: row;
 
@@ -142,7 +146,7 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         min-width: 20rem;
         max-width: 100vw;
         flex-basis: 10rem;
-        min-height: 10rem;
+        min-height: 0;
 
         +lessonnarrow() {
             min-width: 15rem;
@@ -250,8 +254,8 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
             background-color: transparent;
         }
         .Goban div {
-            background: rgba(103, 156, 214, 0.7) !important;
-            background-color: rgba(103, 156, 214, 0.7) !important;
+            background: rgba(103, 156, 214, 0.95) !important;
+            background-color: rgba(103, 156, 214, 0.95) !important;
             //opacity: 0.8;
         }
 
@@ -441,7 +445,9 @@ backdropborder-color=rgba(255, 255, 255, 0.6)
         margin-top: 4rem;
         padding-top: 1.4rem;
         overflow: auto;
+        min-height: 0;
         max-height: calc(100vh - 10rem);
+        max-height: calc(100dvh - 10rem);
 
         +lessonnarrow() {
             margin-left: 0.5rem;

@@ -43,12 +43,12 @@ import { Captures } from "@kidsgo/components/Captures";
 import { BackButton } from "@kidsgo/components/BackButton";
 import { PopupDialog, openPopup, closePopup } from "@kidsgo/components/PopupDialog";
 import { ResultsDialog } from "@kidsgo/components/ResultsDialog";
-import { canRematch, requestRematch } from "@kidsgo/lib/rematch";
 import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "@/views/Game/GameHooks";
 import { animateCaptures } from "@kidsgo/lib/animateCaptures";
 import { ChatBubble } from "./ChatBubble";
 import { openChat } from "@kidsgo/components/ChatDialog";
+import { boardTargetSize } from "@kidsgo/lib/board_size";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -80,7 +80,7 @@ export function KidsGame(): JSX.Element {
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
-            const target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = boardTargetSize(width, height);
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -443,11 +443,6 @@ export function KidsGame(): JSX.Element {
                     <ResultsDialog
                         goban={goban_ref?.current}
                         onPlayAgain={() => {
-                            // Bot games rematch straight away with the same
-                            // settings; other games go back to setup.
-                            if (isBot(opponent) && canRematch(opponent?.id)) {
-                                requestRematch();
-                            }
                             void navigate("/play");
                         }}
                         onClose={() => {
