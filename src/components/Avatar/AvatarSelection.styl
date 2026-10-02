@@ -18,6 +18,7 @@
 
 .AvatarSelection {
     flex: 1;
+    min-height: 0;
 
     display: inline-flex;
     flex-direction: column;
@@ -57,29 +58,68 @@
         align-content: center;
         justify-content: center;
         padding: 1rem;
-        padding-left: 2rem;
-        background-color: rgba(255,255,255,0.2);
+        // Matches the Player Avatar box above so it reads as sitting in front
+        // of the planet rather than the horizon cutting through it.
+        background-color: rgba(120, 120, 120, 0.9);
+        border: 2px solid white;
+        backdrop-filter: blur(4px);
         border-radius: 1rem;
     }
 
-    .Avatar-svg.icon {
-        display: inline-block;
-        width: 4rem;
-        height: 4rem;
-        border 2px solid transparent;
-        border-radius: 0.5rem;
+    // The slot keeps its size and takes the hover/click; only the icon inside
+    // scales, and it ignores the mouse, so the hover ends as soon as the
+    // pointer leaves the original box rather than the grown one.
+    .race-icon {
+        position: relative;
+        width: 6rem;
+        height: 6rem;
+        margin: 0 0.15rem;
+        cursor: pointer;
 
-        &:hover, &.active {
-            cursor: pointer;
+        // Five 6rem slots don't fit a phone held upright.
+        +portrait() {
+            width: 4rem;
+            height: 4rem;
+        }
+
+        // A modest pop: enough to come forward over its neighbours without
+        // spilling past the panel onto the "Change Species" label.
+        &:hover {
+            z-index: 2;
+
+            .icon {
+                transform: scale(1.35);
+            }
+        }
+
+        &:hover .icon, &.active .icon {
             border 2px solid white;
             background-color: rgba(255,255,255,0.4);
         }
     }
 
+    .Avatar-svg.icon {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border 2px solid transparent;
+        border-radius: 0.5rem;
+        transition: hover-pop-transition;
+        pointer-events: none;
+    }
+
+    // The alien takes all the height left under the species picker and the
+    // width between the arrows; he's the point of the page.
     .selector {
         flex: 1;
+        min-height: 0;
         display: flex;
         width: 80vw;
+
+        +portrait() {
+            width: 100vw;
+        }
 
         align-items: stretch;
         align-content: center;
@@ -92,13 +132,27 @@
             align-items: center;
             align-content: center;
             justify-content: center;
-            flex: 1;
-            max-width: 50vw;
+            // A square the height of the row (the art is square), narrowing
+            // on thin screens, so the hover area is the alien and not the
+            // whole band between the arrows.
+            flex: 0 1 auto;
+            height: 100%;
+            aspect-ratio: 1;
+            min-width: 0;
             .Avatar-svg {
                 width: 100%;
                 height: 100%;
                 max-width: 100%;
                 max-height: 100%;
+                transition: hover-pop-transition;
+                pointer-events: none;
+                // Fills its box at rest. The art has a margin of empty
+                // space built in, so the hover pop can grow a little past the
+                // box without touching the species row or the Done button.
+            }
+
+            &:hover .Avatar-svg {
+                transform: scale(1.1);
             }
         }
     }
@@ -109,7 +163,7 @@
         align-items: center;
         align-content: center;
         justify-content: center;
-        margin-top: 2rem;
+        margin-top: 1.25rem;
         margin-bottom: 0.5rem;
 
         .race-selection-title {

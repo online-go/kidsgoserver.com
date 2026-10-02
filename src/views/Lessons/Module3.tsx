@@ -484,9 +484,6 @@ class Page15 extends Module3 {
     axolotlFace() {
         return true;
     }
-    hidePlayButton() {
-        return true;
-    }
 }
 
 class Puzzle1 extends Module3 {

@@ -19,7 +19,8 @@
 
 #CharacterSelection {
     position: absolute;
-    background-color: #eee;
+    background-color: #000;
+    isolation: isolate;
     top: 0;
     right: 0;
     left: 0;
@@ -34,23 +35,64 @@
     max-width: 100vw;
     overflow: hidden;
 
+    // A little smaller than the page's 2rem text, since the name is still one
+    // of the choices here; long names ("Amazed Alchemical Bivel") wrap rather
+    // than widening the box.
     .NameSelection {
         background-color: rgba(120,120,120,0.9);
         color: white;
         border: 2px solid white;
         border-radius: 0.5rem;
-        box-shadow: 0 0 0rem 0.5rem rgba(120, 120, 120, 0.9);
-        padding: 1rem;
-        margin-top: 4rem;
+        box-shadow: 0 0 0rem 0.4rem rgba(120, 120, 120, 0.9);
+        padding: 0.75rem 1.25rem;
+        margin-top: 3.5rem;
+        max-width: "min(32rem, calc(100vw - 8rem))" % "";
+        font-size: 1.7rem;
 
         .title {
             border-bottom: 2px solid white;
-            margin: 0.5rem;
-            padding-bottom: 0.5rem;
-            letter-spacing: 0.4rem;
+            margin: 0 0.5rem 0.5rem;
+            padding-bottom: 0.4rem;
+            letter-spacing: 0.35rem;
+            font-size: 1.4rem;
         }
 
+        .username {
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
 
+        .regenerate {
+            font-size: 1rem;
+        }
+    }
+
+    // Short landscape phones: stacked, the name and species panels leave the
+    // alien a sliver. Put them in a column on the left and give the alien the
+    // full height on the right.
+    @media (orientation: landscape) and (max-height: 500px) {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto auto 1fr;
+        grid-template-areas: "name alien" "title alien" "icons alien" "ok alien";
+        justify-items: center;
+        align-items: start;
+        padding: 0 1rem 0 4rem;
+        column-gap: 1rem;
+
+        .NameSelection { grid-area: name; }
+        .AvatarSelection { display: contents; }
+        .race-selection-container { grid-area: title; }
+        .race-selection-icons { grid-area: icons; }
+        .selector {
+            grid-area: alien;
+            align-self: stretch;
+            width: 100%;
+            padding: 3rem 0 1rem;
+            box-sizing: border-box;
+        }
+        button.ok { grid-area: ok; }
     }
 
     .Button.check, button.ok {

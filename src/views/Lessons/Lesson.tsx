@@ -21,7 +21,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { _ } from "@/lib/translate";
 import { decodeMoves, Goban, GobanCanvas, GobanConfig, prettyCoordinates } from "goban";
-import { Racoon } from "@kidsgo/components/Racoon";
+import { Racoon, RacoonPoint, pointDirectionForClick } from "@kidsgo/components/Racoon";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
+import { LessonComplete, LessonAxolotl } from "./LessonComplete";
 import { setContentNavigate } from "./Content";
 import { chapters } from "./chapters";
 import { PersistentElement } from "@/components/PersistentElement";
@@ -29,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { animateCaptures } from "@kidsgo/lib/animateCaptures";
 import { BackButton } from "@kidsgo/components/BackButton";
 import { sfx } from "@/lib/sfx";
+import { boardTargetSize } from "@kidsgo/lib/board_size";
 
 export function Lesson({ chapter, page }: { chapter: number; page: number }): JSX.Element {
     const navigate = useNavigate();
@@ -77,13 +80,13 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
     const [_hup, hup]: [number, (x: number) => void] = useState<number>(Math.random());
     const [replay, setReplay]: [number, (x: number) => void] = useState<number>(Math.random());
     const [showAxotol, setShowAxotol]: [boolean, (x: boolean) => void] = useState<boolean>(false);
-    const [hidePlayButton, setHidePlayButton]: [boolean, (x: boolean) => void] =
-        useState<boolean>(false);
+    const [racoonPoint, setRacoonPoint] = useState<RacoonPoint | null>(null);
+    const [lessonComplete, setLessonComplete] = useState<boolean>(false);
     const [shouldPlayAudio, setShouldPlayAudio] = useState(true); // State for tracking audio on learn-to-play pages where it has audio matching the text, set to true initially, but can dynamically set it off localstorage if needed
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
-            const target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = boardTargetSize(width, height);
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -128,12 +131,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
             setText(target_text);
         };
 
-        if (content.hidePlayButton()) {
-            setHidePlayButton(true);
-        } else {
-            setHidePlayButton(false);
-        }
-
+        setLessonComplete(content.lessonComplete());
         if (content.axolotlFace()) {
             setShowAxotol(true);
             return;
@@ -292,9 +290,18 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
         }
     };
 
+    // The raccoon glances at wherever on the board the click landed.
+    const pointRacoon = (ev: React.MouseEvent) => {
+        setRacoonPoint({
+            direction: pointDirectionForClick(ev, board_container_resizer.ref.current),
+            nonce: Math.random(),
+        });
+    };
+
     return (
         <>
             <div id="Lesson" className="bg-blue">
+                <SpaceBackground planet="blue" />
                 <div className="landscape-top-spacer">
                     <div className="lesson-title">Lesson {chapter + 1}</div>
                 </div>
@@ -321,14 +328,18 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
                         </div>
                     </div>
 
-                    <div id="board-container" ref={board_container_resizer.ref}>
-                        {showAxotol ? (
-                            <div className="big-axol-container">
-                                <div className={`Axol ${hidePlayButton ? "center" : ""}`} />
-                                {hidePlayButton ? null : (
-                                    <button onClick={() => navigate("/play")}>Play</button>
-                                )}
-                            </div>
+                    <div
+                        id="board-container"
+                        ref={board_container_resizer.ref}
+                        onClickCapture={pointRacoon}
+                    >
+                        {showAxotol && !lessonComplete ? (
+                            <LessonAxolotl />
+                        ) : showAxotol ? (
+                            <LessonComplete
+                                onReplay={() => navigate(`/learn-to-play/${chapter + 1}/1`)}
+                                onNext={() => navigate(next)}
+                            />
                         ) : (
                             <div className="Goban-container">
                                 <div className="Goban">
@@ -340,7 +351,7 @@ export function Lesson({ chapter, page }: { chapter: number; page: number }): JS
 
                     <div id="right-container">
                         <div className="top-spacer" />
-                        <Racoon hover />
+                        <Racoon point={racoonPoint} boardRef={board_container_resizer.ref} />
                         <div className="landscape-bottom-buttons">
                             <Link to={back} className="game-button-container">
                                 <span className="stone-button-left" />

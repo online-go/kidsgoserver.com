@@ -264,7 +264,7 @@ export function HelpPage(): JSX.Element {
                         >
                             click here
                         </a>
-                        .<br></br> <br></br> Images, text, and lessons copyright 2025 by the
+                        .<br></br> <br></br> Images, text, and lessons copyright 2026 by the
                         American Go Foundation.
                     </p>
                     {isMobile && <BackToTopButton />}

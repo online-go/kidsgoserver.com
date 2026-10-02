@@ -549,6 +549,13 @@ export const avatars: { [race: string]: Array<number> } = {
         .map((a) => a.id),
 };
 
+export type PlanetColor = "blue" | "yellow" | "green" | "magenta" | "red";
+
+// The planet art in assets/backgrounds is named after the bg-* class colours.
+export function planet_for_race(race: Race): PlanetColor {
+    return avatar_background_class(race).replace("bg-", "") as PlanetColor;
+}
+
 export function avatar_background_class(race: Race): string {
     switch (race) {
         case "aquatic":

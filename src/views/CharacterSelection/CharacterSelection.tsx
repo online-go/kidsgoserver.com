@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@/lib/hooks";
 import { post, get } from "@/lib/requests";
 import { BackButton } from "@kidsgo/components/BackButton";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 import { _ } from "@/lib/translate";
 import { useEnsureUserIsCreated } from "@kidsgo/views/Matchmaking";
 import {
@@ -30,6 +31,7 @@ import {
     raceIdxToUiClass,
     uiClassToRaceIdx,
     avatar_background_class,
+    planet_for_race,
 } from "@kidsgo/components/Avatar";
 
 export function CharacterSelection(): JSX.Element {
@@ -108,6 +110,7 @@ export function CharacterSelection(): JSX.Element {
 
     return (
         <div id="CharacterSelection" className={avatar_background_class(avatarRace)}>
+            <SpaceBackground planet={planet_for_race(avatarRace)} />
             <BackButton onClick={() => navigate("/play")} />
             <div className="HelpButton" onClick={() => navigate("/help")}></div>
             <NameSelection onRegenerate={() => regenerateUsername()} />

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Content } from "./Content";
+import { Content, LessonCompletePage } from "./Content";
 import { module1 } from "./Module1";
 import { module2 } from "./Module2";
 import { module3 } from "./Module3";
@@ -24,6 +24,9 @@ import { module5 } from "./Module5";
 import { module6 } from "./Module6";
 import { module7 } from "./Module7";
 
+// Every lesson ends on the "Lesson Complete" celebration. Lessons whose own
+// closing page is already the celebration keep it; the rest get the shared
+// celebration page added after their last page.
 export const chapters: Array<Array<typeof Content>> = [
     module1,
     module2,
@@ -32,4 +35,6 @@ export const chapters: Array<Array<typeof Content>> = [
     module5,
     module6,
     module7,
-];
+].map((lesson) =>
+    lesson[lesson.length - 1].prototype.lessonComplete() ? lesson : [...lesson, LessonCompletePage],
+);

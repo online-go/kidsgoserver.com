@@ -34,6 +34,7 @@ import {
     PlayerAvatar,
     //uiClassToRaceIdx,
     avatar_background_class,
+    planet_for_race,
     Race,
     usePlayerRace,
 } from "@kidsgo/components/Avatar";
@@ -42,10 +43,12 @@ import { Captures } from "@kidsgo/components/Captures";
 import { BackButton } from "@kidsgo/components/BackButton";
 import { PopupDialog, openPopup, closePopup } from "@kidsgo/components/PopupDialog";
 import { ResultsDialog } from "@kidsgo/components/ResultsDialog";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 import { usePlayerToMove, useShowUndoRequested, usePhase } from "@/views/Game/GameHooks";
 import { animateCaptures } from "@kidsgo/lib/animateCaptures";
 import { ChatBubble } from "./ChatBubble";
 import { openChat } from "@kidsgo/components/ChatDialog";
+import { boardTargetSize } from "@kidsgo/lib/board_size";
 
 export function KidsGame(): JSX.Element {
     const user = data.get("user");
@@ -77,7 +80,7 @@ export function KidsGame(): JSX.Element {
     const onResize = useCallback((width, height) => {
         const goban = goban_ref.current;
         if (goban) {
-            const target_size = Math.min(width, height) - 60; // white padding border
+            const target_size = boardTargetSize(width, height);
 
             if (isNaN(target_size)) {
                 hup(Math.random());
@@ -417,7 +420,14 @@ export function KidsGame(): JSX.Element {
 
     return (
         <>
-            <div id="KidsGame" className={race ? avatar_background_class(race as Race) : ""}>
+            <div
+                id="KidsGame"
+                className={
+                    (race ? avatar_background_class(race as Race) : "") +
+                    (phase === "finished" && !gameFinishedClosed ? " results-open" : "")
+                }
+            >
+                <SpaceBackground planet={race ? planet_for_race(race as Race) : null} />
                 <BackButton onClick={quit} />
                 <div className="HelpButton" onClick={() => navigate("/help")}></div>
                 {show_undo_requested && (

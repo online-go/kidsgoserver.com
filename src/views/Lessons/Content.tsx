@@ -238,12 +238,32 @@ export class Content extends TypedEventEmitter<Events> {
         return false;
     }
 
-    // set to true if we should *not* show the play button on the axol page
-    hidePlayButton() {
+    // With axolotlFace(): true on the last page of a lesson, where the
+    // axolotl plays the "Lesson Complete" celebration instead of idling.
+    lessonComplete() {
         return false;
     }
+
     // Uses the 'replay' button on the lesson page to reset the goban's state by triggering a re-render
     resetGoban?: () => void;
+}
+
+// Appended to the end of every lesson (see chapters.ts): the animated
+// "Lesson Complete" axolotl with Replay Lesson / Next Lesson buttons.
+export class LessonCompletePage extends Content {
+    constructor() {
+        super();
+        this.audioUrl = "no_audio_here";
+    }
+    text(): JSX.Element | Array<JSX.Element> {
+        return <p>Great job, you finished this lesson!</p>;
+    }
+    axolotlFace() {
+        return true;
+    }
+    lessonComplete() {
+        return true;
+    }
 }
 
 let content_navigate = (_path: string) => {

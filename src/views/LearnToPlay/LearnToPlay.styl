@@ -19,13 +19,18 @@
 
 #LearnToPlay {
     position: absolute;
-    background-color: #001533;
+    background-color: #000;
+    isolation: isolate;
+    overflow: hidden;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
     width: 100vw;
+    // dvh is the visible height; plain vh on phones includes the space
+    // behind the address bar, which pushes the bottom of the map off screen.
     height: 100vh;
+    height: 100dvh;
     display: flex;
     align-content: center;
     justify-content: center;
@@ -40,9 +45,11 @@
         flex-shrink: 1;
         +portrait() {
             height: "calc((100vh - 100vw) / 2)" % "";
+            height: "calc((100dvh - 100vw) / 2)" % "";
         }
         +landscape() {
             width: "calc((100vw - 100vh) / 2)" % "";
+            width: "calc((100vw - 100dvh) / 2)" % "";
         }
     }
 
@@ -60,14 +67,24 @@
         left: 30vw;
         right: 30vw;
         */
-        background-size: cover;
-        background-image: url("/1.0/pages/lessons/planet.jpg") !important;
+        // The blue planet, seen through the airlock window behind the axolotl.
+        // Zoomed past the art's transparent sky so only planet shows.
+        background-size: 150%;
+        background-position: center 85%;
+        background-image: url("/1.0/backgrounds/blue.webp") !important;
     }
 
+    // The stones and titles are sized in --u, a fraction of the map's short
+    // side, so they keep their place around the axolotl at any screen size.
+    // At the 1536x864 base window --u is 14px, i.e. 1rem. The floor keeps
+    // the titles readable and the stones tappable on phones.
     .background-container {
         flex-grow: 1;
         position: relative;
         text-align: center;
+        container-type: size;
+        --u: 1rem;
+        --u: "max(1.62cqmin, 0.65rem)" % "";
     }
 
     .background {
@@ -81,8 +98,19 @@
         left: 0;
         right: 0;
         text-align: center;
-        background-image: url("/1.0/pages/lessons/background.svg");
+        background-image: url("/1.0/pages/lessons/background_v2.svg");
         background-repeat: no-repeat;
+    }
+
+    .axolotl-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        // Slightly shrunk and lifted so the tail clears the lesson 5 stone.
+        transform: translateY(-2%) scale(0.9);
     }
 
     .chapter-container {
@@ -91,11 +119,36 @@
         flex-direction: column;
         align-items: center;
         z-index: 1;
-        width: 7rem;
+        width: "calc(7 * var(--u))" % "";
+
+        cursor: pointer;
+
+        // Hover: the stone pops toward you and the title follows more gently,
+        // both scaling about the stone's centre on the same curve so the title
+        // trails behind for a little parallax. The scaled pieces ignore the
+        // mouse so the hover area stays the unscaled container; otherwise the
+        // grown stone keeps the hover alive after the pointer moves away.
+        .ChapterButton, .chapter-text {
+            transition: hover-pop-transition;
+            pointer-events: none;
+        }
+        &:hover {
+            z-index: 2;
+
+            .ChapterButton {
+                transform: scale(nav-arrow-hover-scale);
+            }
+            .chapter-text {
+                // Stone centre: half the 3u stone plus the 0.5u gap above the title.
+                transform-origin: "50% calc(-2 * var(--u))" % "";
+                // Grows less than the stone so it trails behind it (parallax).
+                transform: scale(1.1);
+            }
+        }
     }
 
     .chapter-1-container {
-        left: "calc(50% - 3.5rem)" % "";
+        left: "calc(50% - 3.5 * var(--u))" % "";
         top: 12%;
     }
 
@@ -105,7 +158,7 @@
     }
 
     .chapter-3-container {
-        top: "calc(50% - 1.5rem)" % "";
+        top: "calc(50% - 1.5 * var(--u))" % "";
         right: 11%;
     }
 
@@ -115,7 +168,7 @@
     }
 
     .chapter-5-container {
-        left: "calc(50% - 3.5rem)" % "";
+        left: "calc(50% - 3.5 * var(--u))" % "";
         bottom: 12%;
     }
 
@@ -125,7 +178,7 @@
     }
 
     .chapter-7-container {
-        top: "calc(50% - 1.5rem)" % "";
+        top: "calc(50% - 1.5 * var(--u))" % "";
         left: 12%;
     }
 
@@ -137,14 +190,14 @@
     .ChapterButton {
         position: relative;
         display: inline-flex;
-        width: 3rem;
-        height: 3rem;
+        width: "calc(3 * var(--u))" % "";
+        height: "calc(3 * var(--u))" % "";
         z-index: 1;
         background-image: svg-load("../assets/pages/lessons/button.svg");
         align-content: center;
         justify-content: center;
         align-items: center;
-        font-size: 2rem;
+        font-size: "calc(2 * var(--u))" % "";
         opacity: 0.8;
 
         &:hover {
@@ -162,12 +215,12 @@
         position: relative;
         color: #001533;
         text-align: center;
-        margin-top: 0.5rem;
-        font-size: 1.25rem;
+        margin-top: "calc(0.5 * var(--u))" % "";
+        font-size: "calc(1.25 * var(--u))" % "";
         background-color:rgb(195, 232, 250); 
         border: 1px solid #9fbcc5;
         border-radius: 4px;
-        padding: 0.5rem
+        padding: "calc(0.5 * var(--u))" % ""
 
         &:hover {
             cursor: pointer;
@@ -179,13 +232,6 @@
             cursor: not-allowed;
             background-color:rgb(48, 119, 219); 
         }
-    
-        +portrait() {
-            font-size: 0.8rem;
-            padding: 0.1rem;
-            width: 60%;
-            margin-left: auto;
-            margin-right: auto;
-        }
+
     }
 }

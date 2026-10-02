@@ -28,8 +28,13 @@ import { notification_manager } from "@/components/Notifications";
 import { errorAlerter } from "@/lib/misc";
 import { PopupDialog } from "@kidsgo/components/PopupDialog";
 import { closePopup, openPopup } from "@kidsgo/components/PopupDialog";
-import { uiClassToRaceIdx, avatar_background_class } from "@kidsgo/components/Avatar";
+import {
+    uiClassToRaceIdx,
+    avatar_background_class,
+    planet_for_race,
+} from "@kidsgo/components/Avatar";
 import { BackButton } from "@kidsgo/components/BackButton";
+import { SpaceBackground } from "@kidsgo/components/SpaceBackground";
 import { Avatar } from "@kidsgo/components/Avatar";
 import { bots } from "@/lib/bots";
 import { image_url } from "@kidsgo/lib/goban_themes";
@@ -285,14 +290,8 @@ export function Matchmaking(): JSX.Element {
                     errorAlerter(err);
                 });
         };
-        /*
-            })
-            .catch((err) => {
-                closePopup();
-                errorAlerter(err);
-            });
-            */
     };
+
     const playOrView = (e) => {
         if (game_to_view) {
             void navigate(`/game/${game_to_view.id}`);
@@ -336,16 +335,19 @@ export function Matchmaking(): JSX.Element {
 
     return (
         <div id="Matchmaking" className={avatar_background_class(race)}>
+            <SpaceBackground planet={planet_for_race(race)} />
             <BackButton onClick={back} />
-            <button id="Lessons-button" onClick={() => navigate("/learn-to-play")}>
-                Lessons
-            </button>
-            <button id="Avatar-button" onClick={() => navigate("/character-selection")}>
-                Avatar
-            </button>
-            <button id="Help-button" onClick={() => navigate("/help")}>
-                Help
-            </button>
+            <div className="nav-buttons">
+                <button id="Lessons-button" onClick={() => navigate("/learn-to-play")}>
+                    Lessons
+                </button>
+                <button id="Avatar-button" onClick={() => navigate("/character-selection")}>
+                    Avatar
+                </button>
+                <button id="Help-button" onClick={() => navigate("/help")}>
+                    Help
+                </button>
+            </div>
             {/* <button>Character</button> */}
             <CheckForChallengeReceived />
             {/* <div className="current-user-container">

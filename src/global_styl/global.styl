@@ -31,9 +31,24 @@
     //color: var(--text-color);
 }
 
+// The UI is laid out in rem and tuned on a ~1536x864 laptop window. Beyond
+// that the root size grows with whichever dimension is tighter, so big and
+// 4K screens get the same proportions instead of a tiny UI in a sea of space.
+// Short landscape phones get a lower floor so the pages still fit.
+html {
+    font-size: "max(%s, min(0.911vw, 1.62vh))" % font-size-normal;
+
+    @media (orientation: landscape) and (max-height: 500px) {
+        font-size: "max(10px, min(0.911vw, 1.62vh, %s))" % font-size-normal;
+    }
+}
+
+body, #main-content {
+    font-size: 1rem;
+}
+
 html, body, #main-content {
     height: 100%;
-    font-size: font-size-normal;
     -webkit-backface-visibility:  hidden;
     -webkit-tap-highlight-color:  transparent;
     background-color: MISSING;

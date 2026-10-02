@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 .ResultsDialog-container {
     display: flex;
     width: 100vw;
@@ -26,194 +25,159 @@
     align-items: center;
     align-content: center;
     justify-content: center;
+    overflow: hidden;
     z-index: z.popup-dialog;
-    background-color: rgba(255,255,255,0.2);
+    // The pop-up's fill is translucent in the animation, so blur and dim the
+    // game behind it rather than letting the board's grid show through.
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
 }
 
-results-height=25rem;
-
+// The pop-up is a 1920px-square composition whose frame spans roughly 15%-85%
+// of the width and 29%-71% of the height; everything else in the square is
+// transparent. The overlays below are positioned as fractions of the square,
+// measured from the composition.
 .ResultsDialog {
-    display: inline-flex;
-    padding: 0;
-    width: results-height * 1.71512;
-    height: results-height;
-    max-width: 100vw;
-    max-height: 100vh;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: svg-load("../assets/misc/modal_background.svg");
-    opacity: 0.90;
+    // Capped in rem (1200px at the base size) so it grows with the rest of
+    // the UI on big screens.
+    --S: "min(110vw, 135vh, 86rem)" % "";
+    position: relative;
+    width: var(--S);
+    height: var(--S);
+    flex-shrink: 0;
     color: #32529a;
-    text-shadow: 0 0 2px #fff;
-    font-size: 1.5rem;
-    line-height: 1.7rem;
+    font-family: "Rubik", "Fredoka", sans-serif;
 
-    +portrait() {
-        font-size: 1.0rem;
+    // The square is mostly transparent, so it lets clicks through to the
+    // backdrop (which closes the pop-up); only the frame and its contents
+    // take clicks.
+    pointer-events: none;
+
+    .ResultsDialog-frame {
+        position: absolute;
+        left: 13%;
+        width: 74%;
+        top: 29%;
+        height: 43%;
+        border-radius: 6%;
+        pointer-events: auto;
     }
 
-    flex-direction: column;
+    .ResultsDialog-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
 
-    .ResultsDialog-results {
-        flex-grow: 1;
-        padding-top: 3rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        text-align: center;
-        flex-direction: row;
+    .ResultsDialog-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        animation: results-overlay-in 0.4s ease-out 0.5s forwards;
+    }
+
+    .ResultsDialog-avatar {
+        position: absolute;
+        top: 39.7%;
+        width: 9%;
+        height: 9%;
+        transform: translate(-50%, -50%);
         display: flex;
-        align-content: stretch;
-
-        .result-text {
-            display: block;
-            min-height: 1.5rem;
-            padding-top: 0.5rem;
-            padding-bottom: 0.25rem;
-        }
-
-        > .black, > .white {
-            flex-grow: 1;
-
-            .stone-avatar-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                align-content: center;
-                .Avatar {
-                    flex: 0;
-                }
-            }
-
-            .Avatar-svg {
-                min-width: 6rem;
-                min-height: 6rem;
-                width: 6rem;
-                height: 6rem;
-                max-width: 6rem;
-                max-height: 6rem;
-
-                +portrait() {
-                    min-width: 5rem;
-                    min-height: 5rem;
-                    width: 5rem;
-                    height: 5rem;
-                    max-width: 5rem;
-                    max-height: 5rem;
-                }
-            }
-        }
-
-        .score-stones {
-            border-bottom: 2px solid;
-        }
-        .score-total {
-            border-top: 2px solid;
-        }
-
-        .score >div {
-            display: inline-flex;
-            flex-direction: row;
-            align-items: center;
-            align-content: center;
-        }
-
-        .stone-svg {
-            min-width: 1rem;
-            min-height: 1rem;
-            width: 1rem;
-            height: 1rem;
-            max-width: 1rem;
-            max-height: 1rem;
-            padding-right: 0.3rem;
-        }
-
-        .label {
-            display: inline-block;
-            width: 10rem;
-            text-align: left;
-            +portrait() {
-                width: 7rem;
-            }
-        }
-
-
-        .value {
-            display: inline-block;
-            width: 2rem;
-            text-align: right;
-            white-space: nowrap;
-        }
-    }
-
-    .result-center-message {
-        display: flex
-        justify-content: center
-        align-items: center
-        padding: 1rem 2rem
-        font-size: 1.75rem
-        font-weight: bold
-        background-color: rgba(34, 197, 94, 0.15)
-        color: #166534
-        border-radius: 0.75rem
-        margin: 1rem 0
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6)
-        
-        +portrait() {
-            font-size 1.5rem
-            padding 0.25rem 0.5rem
-            margin-bottom auto
-        }
-    }
-    
-    .ResultsDialog-buttons {
-        flex-shrink: 0;
-
-        height: 6rem;
-        padding-bottom: 3rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-
-
-        button {
-            display: inline-block;
-            width: 11rem;
-            height: 3rem;
-            cursor: pointer;
-            font-size: 1.5rem;
-            white-space: nowrap;
-            margin: 0;
-        }
-    }
-
-    .ResultsDialog-outcome {
-        flex-shrink: 0;
-
-        height: 1.5rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
         align-items: center;
-        align-content: center;
+        justify-content: center;
 
-        img {
-            width: 1.5rem;
-            height: 1.5rem;
-            margin-right: 0.5rem;
+        &.left { left: 29.4%; }
+        &.right { left: 70.6%; }
 
+        .Avatar, .Avatar-svg {
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100%;
+            max-height: 100%;
         }
     }
 
-    .red-x, .green-check {
-        display: inline-block;
-        width: 3rem;
-        height: 3rem;
-        opacity: 0.8;
+    .ResultsDialog-score {
+        position: absolute;
+        top: 45.5%;
+        width: 16%;
+        transform: translateX(-50%);
+        font-size: calc(var(--S) * 0.016);
+        line-height: 1.35;
+        font-weight: 500;
+
+        &.left { left: 29.4%; }
+        &.right { left: 70.6%; }
+
+        > div {
+            display: flex;
+            justify-content: space-between;
+        }
+        .total {
+            font-weight: 700;
+            border-top: 1px solid currentColor;
+        }
+    }
+
+    // Sits between the two avatars above the title, styled like the "THEY
+    // RESIGNED" line the animator drew into the resign pop-up.
+    .ResultsDialog-note {
+        position: absolute;
+        top: 34.5%;
+        left: 35%;
+        width: 30%;
+        text-align: center;
+        font-size: calc(var(--S) * 0.021);
+        line-height: 1.2;
+        font-weight: 700;
+        font-style: italic;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #2f5fd0;
+    }
+
+    // Click targets over the Play Again / View Game faces drawn in the
+    // animation. They're invisible until hovered, when a soft glow shows the
+    // button is clickable; Play Again (the main action) also pulses gently.
+    .ResultsDialog-hotspot {
+        position: absolute;
+        top: 61.2%;
+        width: 15%;
+        height: 6%;
+        transform: translate(-50%, -50%);
         cursor: pointer;
+        pointer-events: auto;
+        border-radius: calc(var(--S) * 0.01);
+        transition: box-shadow 0.2s ease;
+
+        &.left { left: 29.8%; }
+        &.right { left: 70.9%; }
+
+        &.primary {
+            animation: results-primary-pulse 1.8s ease-in-out 1.2s infinite;
+        }
 
         &:hover {
-            opacity: 1.0;
+            animation: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 calc(var(--S) * 0.02) rgba(255, 255, 255, 0.8);
         }
     }
+}
+
+@keyframes results-primary-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    50% { box-shadow: 0 0 calc(var(--S) * 0.018) calc(var(--S) * 0.004) rgba(255, 255, 255, 0.75); }
+}
+
+@keyframes results-overlay-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }

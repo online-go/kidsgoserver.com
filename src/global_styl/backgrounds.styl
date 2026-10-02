@@ -1,30 +1,8 @@
+// Pages with a space background: black behind the SpaceBackground component's
+// stars/satellite/planet layers. `isolation` gives the root its own stacking
+// context so the background's z-index -1 stays above the root's own colour
+// but below the page content.
 .bg-blue, .bg-yellow, .bg-green, .bg-magenta, .bg-red {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: #000 !important;
+    isolation: isolate;
 }
-
-.bg-blue {
-    background-image: url("/1.0/backgrounds/blue.jpg");
-    background-color: #01021E !important;
-}
-.bg-yellow {
-    background-image: url("/1.0/backgrounds/yellow.jpg");
-    background-color: #E98B1A !important;
-}
-
-.bg-green {
-    background-image: url("/1.0/backgrounds/green.jpg");
-    background-color: #5FDD39 !important;
-}
-
-.bg-magenta {
-    background-image: url("/1.0/backgrounds/magenta.jpg");
-    background-color: #BF1945 !important;
-}
-
-.bg-red {
-    background-image: url("/1.0/backgrounds/red.jpg");
-    background-color: #4D2D1E !important;
-}
-

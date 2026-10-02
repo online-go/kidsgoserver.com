@@ -57,6 +57,7 @@
     display: inline-flex;
     border: 1px solid transparent;
     border-radius: 5rem;
+    transition: hover-pop-transition;
     min-height: 3.7rem;
     min-width: 3.7rem;
     max-height: 3.7rem;
@@ -175,5 +176,29 @@ button.up, .stone-button-up {
     @extend .refresh-light;
     &:not(.disabled):hover {
         @extend .refresh-light-green;
+    }
+}
+
+// Navigation arrows grow toward you on hover. The left/up arrows are the
+// right-arrow art flipped/rotated, so their hover transform has to keep that
+// base transform or the arrow would un-flip while it grows.
+nav-arrow-hover-scale = 1.2
+bar-arrow-hover-scale = 1.15
+
+button.right:not(.disabled):hover, .stone-button-right:not(.disabled):hover,
+.stone-button-refresh:not(.disabled):hover {
+    transform: scale(bar-arrow-hover-scale);
+}
+button.left:not(.disabled):hover, .stone-button-left:not(.disabled):hover {
+    transform: scaleX(-1) scale(bar-arrow-hover-scale);
+}
+// The lesson/puzzle bars wrap each arrow with its label; hovering anywhere on
+// the pair should pop the arrow.
+.game-button-container:hover {
+    .stone-button-right, .stone-button-refresh {
+        transform: scale(bar-arrow-hover-scale);
+    }
+    .stone-button-left {
+        transform: scaleX(-1) scale(bar-arrow-hover-scale);
     }
 }

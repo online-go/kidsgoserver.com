@@ -25,7 +25,10 @@
     bottom: 0;
     display: flex;
     overflow: hidden;
-    background-color: #333;
+    background-color: #000;
+    isolation: isolate;
+    // Satellite about a quarter of the on-screen character (avatars cap at 15rem).
+    --SATELLITE-SIZE: 11rem;
 
     +landscape() {
         flex-direction: row;
@@ -99,8 +102,8 @@
             background-color: transparent;
         }
         .Goban > div {
-            background: rgba(208, 155, 86, 0.85) !important;
-            background-color: rgba(208, 155, 86, 0.85) !important;
+            background: rgba(208, 155, 86, 0.95) !important;
+            background-color: rgba(208, 155, 86, 0.95) !important;
             //opacity: 0.8;
         }
 
@@ -226,6 +229,12 @@
 
     }
 
+    // Keep the back arrow sharp above the results pop-up's blurred backdrop,
+    // as the way back to the main menu.
+    &.results-open .BackButton {
+        z-index: z.popup-dialog + 1;
+    }
+
     .results-button {
         position: fixed;
         top: 1.75rem;
@@ -280,6 +289,7 @@
     z-index: z.back-button;
     &:hover {
         background-image: svg-load("../assets/buttons/help-on.svg");
+        transform: scale(nav-arrow-hover-scale);
     }
 }
 

@@ -15,27 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Room left around the board for its frame (the Goban-container's 1.5rem
+// padding each side plus border and some slack). It was a flat 60px when
+// the root font size was fixed at 14px; the root now grows on big screens,
+// so it's kept in rem. Too little room and the framed board outgrows its
+// flex slot, which grows to fit, which grows the board again.
+const FRAME_ALLOWANCE_REM = 60 / 14;
 
-.BackButton {
-    @extend .stone-button
-    @extend .left-light;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 2rem;
-    height: 2rem;
-    position: fixed;
-    left: 1rem;
-    top: 1rem;
-    cursor: pointer;
-    z-index: z.back-button;
-
-    &:hover {
-        @extend .left-light-green;
-        transform: scaleX(-1) scale(nav-arrow-hover-scale);
-    }
-    &:active {
-        @extend .left-dark-green;
-    }
+export function boardTargetSize(width: number, height: number): number {
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 14;
+    return Math.min(width, height) - FRAME_ALLOWANCE_REM * rem;
 }
